@@ -1,0 +1,71 @@
+services:
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: .deploy/Dockerfile
+    entrypoint: [ "/usr/bin/supervisord", "-n", "-c", "/etc/supervisor.d/supervisor.ini" ]
+    container_name: backend
+    image: backend
+    restart: unless-stopped
+    volumes:
+      - backend-storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - service
+
+  backend-proxy:
+    build:
+      context: ../backend
+      dockerfile: .deploy/nginx/Dockerfile
+    image: backend-proxy
+    container_name: backend-proxy
+    volumes:
+      - ../backend/public:/app/public
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - service
+
+  nginx:
+    build:
+      context: ../proxy
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - backend-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - service
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}         # Имя базы данных
+      POSTGRES_USER: ${POSTGRES_USER}         # Пользователь базы данных
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}      # Пароль пользователя
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Хранение данных базы данных
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - service
+
+
+volumes:
+  postgres-data:                   # Объем для хранения данных PostgreSQL
+  backend-storage:
+
+networks:
+  service:                 # Внутренняя сеть для связи контейнеров
