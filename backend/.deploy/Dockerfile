@@ -37,9 +37,9 @@ RUN composer install --no-interaction --no-autoloader --no-scripts
 
 # Copy laravel project files
 COPY . /app
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 RUN composer dump-autoload --optimize
 
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 EXPOSE 9000
 
