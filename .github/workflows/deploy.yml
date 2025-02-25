@@ -16,7 +16,7 @@ jobs:
       - name: rsync deployments
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzru --delete"
+          switches: -avzru --delete
           path: ./
           remote_path: ~/Taskeee
           remote_host: ${{ secrets.HOST }}
