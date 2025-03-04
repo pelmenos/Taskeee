@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -47,6 +49,15 @@ class Handler extends ExceptionHandler
                     'status' => false,
                     'message' => 'Для использования данного функционала пользователь должен быть аутентифицированным'
                 ], 401);
+            }
+        });
+
+        $this->renderable(function (AuthorizationException | AccessDeniedHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'У вас недостаточно прав для выполнения этого действия'
+                ], 403);
             }
         });
     }

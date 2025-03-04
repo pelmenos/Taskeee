@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('spaces', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name', 36);
-            $table->string('email', 255)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 255);
+            $table->string('name', 100);
+            $table->string('description', 500)->nullable();
+            $table->string('avatar')->nullable();
+            $table->uuid('admin_id');
+            $table->string('tariff');
             $table->timestamps();
+
+            $table->foreign('admin_id', 'fk-space-admin_id')
+                ->on('users')->references('id');
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('spaces');
     }
 };

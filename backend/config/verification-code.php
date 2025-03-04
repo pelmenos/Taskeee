@@ -83,7 +83,7 @@ return [
     | will be used for the notification.
     |
     */
-    'queue' => 'queue',
+    'queue' => 'mailQueue',
 
     /*
     |--------------------------------------------------------------------------

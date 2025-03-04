@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\SpaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -37,6 +39,18 @@ Route::post('file', function(Request $request){
     ], 200);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('spaces', [SpaceController::class, 'createSpace']);
+    Route::get('spaces', [SpaceController::class, 'getSpaces']);
+    Route::get('spaces/{id}', [SpaceController::class, 'getSpace']);
+    Route::put('spaces/{id}', [SpaceController::class, 'updateSpace']);
+    Route::delete('spaces/{id}', [SpaceController::class, 'deleteSpace']);
+    Route::post('spaces/{id}/invite', [SpaceController::class, 'sendInviteSpace']);
+    Route::get('invite/{token}', [SpaceController::class, 'acceptInviteSpace']);
+
+    Route::post('projects', [ProjectController::class, 'createProject']);
+    Route::get('projects', [ProjectController::class, 'getProjects']);
+    Route::get('projects/{id}', [ProjectController::class, 'getProject']);
+    Route::put('projects/{id}', [ProjectController::class, 'updateProject']);
+    Route::delete('projects/{id}', [ProjectController::class, 'deleteProject']);
 });

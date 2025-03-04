@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personal_access_tokens', function (Blueprint $table) {
+        Schema::create('invite_tokens', function (Blueprint $table) {
             $table->id();
-            $table->uuidMorphs('tokenable');
-            $table->string('name');
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable();
-            $table->timestamp('last_used_at')->nullable();
+            $table->string('token');
             $table->timestamp('expires_at')->nullable();
+            $table->uuid('space_id');
+            $table->uuid('sender_id');
             $table->timestamps();
+
+            $table->foreign('space_id', 'fk-invite-token-space_id')
+                ->on('spaces')->references('id');
+
+            $table->foreign('sender_id', 'fk-invite-token-sender_id')
+                ->on('users')->references('id');
         });
     }
 
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::dropIfExists('invite_tokens');
     }
 };
