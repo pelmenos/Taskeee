@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\SpaceRoleController;
+use App\Http\Controllers\Api\SpaceUserController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SpaceController;
 use Illuminate\Http\Request;
@@ -40,6 +42,12 @@ Route::post('file', function(Request $request){
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('spaces/{id}/roles', [SpaceRoleController::class, 'createSpaceRole']);
+    Route::put('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'updateSpaceRole']);
+    Route::delete('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'deleteSpaceRole']);
+    Route::post('spaces/{id}/users', [SpaceUserController::class, 'createSpaceUser']);
+    Route::delete('spaces/{id}/users/{email}', [SpaceUserController::class, 'deleteSpaceUser']);
+
     Route::post('spaces', [SpaceController::class, 'createSpace']);
     Route::get('spaces', [SpaceController::class, 'getSpaces']);
     Route::get('spaces/{id}', [SpaceController::class, 'getSpace']);
