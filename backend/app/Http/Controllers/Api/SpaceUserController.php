@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSpaceUserRequest;
-use App\Http\Requests\DeleteSpaceRoleRequest;
 use App\Http\Requests\DeleteSpaceUserRequest;
-use App\Models\SpaceRole;
 
 use App\Models\Space;
 use App\Models\SpaceUser;

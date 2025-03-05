@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSpaceRoleRequest;
 use App\Http\Requests\DeleteSpaceRoleRequest;
 use App\Http\Requests\UpdateSpaceRoleRequest;
+use App\Http\Resources\SpaceRoleResource;
 use App\Models\SpaceRole;
 
 use App\Models\Space;
@@ -26,7 +27,7 @@ class SpaceRoleController extends Controller
 
         $spaceRole = SpaceRole::create($request->all());
 
-        return response()->json($spaceRole);
+        return response()->json(new SpaceRoleResource($spaceRole, true));
     }
 
     public function updateSpaceRole(UpdateSpaceRoleRequest $request)
