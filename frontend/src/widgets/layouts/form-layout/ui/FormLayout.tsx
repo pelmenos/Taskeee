@@ -1,7 +1,7 @@
 import React from "react"
 import "./FormLayout.css"
 import { clsx } from "clsx"
-import { Logo } from "shared/ui/logo"
+import { Logo } from "shared/ui/Logo"
 
 interface Props {
 	className?: string

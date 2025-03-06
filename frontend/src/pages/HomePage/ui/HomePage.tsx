@@ -1,0 +1,50 @@
+import { Button } from "shared/ui/Button"
+import { useTheme } from "shared/ui/ThemeProvider"
+import { useUnit } from "effector-react"
+import { $token, $user, logouted } from "shared/session"
+import { router } from "shared/routing"
+import { Link } from "atomic-router-react"
+
+export const HomePage = () => {
+  const { theme, setTheme } = useTheme()
+
+  const {
+    logout,
+    user,
+    token,
+  } = useUnit({
+    logout: logouted,
+    user: $user,
+    token: $token,
+  })
+
+  return (
+    <div className="home-page" style={{
+      maxWidth: "64rem",
+      margin: "0 auto",
+    }}>
+      <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>toggle ({theme})</Button>
+
+      <Button onClick={logout}>logout</Button>
+
+      <nav style={{
+        display: "flex",
+        gap: "1rem",
+      }}>
+        {router.routes.map(value => <Link key={value.path} to={value.route}>{value.path}</Link>)}
+      </nav>
+
+      <div className="">
+        <h1>User:</h1>
+        <pre>
+          {JSON.stringify(user, null, 2)}
+        </pre>
+
+        <h1>token:</h1>
+        <pre>
+          {JSON.stringify(token, null, 2)}
+        </pre>
+      </div>
+    </div>
+  )
+}
