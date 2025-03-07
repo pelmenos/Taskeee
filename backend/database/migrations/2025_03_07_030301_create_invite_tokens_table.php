@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->uuid('space_id');
             $table->uuid('sender_id');
+            $table->uuid('role_id');
             $table->timestamps();
 
             $table->foreign('space_id', 'fk-invite-token-space_id')
@@ -24,6 +25,9 @@ return new class extends Migration
 
             $table->foreign('sender_id', 'fk-invite-token-sender_id')
                 ->on('users')->references('id');
+
+            $table->foreign('role_id', 'fk-invite-token-role_id')
+                ->on('space_roles')->references('id');
         });
     }
 

@@ -13,17 +13,20 @@ class InviteToSpace extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public $space;
+
     public $user_id;
 
-    public $space;
+    public $role_id;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($space, $user_id)
+    public function __construct($space, $user_id, $role_id)
     {
-        $this->user_id = $user_id;
         $this->space = $space;
+        $this->user_id = $user_id;
+        $this->role_id = $role_id;
     }
 
     /**
@@ -48,7 +51,7 @@ class InviteToSpace extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $token = InviteToken::generateToken($this->space->id, $this->user_id);
+        $token = InviteToken::generateToken($this->space->id, $this->user_id, $this->role_id);
         $url = url('/api/invite/' . $token);
 
         return (new MailMessage)
