@@ -29,14 +29,14 @@ class getSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:spaces',
+            'id' => 'uuid|exists:spaces',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.required' => 'Идентификатор пространства должен быть передан в запросе', // Мб не нужна эта проверка, т.к есть другой роут где список выводится, и вообще по сути этот id является частью роута
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
             'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
         ];
     }
