@@ -33,7 +33,7 @@ class UpdateProjectRequest extends FormRequest
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500',
             'members' => 'required|array|min:1',
-            'members.*' => 'uuid', // тут также проверка exists потом должна быть на юзеров спейса
+            'members.*' => 'uuid|exists:space_users,id',
             'boards' => 'required|array|min:1|max:20',
             'boards.*' => 'string'
         ];
@@ -54,6 +54,7 @@ class UpdateProjectRequest extends FormRequest
             'members.array' => 'Поле участники должно быть массивом',
             'members.min' => 'Поле участники должно содержать хотя бы одного участника',
             'members.*.uuid' => 'Идентификаторы всех участников должны иметь тип данных UUID',
+            'members.*.exists' => 'Идентификаторы всех участников должны относится к существующим пользователям пространств',
             'boards.required' => 'Поле доски обязательно для заполнения',
             'boards.array' => 'Поле доски должно быть массивом',
             'boards.min' => 'Поле доски должно содержать хотя бы одну доску',

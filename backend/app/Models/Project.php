@@ -18,12 +18,18 @@ class Project extends Model
         'name',
         'description',
         'space_id',
-        'members',
         'boards'
     ];
 
+    protected $hidden = ['spaceUsers'];
+
     protected $casts = [
-        'members' => 'array',
         'boards' => 'array'
     ];
+
+    public function spaceUsers()
+    {
+        return $this->belongsToMany(SpaceUser::class, 'project_space_users',
+            'project_id', 'space_user_id');
+    }
 }

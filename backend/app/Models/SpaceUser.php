@@ -19,4 +19,10 @@ class SpaceUser extends Model
         'email',
         'role_id'
     ];
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_space_users',
+             'space_user_id', 'project_id');
+    }
 }

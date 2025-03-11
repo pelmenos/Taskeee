@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('description', 500)->nullable();
             $table->uuid('space_id');
-            $table->json('members');
             $table->json('boards');
             $table->timestamps();
 
