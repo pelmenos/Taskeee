@@ -52,6 +52,6 @@ class User extends Authenticatable
     public function getSpaceId()
     {
         return SpaceUser::where('email', $this->email)
-            ->firstOrFail()->space_id;
+            ->firstOrFail()->space_id ?? null;
     }
 }

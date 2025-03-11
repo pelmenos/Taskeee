@@ -33,6 +33,7 @@ class FinanceProjectController extends Controller
     public function view(Request $request, $projectId)
     {
         if ($project = FinanceProject::find($projectId)) {
+            $this->authorize('view', $project);
             return response()->json([
                 'data' => FinanceProjectResource::make($project)
             ]);
@@ -65,7 +66,7 @@ class FinanceProjectController extends Controller
     public function update(UpdateFinanceProjectRequest $request, $projectId)
     {
         if ($financeProject = FinanceProject::find($projectId)) {
-
+            $this->authorize('update', $financeProject);
             $financeProject->update($request->all());
 
             return response()->json([
@@ -81,6 +82,7 @@ class FinanceProjectController extends Controller
     public function delete(Request $request, $projectId)
     {
         if ($financeProject = FinanceProject::find($projectId)) {
+            $this->authorize('delete', $financeProject);
             $financeProject->delete();
             return response()->json([
                 'data' => FinanceProjectResource::make($financeProject)
