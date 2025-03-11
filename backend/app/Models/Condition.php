@@ -7,5 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Condition extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'name', 'space_id'
+    ];
+
+    public function scopeCurrentSpace($query)
+    {
+        return $query->where('space_id', auth()->user()->getSpaceId());
+    }
 }
