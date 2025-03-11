@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\SpaceUserController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SpaceController;
 use App\Http\Controllers\Api\FinanceProjectController;
+use App\Http\Controllers\Api\SubjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -71,5 +72,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('projects/{project_id}', [FinanceProjectController::class, 'view']);
         Route::match(['put', 'patch'], 'projects/{project_id}', [FinanceProjectController::class, 'update']);
         Route::delete('projects/{project_id}', [FinanceProjectController::class, 'delete']);
+    });
+
+    Route::group([
+        'prefix' => 'finances'
+    ], function () {
+        Route::post('subjects', [SubjectController::class, 'store']);
+        Route::get('subjects', [SubjectController::class, 'index']);
+        Route::get('subjects/{subject_id}', [SubjectController::class, 'view']);
+        Route::match(['put', 'patch'], 'subjects/{subject_id}', [SubjectController::class, 'update']);
+        Route::delete('subjects/{subject_id}', [SubjectController::class, 'delete']);
     });
 });

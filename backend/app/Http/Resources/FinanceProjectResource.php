@@ -21,12 +21,12 @@ class FinanceProjectResource extends JsonResource
             'id' => $this->id,
             'price' => $this->price,
             'comment' => $this->comment,
-            'status' => FinanceProjectStatus::find($this->status_id),
-            'project' => Project::find($this->project_id),
-            'coordinator' => User::find($this->coordinator_id),
-            'lead' => User::find($this->lead_id),
-            'customer' => User::find($this->customer_id),
-            'source' => User::find($this->source_id),
+            'status' => $this->status()->first(),
+            'project' => $this->project()->first(),
+            'coordinator' => $this->coordinator()->first(),
+            'lead' => $this->lead()->first(),
+            'customer' => $this->customer()->first(),
+            'source' => $this->source()->first(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];
