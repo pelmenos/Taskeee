@@ -13,6 +13,7 @@ class SubjectController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('inSpaceEntity', auth()->user());
         return response()->json([
             'data' => Subject::currentSpace()->get()
         ]);
@@ -34,6 +35,7 @@ class SubjectController extends Controller
 
     public function store(StoreSubjectRequest $request)
     {
+        $this->authorize('inSpaceEntity', auth()->user());
         $subject = Subject::create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),

@@ -11,34 +11,25 @@ class ConditionPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, Condition $condition): Response
     {
-        if ($user->getSpaceId() === $condition->space_id) {
+        if ($user->getSpaceId() === $condition->space_id && auth()->check()) {
             return $this->allow();
         }
         return $this->deny();
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Condition $condition): Response
     {
-        if ($user->getSpaceId() === $condition->space_id) {
+        if ($user->getSpaceId() === $condition->space_id && auth()->check()) {
             return $this->allow();
         }
         return $this->deny();
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, Condition $condition): Response
     {
-        if ($user->getSpaceId() === $condition->space_id) {
+        if ($user->getSpaceId() === $condition->space_id && auth()->check()) {
             return $this->allow();
         }
         return $this->deny();

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\SpaceController;
 use App\Http\Controllers\Api\FinanceProjectController;
 use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\ConditionController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -93,5 +94,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('conditions/{condition_id}', [ConditionController::class, 'view']);
         Route::match(['put', 'patch'], 'conditions/{condition_id}', [ConditionController::class, 'update']);
         Route::delete('conditions/{condition_id}', [ConditionController::class, 'delete']);
+    });
+
+    Route::group([
+        'prefix' => 'finances'
+    ], function () {
+        Route::post('payments', [PaymentController::class, 'store']);
+        Route::get('payments', [PaymentController::class, 'index']);
+        Route::get('payments/{payment_id}', [PaymentController::class, 'view']);
+        Route::match(['put', 'patch'], 'payments/{payment_id}', [PaymentController::class, 'update']);
+        Route::delete('payments/{payment_id}', [PaymentController::class, 'delete']);
+        Route::post('payments/{payment_id}', [PaymentController::class, 'duplicate']);
+        Route::match(['put', 'patch'], 'payments/{payment_id}/paid', [PaymentController::class, 'paidStatus']);
     });
 });

@@ -21,7 +21,9 @@ return new class extends Migration
             $table->uuid('director_id');
             $table->uuid('recipient_id');
             $table->integer('condition_id');
+            $table->uuid('space_id');
             $table->string('method', 50);
+            $table->string('comment', 2500)->nullable();
             $table->timestamps();
 
             $table->foreign('status_id')
@@ -42,6 +44,10 @@ return new class extends Migration
 
             $table->foreign('condition_id')
                 ->on('conditions')
+                ->references('id');
+
+            $table->foreign('space_id')
+                ->on('spaces')
                 ->references('id');
         });
     }

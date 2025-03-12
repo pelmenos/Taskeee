@@ -58,8 +58,7 @@ class FinanceProject extends Model
 
     public function scopeWithSearch($query, $term)
     {
-        return $query->with(['status', 'coordinator', 'project', 'lead', 'customer', 'source'])
-            ->where('price', 'like', '%' . $term . '%')
+        return $query->where('price', 'like', '%' . $term . '%')
             ->orWhere('comment', 'like', '%' . $term . '%')
             ->orWhere('id', 'like', '%' . $term . '%')
             ->orWhereHas('status', function ($query) use ($term) {

@@ -14,6 +14,7 @@ class FinanceProjectController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('inSpaceEntity', auth()->user());
         $financesProjects = FinanceProject::currentSpace();
 
         if ($term = $request->q) {
@@ -46,6 +47,7 @@ class FinanceProjectController extends Controller
 
     public function store(StoreFinanceProjectRequest $request)
     {
+        $this->authorize('inSpaceEntity', auth()->user());
         $financeProject = FinanceProject::create([
             'comment' => $request->input('comment'),
             'price' => $request->input('price'),

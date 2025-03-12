@@ -13,6 +13,7 @@ class ConditionController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('inSpaceEntity', auth()->user());
         return response()->json([
             'data' => Condition::currentSpace()->get()
         ]);
@@ -34,6 +35,7 @@ class ConditionController extends Controller
 
     public function store(StoreConditionRequest $request)
     {
+        $this->authorize('inSpaceEntity', auth()->user());
         $condition = Condition::create([
             'name' => $request->input('name'),
             'space_id' => auth()->user()->getSpaceId()
