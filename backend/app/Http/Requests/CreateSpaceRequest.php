@@ -24,7 +24,7 @@ class CreateSpaceRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'description' => 'string|max:500',
-            'avatar' => 'url:https',
+            'avatar' => 'url',
             'admin_id' => 'required|exists:users,id',
             'tariff' => 'required|in:Free,Pro,Enterprise'
         ];
@@ -38,7 +38,7 @@ class CreateSpaceRequest extends FormRequest
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',
             'description.string' => 'Поле Описание должно содержать строковой тип данных',
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
-            'avatar.url' => 'Поле изображение должно содержать валидную ссылку на изображение с протоколом https',
+            'avatar.url' => 'Поле изображение должно содержать валидную ссылку на изображение',
             'admin_id.required' => 'Идентификатор пользователя должен быть передан для запроса',
             'admin_id.exists' => 'Идентификатор пользователя не относится ни к одному из пользователей',
             'tariff.required' => 'Поле Тариф обязательно для заполнения',

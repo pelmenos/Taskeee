@@ -49,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('spaces/{id}/roles', [SpaceRoleController::class, 'createSpaceRole']);
     Route::put('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'updateSpaceRole']);
     Route::delete('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'deleteSpaceRole']);
+
     Route::post('spaces/{id}/users', [SpaceUserController::class, 'createSpaceUser']);
     Route::delete('spaces/{id}/users/{email}', [SpaceUserController::class, 'deleteSpaceUser']);
 
@@ -59,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('spaces/{id}', [SpaceController::class, 'deleteSpace']);
     Route::post('spaces/{id}/invite', [SpaceController::class, 'sendInviteSpace']);
     Route::get('invite/{token}', [SpaceController::class, 'acceptInviteSpace']);
+    Route::put('spaces/{id}/users/{user_id}/role', [SpaceController::class, 'updateUserSpaceRole']);
 
     Route::post('projects', [ProjectController::class, 'createProject']);
     Route::get('projects', [ProjectController::class, 'getProjects']);

@@ -11,6 +11,7 @@ use App\Models\Subject;
 use App\Policies\ConditionPolicy;
 use App\Policies\FinanceProjectPolicy;
 use App\Policies\PaymentPolicy;
+use App\Policies\AdminOrMemberSpacePolicy;
 use App\Policies\SpacePolicy;
 use App\Policies\SubjectPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;

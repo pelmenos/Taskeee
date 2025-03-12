@@ -29,25 +29,28 @@ class UpdateSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:spaces',
+            'id' => 'uuid|exists:spaces',
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
-            'avatar' => 'url:https',
-            'tariff' => 'in:Free,Pro,Enterprise'
+            'description' => 'required|string|max:500',
+            'avatar' => 'required|url:https',
+            'tariff' => 'required|in:Free,Pro,Enterprise'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.required' => 'Идентификатор пространства должен быть передан в запросе', // Мб не нужна эта проверка, т.к есть другой роут где список выводится, и вообще по сути этот id является частью роута
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
             'id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',
+            'description.required' => 'Поле Описание обязательно для заполнения',
             'description.string' => 'Поле Описание должно содержать строковой тип данных',
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
-            'avatar.url' => 'Поле изображение должно содержать валидную ссылку на изображение с протоколом https',
+            'avatar.required' => 'Поле изображение обязательно для заполнения',
+            'avatar.url' => 'Поле изображение должно содержать валидную ссылку на изображение',
+            'tariff.required' => 'Поле Тариф обязательно для заполнения',
             'tariff.in' => 'Поле Тариф должно содержать одно из значений: Free, Pro, Enterprise',
         ];
     }
