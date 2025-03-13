@@ -19,7 +19,7 @@ class BoardController extends Controller
 
         $this->authorize('spaceAdmin', $project->space);
 
-        $board = Board::create($request->all());
+        $board = Board::create($request->validated());
 
         return response()->json($board);
     }
@@ -39,7 +39,7 @@ class BoardController extends Controller
 
         $this->authorize('spaceAdmin', $board->project->space);
 
-        $board->update($request->all());
+        $board->update($request->validated());
 
         return response()->json(new BoardResource($board));
     }

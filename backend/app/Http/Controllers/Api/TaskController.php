@@ -19,7 +19,7 @@ class TaskController extends Controller
 
         $this->authorize('spaceAdmin', $board->project->space);
 
-        $task = Task::create($request->all());
+        $task = Task::create($request->validated());
 
         return response()->json($task);
     }
@@ -30,7 +30,7 @@ class TaskController extends Controller
 
         $this->authorize('spaceAdmin', $task->board->project->space);
 
-        $task->update($request->all());
+        $task->update($request->validated());
 
         return response()->json(new TaskResource($task));
     }
