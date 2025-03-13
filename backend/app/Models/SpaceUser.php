@@ -25,4 +25,10 @@ class SpaceUser extends Model
         return $this->belongsToMany(Project::class, 'project_space_users',
              'space_user_id', 'project_id');
     }
+
+    public function users()
+    {
+        $emails = SpaceUser::where('space_id', $this->space_id)->pluck('email')->toArray();
+        return User::whereIn('email', $emails);
+    }
 }
