@@ -21,4 +21,19 @@ class Space extends Model
         'admin_id',
         'tariff'
     ];
+
+    public function financesProjects()
+    {
+        return $this->hasMany(FinanceProject::class);
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
+
+    public function conditions()
+    {
+        return $this->hasMany(Condition::class);
+    }
 }
