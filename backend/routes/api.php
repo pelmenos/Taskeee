@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SpaceRoleController;
 use App\Http\Controllers\Api\SpaceUserController;
+use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SpaceController;
 use Illuminate\Http\Request;
@@ -41,6 +43,10 @@ Route::post('file', function(Request $request){
     ], 200);
 });
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request){
+    return $request->user();
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('spaces/{id}/roles', [SpaceRoleController::class, 'createSpaceRole']);
     Route::put('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'updateSpaceRole']);
@@ -63,4 +69,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('projects/{id}', [ProjectController::class, 'getProject']);
     Route::put('projects/{id}', [ProjectController::class, 'updateProject']);
     Route::delete('projects/{id}', [ProjectController::class, 'deleteProject']);
+
+    Route::post('boards', [BoardController::class, 'createBoard']);
+    Route::put('boards/{id}', [BoardController::class, 'updateBoard']);
+    Route::delete('boards/{id}', [BoardController::class, 'deleteBoard']);
+
+    Route::post('tasks', [TaskController::class, 'createTask']);
+    Route::put('tasks/{id}', [TaskController::class, 'updateTask']);
+    Route::delete('tasks/{id}', [TaskController::class, 'deleteTask']);
 });

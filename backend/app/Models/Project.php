@@ -27,6 +27,11 @@ class Project extends Model
         'boards' => 'array'
     ];
 
+    public function space()
+    {
+        return $this->belongsTo(Space::class, 'space_id', 'id');
+    }
+
     public function spaceUsers()
     {
         return $this->belongsToMany(SpaceUser::class, 'project_space_users',
