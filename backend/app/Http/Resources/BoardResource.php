@@ -26,6 +26,12 @@ class BoardResource extends JsonResource
         $data['name'] = $this->resource->name;
         $data['description'] = $this->resource->description;
         $data['project_id'] = $this->resource->project_id;
+        $data['created_at'] = $this->resource->created_at;
+        $data['updated_at'] = $this->resource->updated_at;
+
+        if ($this->resource->relationLoaded('tasks')) {
+            $data['tasks'] = $this->resource->tasks;
+        }
 
         return $data;
     }

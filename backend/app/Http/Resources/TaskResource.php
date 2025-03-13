@@ -27,6 +27,8 @@ class TaskResource extends JsonResource
         $data['description'] = $this->resource->description;
         $data['status'] = $this->resource->status;
         $data['board_id'] = $this->resource->board_id;
+        $data['created_at'] = $this->resource->created_at;
+        $data['updated_at'] = $this->resource->updated_at;
 
         return $data;
     }

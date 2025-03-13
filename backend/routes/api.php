@@ -71,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('projects/{id}', [ProjectController::class, 'deleteProject']);
 
     Route::post('boards', [BoardController::class, 'createBoard']);
+    Route::get('boards/{id}', [BoardController::class, 'getBoard']);
     Route::put('boards/{id}', [BoardController::class, 'updateBoard']);
     Route::delete('boards/{id}', [BoardController::class, 'deleteBoard']);
 
