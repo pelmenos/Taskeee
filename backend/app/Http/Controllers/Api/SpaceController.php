@@ -108,7 +108,7 @@ class SpaceController extends Controller
         return response()->json(['message' => 'Приглашение успешно отправлено']);
     }
 
-    public function acceptInviteSpace(AcceptInviteSpaceRequest $request) // Тут также проверка на то, что юзера нету в таблице юзеров спейса из 1.4
+    public function acceptInviteSpace(AcceptInviteSpaceRequest $request)
     {
         $token = InviteToken::where('token', $request->token)->first();
 

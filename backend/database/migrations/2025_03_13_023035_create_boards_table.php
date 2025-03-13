@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('boards', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 100);
             $table->string('description', 500)->nullable();
-            $table->uuid('space_id');
-            $table->json('boards');
+            $table->uuid('project_id');
             $table->timestamps();
 
-            $table->foreign('space_id', 'fk-project-space_id')
-                ->on('spaces')->references('id');
+            $table->foreign('project_id', 'fk-board-project_id')
+                ->on('projects')->references('id')->onDelete('cascade');
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('boards');
     }
 };

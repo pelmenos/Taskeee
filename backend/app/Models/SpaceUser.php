@@ -22,7 +22,8 @@ class SpaceUser extends Model
 
     public function projects()
     {
-        return Project::where('space_id', $this->space_id);
+        return $this->belongsToMany(Project::class, 'project_space_users',
+             'space_user_id', 'project_id');
     }
 
     public function users()

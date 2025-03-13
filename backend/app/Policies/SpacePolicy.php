@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\SpaceRole;
 use App\Models\SpaceUser;
 use Illuminate\Auth\Access\Response;
 use App\Models\Space;
@@ -21,5 +22,18 @@ class SpacePolicy
         }
 
         return SpaceUser::where('space_id', $space->id)->where('email', $user->email)->exists();
+    }
+
+    public function memberSpaceWithProjectsAccess(User $user, Space $space){
+
+        $spaceUser = SpaceUser::where('space_id', $space->id)->where('email', $user->email)->first();
+
+        if(!$spaceUser){
+            return false;
+        }
+
+        $spaceRole = SpaceRole::find($spaceUser->role_id);
+
+        return $spaceRole->permissions['projects_access'] === true;
     }
 }
