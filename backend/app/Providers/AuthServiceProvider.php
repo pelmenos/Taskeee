@@ -3,9 +3,17 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Condition;
+use App\Models\FinanceProject;
+use App\Models\Payment;
 use App\Models\Space;
+use App\Models\Subject;
+use App\Policies\ConditionPolicy;
+use App\Policies\FinanceProjectPolicy;
+use App\Policies\PaymentPolicy;
 use App\Policies\AdminOrMemberSpacePolicy;
 use App\Policies\SpacePolicy;
+use App\Policies\SubjectPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -18,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
         Space::class => SpacePolicy::class,
+        FinanceProject::class => FinanceProjectPolicy::class,
+        Subject::class => SubjectPolicy::class,
+        Condition::class => ConditionPolicy::class,
+        Payment::class => PaymentPolicy::class
     ];
 
     /**

@@ -19,4 +19,15 @@ class SpaceUser extends Model
         'email',
         'role_id'
     ];
+
+    public function projects()
+    {
+        return Project::where('space_id', $this->space_id);
+    }
+
+    public function users()
+    {
+        $emails = SpaceUser::where('space_id', $this->space_id)->pluck('email')->toArray();
+        return User::whereIn('email', $emails);
+    }
 }
