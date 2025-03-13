@@ -23,7 +23,7 @@ class SpaceUserController extends Controller
 
         $request->merge(['space_id' => $request->id]);
 
-        SpaceUser::create($request->all());
+        SpaceUser::create($request->validated());
 
         return response()->json(['message' => 'Пользователь приглашен успешно']);
     }

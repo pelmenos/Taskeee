@@ -25,7 +25,7 @@ class SpaceRoleController extends Controller
 
         $request->merge(['space_id' => $request->id]);
 
-        $spaceRole = SpaceRole::create($request->all());
+        $spaceRole = SpaceRole::create($request->validated());
 
         return response()->json(new SpaceRoleResource($spaceRole, true));
     }
@@ -43,7 +43,7 @@ class SpaceRoleController extends Controller
 
         $spaceRole = SpaceRole::find($request->role_id);
 
-        $spaceRole->update($request->all());
+        $spaceRole->update($request->validated());
 
         return response()->json(['message' => 'Роль успешно обновлена']);
     }

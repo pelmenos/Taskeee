@@ -27,7 +27,7 @@ class SpaceController extends Controller
             return response()->json(['message' => 'Пользователь уже имеет данное пространство'], 422);
         }
 
-        $space = Space::create($request->all());
+        $space = Space::create($request->validated());
 
         return response()->json($space);
     }
@@ -68,7 +68,7 @@ class SpaceController extends Controller
             return response()->json(['message' => 'Пользователь уже имеет данное пространство'], 422);
         }
 
-        $space->update($request->all());
+        $space->update($request->validated());
 
         return response()->json($space);
     }
