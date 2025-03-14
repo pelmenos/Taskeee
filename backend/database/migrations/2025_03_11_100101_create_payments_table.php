@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->decimal('sum', 14, 2);
-            $table->integer('status_id');
-            $table->integer('finance_project_id');
+            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('finance_project_id');
             $table->integer('subject_id');
             $table->string('type', 50);
             $table->uuid('director_id');
             $table->uuid('recipient_id');
-            $table->integer('condition_id');
+            $table->unsignedBigInteger('condition_id');
             $table->uuid('space_id');
             $table->string('method', 50);
             $table->string('comment', 2500)->nullable();

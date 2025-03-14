@@ -8,9 +8,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class BoardResource extends JsonResource
 {
 
-    public function __construct($resource)
+    private $withTasks;
+
+    public function __construct($resource, $withTasks = false)
     {
         parent::__construct($resource);
+        $this->withTasks = $withTasks;
+    }
+
+    public static function collectionWithTasks($collection, $withTasks = false)
+    {
+        return $collection->map(function ($resource) use ($withTasks) {
+            return new self($resource, $withTasks);
+        });
     }
 
     /**
@@ -29,7 +39,7 @@ class BoardResource extends JsonResource
         $data['created_at'] = $this->resource->created_at;
         $data['updated_at'] = $this->resource->updated_at;
 
-        if ($this->resource->relationLoaded('tasks')) {
+        if ($this->withTasks) {
             $data['tasks'] = $this->resource->tasks;
         }
 
