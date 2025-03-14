@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->decimal('price', 14, 2);
             $table->string('comment', 2500)->nullable();
-            $table->integer('status_id');
+            $table->unsignedBigInteger('status_id');
             $table->uuid('project_id');
             $table->uuid('coordinator_id');
             $table->uuid('lead_id');

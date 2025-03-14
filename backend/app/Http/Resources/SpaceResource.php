@@ -33,6 +33,13 @@ class SpaceResource extends JsonResource
     {
         $data = [];
 
+        $data['id'] = $this->resource->id;
+        $data['name'] = $this->resource->name;
+        $data['description'] = $this->resource->description;
+        $data['avatar'] = $this->resource->avatar;
+        $data['admin_id'] = $this->resource->admin_id;
+        $data['tariff'] = $this->resource->tariff;
+
         if ($this->withCreatedAt) {
             $data['created_at'] = $this->resource->created_at;
         }
@@ -40,13 +47,6 @@ class SpaceResource extends JsonResource
         if ($this->withUpdatedAt) {
             $data['updated_at'] = $this->resource->updated_at;
         }
-
-        $data['id'] = $this->resource->id;
-        $data['name'] = $this->resource->name;
-        $data['description'] = $this->resource->description;
-        $data['avatar'] = $this->resource->avatar;
-        $data['admin_id'] = $this->resource->admin_id;
-        $data['tariff'] = $this->resource->tariff;
 
         return $data;
     }

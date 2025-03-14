@@ -17,19 +17,17 @@ class Project extends Model
     protected $fillable = [
         'name',
         'description',
-        'space_id',
-        'boards'
-    ];
-
-    protected $hidden = ['spaceUsers'];
-
-    protected $casts = [
-        'boards' => 'array'
+        'space_id'
     ];
 
     public function space()
     {
         return $this->belongsTo(Space::class, 'space_id', 'id');
+    }
+
+    public function boards()
+    {
+        return $this->hasMany(Board::class, 'project_id', 'id');
     }
 
     public function spaceUsers()

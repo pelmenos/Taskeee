@@ -17,7 +17,7 @@ class CreateSpaceUserRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'space_id' => $this->route('id'),
         ]);
     }
 
@@ -29,7 +29,7 @@ class CreateSpaceUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
+            'space_id' => 'uuid|exists:spaces,id',
             'email' => 'required|email|exists:users,email',
             'role_id' => 'required|uuid|exists:space_roles,id'
         ];

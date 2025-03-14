@@ -13,15 +13,13 @@ class SpaceUserController extends Controller
 {
     public function createSpaceUser(CreateSpaceUserRequest $request)
     {
-        $space = Space::find($request->id);
+        $space = Space::find($request->space_id);
 
         $this->authorize('spaceAdmin', $space);
 
-        if(SpaceUser::where([['space_id', '=', $request->id], ['email', '=', $request->email]])->exists()){
+        if(SpaceUser::where([['space_id', '=', $request->space_id], ['email', '=', $request->email]])->exists()){
             return response()->json(['message' => 'Пользователь уже находится в пространстве'], 422);
         }
-
-        $request->merge(['space_id' => $request->id]);
 
         SpaceUser::create($request->validated());
 

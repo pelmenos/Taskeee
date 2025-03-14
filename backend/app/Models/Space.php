@@ -36,4 +36,9 @@ class Space extends Model
     {
         return $this->hasMany(Condition::class);
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'space_id', 'id');
+    }
 }

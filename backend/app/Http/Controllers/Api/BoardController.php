@@ -17,7 +17,7 @@ class BoardController extends Controller
     {
         $project = Project::find($request->project_id);
 
-        $this->authorize('spaceAdmin', $project->space);
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $project);
 
         $board = Board::create($request->validated());
 
@@ -26,18 +26,18 @@ class BoardController extends Controller
 
     public function getBoard(GetBoardRequest $request)
     {
-        $board = Board::with('tasks')->find($request->id);
+        $board = Board::find($request->id);
 
         $this->authorize('adminOrMemberSpaceWithProjectsAccess', $board->project);
 
-        return response()->json(new BoardResource($board));
+        return response()->json(new BoardResource($board, true));
     }
 
     public function updateBoard(UpdateBoardRequest $request)
     {
         $board = Board::find($request->id);
 
-        $this->authorize('spaceAdmin', $board->project->space);
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $board->project);
 
         $board->update($request->validated());
 
@@ -48,7 +48,7 @@ class BoardController extends Controller
     {
         $board = Board::find($request->id);
 
-        $this->authorize('spaceAdmin', $board->project->space);
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $board->project);
 
         $board->delete();
 

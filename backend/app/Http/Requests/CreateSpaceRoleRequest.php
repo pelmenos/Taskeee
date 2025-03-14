@@ -17,7 +17,7 @@ class CreateSpaceRoleRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'space_id' => $this->route('id'),
         ]);
     }
 
@@ -29,7 +29,7 @@ class CreateSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
+            'space_id' => 'uuid|exists:spaces,id',
             'name' => 'required|string|max:100',
             'description' => 'string|max:500',
             'permissions' => 'required|array',

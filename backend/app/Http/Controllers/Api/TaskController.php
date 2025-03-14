@@ -17,7 +17,7 @@ class TaskController extends Controller
     {
         $board = Board::find($request->board_id);
 
-        $this->authorize('spaceAdmin', $board->project->space);
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $board->project);
 
         $task = Task::create($request->validated());
 
@@ -28,7 +28,7 @@ class TaskController extends Controller
     {
         $task = Task::find($request->id);
 
-        $this->authorize('spaceAdmin', $task->board->project->space);
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $task->board->project);
 
         $task->update($request->validated());
 
@@ -39,7 +39,7 @@ class TaskController extends Controller
     {
         $task = Task::find($request->id);
 
-        $this->authorize('spaceAdmin', $task->board->project->space);
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $task->board->project);
 
         $task->delete();
 
