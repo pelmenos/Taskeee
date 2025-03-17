@@ -30,7 +30,7 @@ class UpdateSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
+            'id' => 'uuid|exists:spaces,id',
             'role_id' => 'uuid|exists:space_roles,id',
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500',
