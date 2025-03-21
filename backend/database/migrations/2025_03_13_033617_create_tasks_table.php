@@ -20,7 +20,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('board_id', 'fk-task-board_id')
-                ->on('boards')->references('id')->onDelete('cascade');
+                ->on('boards')->references('id');
+
+            $table->softDeletes();
         });
     }
 

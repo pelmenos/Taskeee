@@ -18,7 +18,7 @@ class SendInviteSpaceRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'id' => $this->route('id')
         ]);
     }
 
@@ -30,9 +30,9 @@ class SendInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
-            'email' => ['required', 'email','exists:users,email', new InviteEmailRule()], // тут также дописать проверку что юзер есть в табличке из 1.4, либо же в контроллере это чекать
-            'role' => 'required|string|exists:space_roles,name', // Как будет табличка из 1.4 то проверять нужно что роль существует(скорее всего именно как в спейсе)
+            'id' => 'uuid|exists:spaces,id',
+            'email' => ['required', 'email','exists:users,email', new InviteEmailRule()],
+            'role' => 'required|string|exists:space_roles,name'
         ];
     }
 

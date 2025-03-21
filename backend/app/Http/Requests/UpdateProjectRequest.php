@@ -17,7 +17,7 @@ class UpdateProjectRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'id' => $this->route('id')
         ]);
     }
 
@@ -61,7 +61,7 @@ class UpdateProjectRequest extends FormRequest
             'boards.array' => 'Поле Доски должно быть массивом',
             'boards.min' => 'Поле Доски должно содержать хотя бы одну доску',
             'boards.max' => 'Поле Доски должно содержать максимум 20 досок',
-            'boards.*.array' => 'Все доски должны быть массивами',
+            'boards.*.array' => 'Все доски должны быть JSON-объектами',
             'boards.*.name.required' => 'Все доски должны иметь название',
             'boards.*.name.string' => 'Все доски должны иметь название строкового типа данных',
             'boards.*.name.max' => 'Все доски должны иметь название не более 100 символов',

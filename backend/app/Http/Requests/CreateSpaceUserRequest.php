@@ -17,7 +17,7 @@ class CreateSpaceUserRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'space_id' => $this->route('id'),
+            'space_id' => $this->route('id')
         ]);
     }
 
@@ -38,8 +38,8 @@ class CreateSpaceUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
+            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'space_id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
             'email.exists' => 'Поле Электронная почта должна принадлежать существующему аккаунту',

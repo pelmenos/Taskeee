@@ -29,7 +29,7 @@ class SpaceController extends Controller
 
         $space = Space::create($request->validated());
 
-        return response()->json($space);
+        return response()->json(new SpaceResource($space, true, true));
     }
 
     public function getSpaces()
@@ -54,7 +54,7 @@ class SpaceController extends Controller
 
         $this->authorize('adminOrMemberSpace', $space);
 
-        return response()->json($space);
+        return response()->json(new SpaceResource($space, true, true));
     }
 
     public function updateSpace(UpdateSpaceRequest $request)
@@ -70,7 +70,7 @@ class SpaceController extends Controller
 
         $space->update($request->validated());
 
-        return response()->json($space);
+        return response()->json(new SpaceResource($space, true, true));
     }
 
     public function deleteSpace(GetSpaceRequest $request)
@@ -78,6 +78,8 @@ class SpaceController extends Controller
         $space = Space::find($request->id);
 
         $this->authorize('spaceAdmin', $space);
+
+        $space->inviteTokens()->delete();
 
         $space->delete();
 
@@ -123,7 +125,7 @@ class SpaceController extends Controller
         if($token->expires_at <= now()->format('Y-m-d H:i:s')){
             $token->delete();
 
-            return response()->json(['message' => 'Срок действия ссылки на приглашение истек'], 422);
+            return response()->json(['message' => 'Срок действия токена приглашения истек'], 422);
         }
 
         SpaceUser::create([
@@ -146,7 +148,7 @@ class SpaceController extends Controller
         $spaceUser = SpaceUser::find($request->user_id);
 
         if($spaceUser->space_id !== $request->id){
-            return response()->json(['message' => 'Идентификатор пользователя не относится к указанному пространству'], 422);
+            return response()->json(['message' => 'Пользователь не относится к указанному пространству'], 422);
         }
 
         $spaceRole = SpaceRole::where([['space_id', '=', $request->id],
@@ -162,5 +164,4 @@ class SpaceController extends Controller
 
         return response()->json(['message' => 'Роль пользователя успешно обновлена']);
     }
-
 }

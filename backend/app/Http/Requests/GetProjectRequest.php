@@ -17,7 +17,7 @@ class GetProjectRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'id' => $this->route('id')
         ]);
     }
 
@@ -29,7 +29,7 @@ class GetProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:projects,id',
+            'id' => 'uuid|exists:projects,id'
         ];
     }
 
@@ -37,7 +37,7 @@ class GetProjectRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор проекта не относится ни к одному проекту',
+            'id.exists' => 'Идентификатор проекта не относится ни к одному проекту'
         ];
     }
 }

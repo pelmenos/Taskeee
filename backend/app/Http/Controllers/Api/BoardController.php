@@ -21,7 +21,7 @@ class BoardController extends Controller
 
         $board = Board::create($request->validated());
 
-        return response()->json($board);
+        return response()->json(new BoardResource($board));
     }
 
     public function getBoard(GetBoardRequest $request)
