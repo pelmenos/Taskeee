@@ -69,7 +69,7 @@ class ProjectController extends Controller
             return response()->json(ProjectResource::collectionWithFlags($projects, true));
         }
 
-        $spaceMember = Space::where('id', $request->space_id)->first();
+        $spaceMember = Space::find($request->space_id);
 
         $this->authorize('memberSpaceWithProjectsAccess', $spaceMember);
 
@@ -119,7 +119,7 @@ class ProjectController extends Controller
 
         $project->update([
             'name' => $request->name,
-            'description' => $request->description,
+            'description' => $request->description
         ]);
 
         $project->spaceUsers()->attach($request->input('members'));

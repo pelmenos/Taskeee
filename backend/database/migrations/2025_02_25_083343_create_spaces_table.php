@@ -22,6 +22,8 @@ return new class extends Migration
 
             $table->foreign('admin_id', 'fk-space-admin_id')
                 ->on('users')->references('id');
+
+            $table->softDeletes();
         });
     }
 

@@ -18,7 +18,7 @@ class DeleteSpaceUserRequest extends FormRequest
     {
         $this->merge([
             'id' => $this->route('id'),
-            'email' => $this->route('email'),
+            'email' => $this->route('email')
         ]);
     }
 
@@ -30,16 +30,16 @@ class DeleteSpaceUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
-            'email' => 'email|exists:space_users,email',
+            'id' => 'uuid|exists:spaces,id',
+            'email' => 'email|exists:space_users,email'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор роли пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор роли пространства должен относится к существующей роли пространства',
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'email.email' => 'Электронная почта должна содержать валидный адрес эл. почты',
             'email.exists' => 'Электронная почта должна относится к существующему пользователю пространства'
         ];

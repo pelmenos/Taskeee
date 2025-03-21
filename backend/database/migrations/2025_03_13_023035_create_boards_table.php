@@ -19,7 +19,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('project_id', 'fk-board-project_id')
-                ->on('projects')->references('id')->onDelete('cascade');
+                ->on('projects')->references('id');
+
+            $table->softDeletes();
         });
     }
 

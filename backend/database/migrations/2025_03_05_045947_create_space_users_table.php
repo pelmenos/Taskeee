@@ -23,6 +23,8 @@ return new class extends Migration
 
             $table->foreign('role_id', 'fk-space_users-role_id')
                 ->on('space_roles')->references('id');
+
+            $table->softDeletes();
         });
     }
 

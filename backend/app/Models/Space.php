@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use Askedio\SoftCascade\Traits\SoftCascadeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Space extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, SoftDeletes, SoftCascadeTrait;
 
     public $incrementing = false;
 
     public $keyType = 'string';
+
+    protected $softCascade = ['spaceUsers', 'spaceRoles', 'projects'];
 
     protected $fillable = [
         'name',
@@ -40,5 +44,20 @@ class Space extends Model
     public function projects()
     {
         return $this->hasMany(Project::class, 'space_id', 'id');
+    }
+
+    public function spaceRoles()
+    {
+        return $this->hasMany(SpaceRole::class, 'space_id', 'id');
+    }
+
+    public function spaceUsers()
+    {
+        return $this->hasMany(SpaceUser::class, 'space_id', 'id');
+    }
+
+    public function inviteTokens()
+    {
+        return $this->hasMany(InviteToken::class, 'space_id', 'id');
     }
 }

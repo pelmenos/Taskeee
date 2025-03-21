@@ -7,9 +7,9 @@ use App\Http\Requests\CreateSpaceRoleRequest;
 use App\Http\Requests\DeleteSpaceRoleRequest;
 use App\Http\Requests\UpdateSpaceRoleRequest;
 use App\Http\Resources\SpaceRoleResource;
-use App\Models\SpaceRole;
 
 use App\Models\Space;
+use App\Models\SpaceRole;
 
 class SpaceRoleController extends Controller
 {
@@ -56,8 +56,10 @@ class SpaceRoleController extends Controller
             ['id', '=', $request->role_id]])->first();
 
         if(!$spaceRole){
-            return response()->json(['message' => 'Роль не относится к этому пространству'], 403);
+            return response()->json(['message' => 'Роль не найдена в этом пространстве'], 404);
         }
+
+        $spaceRole->inviteTokens()->delete();
 
         $spaceRole->delete();
 

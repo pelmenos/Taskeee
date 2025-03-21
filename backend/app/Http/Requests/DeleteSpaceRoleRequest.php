@@ -18,7 +18,7 @@ class DeleteSpaceRoleRequest extends FormRequest
     {
         $this->merge([
             'id' => $this->route('id'),
-            'role_id' => $this->route('role_id'),
+            'role_id' => $this->route('role_id')
         ]);
     }
 
@@ -30,16 +30,16 @@ class DeleteSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
-            'role_id' => 'uuid|exists:space_roles,id',
+            'id' => 'uuid|exists:spaces,id',
+            'role_id' => 'uuid|exists:space_roles,id'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор роли пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор роли пространства должен относится к существующей роли пространства',
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'role_id.uuid' => 'Идентификатор роли пространства должен иметь тип данных UUID',
             'role_id.exists' => 'Идентификатор роли пространства должен быть относится к существующей роли пространства'
         ];

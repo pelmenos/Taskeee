@@ -21,7 +21,7 @@ class TaskController extends Controller
 
         $task = Task::create($request->validated());
 
-        return response()->json($task);
+        return response()->json(new TaskResource($task));
     }
 
     public function updateTask(UpdateTaskRequest $request)

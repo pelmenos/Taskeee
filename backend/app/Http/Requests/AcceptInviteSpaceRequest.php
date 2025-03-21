@@ -18,7 +18,7 @@ class AcceptInviteSpaceRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'token' => $this->route('token'),
+            'token' => $this->route('token')
         ]);
     }
 
@@ -30,14 +30,14 @@ class AcceptInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'exists:invite_tokens,token',
+            'token' => 'exists:invite_tokens,token'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'token.exists' => 'Токен приглашения должен существовать',
+            'token.exists' => 'Токен приглашения должен существовать'
         ];
     }
 }

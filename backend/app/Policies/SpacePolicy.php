@@ -32,8 +32,6 @@ class SpacePolicy
             return false;
         }
 
-        $spaceRole = SpaceRole::find($spaceUser->role_id);
-
-        return $spaceRole->permissions['projects_access'] === true;
+        return $spaceUser->role->permissions['projects_access'] === true;
     }
 }

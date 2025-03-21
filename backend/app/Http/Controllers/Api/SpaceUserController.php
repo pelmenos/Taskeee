@@ -23,7 +23,7 @@ class SpaceUserController extends Controller
 
         SpaceUser::create($request->validated());
 
-        return response()->json(['message' => 'Пользователь приглашен успешно']);
+        return response()->json(['message' => 'Пользователь добавлен в пространство']);
     }
 
     public function deleteSpaceUser(DeleteSpaceUserRequest $request)
@@ -36,12 +36,11 @@ class SpaceUserController extends Controller
             ->where('email', $request->email)->first();
 
         if(!$spaceUser){
-            return response()->json(['message' => 'Пользователь не найден'], 404);
+            return response()->json(['message' => 'Пользователь не найден в этом пространстве'], 404);
         }
 
         $spaceUser->delete();
 
         return response()->json(['message' => 'Пользователь успешно удален']);
     }
-
 }

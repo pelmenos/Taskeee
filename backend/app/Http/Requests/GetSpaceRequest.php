@@ -17,7 +17,7 @@ class getSpaceRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'id' => $this->route('id')
         ]);
     }
 
@@ -29,7 +29,7 @@ class getSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
+            'id' => 'uuid|exists:spaces,id'
         ];
     }
 
@@ -37,7 +37,7 @@ class getSpaceRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
+            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству'
         ];
     }
 }
