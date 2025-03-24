@@ -1,18 +1,14 @@
 import { clsx } from "clsx"
+import { ComponentProps } from "react"
 
-interface Props {
-	className?: string
-	children?: React.ReactNode
-	onClick?: () => void
-	disabled?: boolean
+interface Props extends ComponentProps<"button"> {
 }
 
-export const FormFallbackButton = ({ className, children, onClick, disabled }: Props) => {
+export const FormFallbackButton = ({ className, children, ...props }: Props) => {
 	return (
 		<button
 			className={clsx("form__fallback-container__button", className)}
-			onClick={onClick}
-			disabled={disabled}
+      {...props}
 		>
 			{children}
 		</button>

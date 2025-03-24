@@ -9,8 +9,7 @@ import { PinInput } from "shared/ui/PinInput"
 import { FormFooterContainer } from "shared/ui/Form/FormFooterContainer"
 import { Button } from "shared/ui/Button"
 import React from "react"
-import { authRegisterStageConfirmModel } from "../model"
-
+import { confirmModel } from "features/register-flow"
 
 export const StageConfirm = () => {
   const {
@@ -21,15 +20,15 @@ export const StageConfirm = () => {
     buttonResentIsDisabled,
     formErrors,
   } = useUnit({
-    submitted: authRegisterStageConfirmModel.submitted,
-    codeChanged: authRegisterStageConfirmModel.codeChanged,
-    codeResent: authRegisterStageConfirmModel.codeResent,
-    buttonUnlockedAfterTime: authRegisterStageConfirmModel.$buttonUnlockedAfterTime,
-    buttonResentIsDisabled: authRegisterStageConfirmModel.$buttonResentIsDisabled,
-    formErrors: authRegisterStageConfirmModel.$formErrors,
+    submitted: confirmModel.submitted,
+    codeChanged: confirmModel.codeChanged,
+    codeResent: confirmModel.codeResent,
+    buttonUnlockedAfterTime: confirmModel.$buttonUnlockedAfterTime,
+    buttonResentIsDisabled: confirmModel.$buttonResentIsDisabled,
+    formErrors: confirmModel.$formErrors,
   })
 
-  useGate(authRegisterStageConfirmModel.Gate)
+  useGate(confirmModel.Gate)
 
   return (
     <Form

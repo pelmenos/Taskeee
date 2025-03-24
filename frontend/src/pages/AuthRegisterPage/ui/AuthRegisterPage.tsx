@@ -1,22 +1,18 @@
 import React from "react"
 import { FormLayout } from "widgets/layouts/form-layout"
-import { authRegisterModel } from "../model"
 import { useUnit } from "effector-react"
 import { StageRegister } from "./StageRegister"
 import { StageConfirm } from "./StageConfirm"
+import { RegisterFlowStages, stagesModel } from "features/register-flow/model/stages"
 
 
 export const AuthRegisterPage = () => {
-  const {
-    stage,
-  } = useUnit({
-    stage: authRegisterModel.$stage,
-  })
+  const stage = useUnit(stagesModel.$currentStage)
 
   return (
     <FormLayout>
-      {stage === "register" && <StageRegister />}
-      {stage === "confirm" && <StageConfirm />}
+      {stage === RegisterFlowStages.Register && <StageRegister />}
+      {stage === RegisterFlowStages.Confirm && <StageConfirm />}
     </FormLayout>
   )
 }

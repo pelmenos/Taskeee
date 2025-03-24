@@ -3,6 +3,7 @@ import { AuthLoginRouteView } from "./AuthLoginPage"
 import { HomeRouteView } from "./HomePage"
 import { AuthPasswordRecoveryRouteView } from "./AuthPasswordRecoveryPage"
 import { AuthRegisterRouteView } from "./AuthRegisterPage"
+import { AuthRequiredRouteView } from "./AuthRequired"
 
 
 export const Pages = createRoutesView({
@@ -10,6 +11,8 @@ export const Pages = createRoutesView({
     AuthLoginRouteView,
     AuthPasswordRecoveryRouteView,
     AuthRegisterRouteView,
+
+    AuthRequiredRouteView,
 
     HomeRouteView,
   ],

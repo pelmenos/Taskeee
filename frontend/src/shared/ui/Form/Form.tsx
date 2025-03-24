@@ -1,17 +1,17 @@
-import React from "react"
+import React, { ComponentProps } from "react"
 import "./Form.css"
 import { clsx } from "clsx"
 
-interface Props {
-	className?: string
-	children?: React.ReactNode
-	onSubmit?: React.FormEventHandler<HTMLFormElement>
+interface Props extends ComponentProps<"form"> {
 }
 
-export const Form = ({ className, children, onSubmit }: Props) => {
-	return (
-		<form action="#" className={clsx("form", className)} onSubmit={onSubmit}>
-			{children}
-		</form>
-	)
+export const Form = ({ className, children, ...props }: Props) => {
+  return (
+    <form
+      className={clsx("form", className)}
+      {...props}
+    >
+      {children}
+    </form>
+  )
 }

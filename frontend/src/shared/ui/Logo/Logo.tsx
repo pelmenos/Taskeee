@@ -1,15 +1,24 @@
-import React from "react"
-import { HPACE } from "../Icons/HPACE"
+import React, { ComponentProps } from "react"
+import { HPACE } from "../assets/icons/HPACE"
 import "./Logo.css"
 import { routes } from "../../routing"
 import { Link } from "atomic-router-react"
+import { clsx } from "clsx"
 
-export const Logo = () => {
-	return (
-		<Link className="logo" to={routes.home}>
-			<HPACE className="logo__icon" />
+interface Props extends Omit<ComponentProps<typeof Link>, "to" | "params"> {
 
-			<span className="logo__title">hpace crm</span>
-		</Link>
-	)
+}
+
+export const Logo = ({ className, ...props }: Props) => {
+  return (
+    <Link
+      className={clsx("logo", className)}
+      to={routes.home}
+      {...props}
+    >
+      <HPACE className="logo__icon" />
+
+      <span className="logo__title">hpace crm</span>
+    </Link>
+  )
 }

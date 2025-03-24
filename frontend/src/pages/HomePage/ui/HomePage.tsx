@@ -1,9 +1,10 @@
 import { Button } from "shared/ui/Button"
 import { useTheme } from "shared/ui/ThemeProvider"
 import { useUnit } from "effector-react"
-import { $token, $user, logouted } from "shared/session"
 import { router } from "shared/routing"
 import { Link } from "atomic-router-react"
+import { $session, $user } from "shared/api"
+import { logouted } from "shared/session/logouted"
 
 export const HomePage = () => {
   const { theme, setTheme } = useTheme()
@@ -11,11 +12,11 @@ export const HomePage = () => {
   const {
     logout,
     user,
-    token,
+    session,
   } = useUnit({
     logout: logouted,
     user: $user,
-    token: $token,
+    session: $session,
   })
 
   return (
@@ -40,9 +41,9 @@ export const HomePage = () => {
           {JSON.stringify(user, null, 2)}
         </pre>
 
-        <h1>token:</h1>
+        <h1>session:</h1>
         <pre>
-          {JSON.stringify(token, null, 2)}
+          {JSON.stringify(session, null, 2)}
         </pre>
       </div>
     </div>

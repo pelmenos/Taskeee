@@ -2,12 +2,22 @@ import { atom } from "shared/lib/factory"
 import { combine, createEvent, createStore, sample } from "effector"
 import { not, reset, spread } from "patronum"
 import { LoginFormSchema } from "entities/auth/model"
-import { loginMutation } from "../api"
 import { routes } from "shared/routing"
-import { $token, $user } from "shared/session"
+import { $session, $user } from "shared/api"
+import { chainAnonymous } from "shared/session"
+import { createLoginMutation } from "entities/auth/api"
 
 
 export const authLoginModel = atom(() => {
+  const currentRoute = routes.auth.login
+
+  const loginMutation = createLoginMutation()
+
+  const anonymousRoute = chainAnonymous({
+    route: currentRoute,
+    otherwise: routes.home.open,
+  })
+
   const submitted = createEvent<LoginFormSchema>()
 
   const $errorRoot = createStore<string | null>(null)
@@ -36,7 +46,7 @@ export const authLoginModel = atom(() => {
     fn: (source) => source.result,
     target: spread({
       user: $user,
-      token: $token,
+      token: $session,
     }),
   })
 
@@ -77,6 +87,10 @@ export const authLoginModel = atom(() => {
   })
 
   return {
+    anonymousRoute,
+
+    loginMutation,
+
     submitted,
 
     $formErrors,

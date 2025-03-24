@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { ComponentProps, useCallback, useEffect, useRef, useState } from "react"
 import { clsx } from "clsx"
 import { PinItem } from "./PinItem"
 import "./PinInput.css"
 
-interface Props {
-	className?: string
+interface Props extends Omit<ComponentProps<"div">, "onChange"> {
 	length: number
 	onChange: (val: number) => void
 }
 
-export const PinInput = ({ className, length, onChange }: Props) => {
+export const PinInput = ({ className, length, onChange, ...props }: Props) => {
 	const [values, setValues] = useState<string[]>(Array(length).fill(""))
 
 	useEffect(() => {
@@ -50,7 +49,10 @@ export const PinInput = ({ className, length, onChange }: Props) => {
 	)
 
 	return (
-		<div className={clsx("pin-input", className)}>
+		<div
+      className={clsx("pin-input", className)}
+      {...props}
+    >
 			{values.map((val, i) => (
 				<PinItem
 					ref={(el) => {

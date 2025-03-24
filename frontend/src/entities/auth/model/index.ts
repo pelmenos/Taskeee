@@ -1,5 +1,4 @@
-import { ErrorResponse, ResponseWithMessage } from "shared/api"
-import { User } from "../../user/model"
+import { ErrorResponse, ResponseWithMessage, User } from "shared/api"
 
 export type LoginFormSchema = {
   email: string,
@@ -19,6 +18,10 @@ export type RegisterFormSchema = {
   email: string
   password: string
 }
+
+export type RegisterFormSuccess = ResponseWithMessage<{
+  email: string,
+}>
 
 export type RegisterFormError = ErrorResponse<RegisterFormSchema>
 
@@ -43,7 +46,9 @@ export type ConfirmCodeResendSuccess = ResponseWithMessage
 
 export type ConfirmCodeResendError = ErrorResponse<PasswordRecoveryEmailFormSchema>
 
-export type PasswordRecoveryEmailFormSuccess = ResponseWithMessage
+export type PasswordRecoveryEmailFormSuccess = ResponseWithMessage<{
+  email: string
+}>
 
 export type PasswordRecoveryEmailFormError = ErrorResponse<PasswordRecoveryEmailFormSchema>
 
@@ -52,7 +57,10 @@ export type PasswordRecoveryConfirmFormSchema = {
   verify_code: number,
 }
 
-export type PasswordRecoveryConfirmFormSuccess = ResponseWithMessage
+export type PasswordRecoveryConfirmFormSuccess = ResponseWithMessage<{
+  verify_code: number,
+  email: string,
+}>
 
 export type PasswordRecoveryConfirmFormError = ErrorResponse<PasswordRecoveryConfirmFormSchema>
 

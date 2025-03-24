@@ -1,22 +1,18 @@
 import { FormLayout } from "widgets/layouts/form-layout"
-import { StepOne } from "./StepOne"
+import { StageEmail } from "./StageEmail"
+import { StageEmailConfirm } from "./StageEmailConfirm"
+import { StagePasswordRecovery } from "./StagePasswordRecovery"
+import { PasswordRecoveryFlowStages, stagesModel } from "features/password-recovery-flow"
 import { useUnit } from "effector-react"
-import { authPasswordRecoveryModel } from "../model"
-import { StepTwo } from "./StepTwo"
-import { StepThree } from "./StepThree"
 
 export const AuthPasswordRecoveryPage = () => {
-  const {
-    stage,
-  } = useUnit({
-    stage: authPasswordRecoveryModel.$stage,
-  })
+  const stage = useUnit(stagesModel.$stage)
 
   return (
     <FormLayout>
-      {stage === "one" && <StepOne />}
-      {stage === "two" && <StepTwo />}
-      {stage === "three" && <StepThree />}
+      {stage === PasswordRecoveryFlowStages.EmailStage && <StageEmail />}
+      {stage === PasswordRecoveryFlowStages.EmailConfirmStage && <StageEmailConfirm />}
+      {stage === PasswordRecoveryFlowStages.PasswordRecoveryStage && <StagePasswordRecovery />}
     </FormLayout>
   )
 }

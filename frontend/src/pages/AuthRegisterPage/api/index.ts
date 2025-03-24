@@ -1,15 +1,6 @@
-import { createMutation } from "@farfetched/core"
-import { confirmCodeResendFx, confirmEmailFx, registerFx } from "entities/auth/api"
+import { createConfirmCodeResendMutation, createConfirmEmailMutation, createRegisterMutation } from "entities/auth/api"
 
 
-export const registerMutation = createMutation({
-  effect: registerFx(),
-})
-
-export const confirmCodeResendMutation = createMutation({
-  effect: confirmCodeResendFx(),
-})
-
-export const confirmEmailMutation = createMutation({
-  effect: confirmEmailFx(),
-})
+export const registerMutation = createRegisterMutation()
+export const confirmCodeResendMutation = createConfirmCodeResendMutation()
+export const confirmEmailMutation = createConfirmEmailMutation()

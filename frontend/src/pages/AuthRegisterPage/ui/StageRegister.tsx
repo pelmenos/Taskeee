@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form"
 import { RegisterFormSchema } from "entities/auth/model"
 import { useUnit } from "effector-react"
-import { authRegisterStageRegisterModel } from "../model"
 import React, { useEffect } from "react"
 import { Form } from "shared/ui/Form"
 import { FormTitle } from "shared/ui/Form/FormTitle"
@@ -11,12 +10,13 @@ import { FormFallbackLink } from "shared/ui/Form/FormFallbackLink"
 import { routes } from "shared/routing"
 import { FormFieldContainer } from "shared/ui/Form/FormFieldContainer"
 import { FormField } from "shared/ui/Form/FormField"
-import { Mail } from "shared/ui/Icons/Mail"
-import { Password } from "shared/ui/Icons/Password"
+import { Mail } from "shared/ui/assets/icons/Mail"
+import { Password } from "shared/ui/assets/icons/Password"
 import { FormFooterContainer } from "shared/ui/Form/FormFooterContainer"
 import { Button } from "shared/ui/Button"
 import { FormFooterContainerDivider } from "shared/ui/Form/FormFooterContainerDivider"
 import { FormSocials } from "shared/ui/Form/FormSocials"
+import { registerModel } from "features/register-flow"
 
 export const StageRegister = () => {
   const {
@@ -30,8 +30,8 @@ export const StageRegister = () => {
     submitted,
     formErrors,
   } = useUnit({
-    submitted: authRegisterStageRegisterModel.submitted,
-    formErrors: authRegisterStageRegisterModel.$formErrors,
+    submitted: registerModel.submitted,
+    formErrors: registerModel.$formErrors,
   })
 
   useEffect(() => {
@@ -39,6 +39,7 @@ export const StageRegister = () => {
       error && setError(field as keyof RegisterFormSchema, { message: error }),
     )
   }, [setError, formErrors])
+
   return (
     <Form onSubmit={handleSubmit(submitted)}>
       <FormTitle>Авторизация</FormTitle>

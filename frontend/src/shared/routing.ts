@@ -9,6 +9,8 @@ export const controls = createRouterControls()
 export const routes = {
   home: createRoute(),
 
+  authRequired: createRoute(),
+
   auth: {
     login: createRoute(),
     register: createRoute(),
@@ -22,6 +24,8 @@ export const router = createHistoryRouter({
     { path: "/auth/login", route: routes.auth.login },
     { path: "/auth/register", route: routes.auth.register },
     { path: "/auth/password-recovery", route: routes.auth.passwordRecovery },
+
+    { path: "/auth/required", route: routes.authRequired },
 
     { path: "/", route: routes.home },
   ],

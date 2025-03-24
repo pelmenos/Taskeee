@@ -1,68 +1,91 @@
-import { createInternalRequestFx } from "shared/api"
 import {
-  ConfirmCodeResendError, ConfirmCodeResendSchema,
-  ConfirmCodeResendSuccess, ConfirmEmailError, ConfirmEmailSchema,
+  ConfirmCodeResendError,
+  ConfirmCodeResendSchema, ConfirmCodeResendSuccess, ConfirmEmailError,
+  ConfirmEmailSchema,
   LoginFormError,
   LoginFormSchema,
-  LoginFormSuccess,
-  PasswordRecoveryConfirmFormError,
-  PasswordRecoveryConfirmFormSchema,
-  PasswordRecoveryConfirmFormSuccess,
-  PasswordRecoveryEmailFormError,
-  PasswordRecoveryEmailFormSchema,
-  PasswordRecoveryEmailFormSuccess,
-  PasswordRecoveryFormError,
-  PasswordRecoveryFormSchema,
-  PasswordRecoveryFormSuccess,
+  LoginFormSuccess, PasswordRecoveryConfirmFormError,
+  PasswordRecoveryConfirmFormSchema, PasswordRecoveryConfirmFormSuccess, PasswordRecoveryEmailFormError,
+  PasswordRecoveryEmailFormSchema, PasswordRecoveryEmailFormSuccess, PasswordRecoveryFormError,
+  PasswordRecoveryFormSchema, PasswordRecoveryFormSuccess,
   RegisterFormError,
-  RegisterFormSchema,
+  RegisterFormSchema, RegisterFormSuccess,
 } from "../model"
+import { createApiMutation } from "shared/lib/createApiMutation"
 
 
-export const loginFx = () =>
-  createInternalRequestFx<LoginFormSchema, LoginFormSuccess, LoginFormError>((params) => ({
+export const createLoginMutation = () =>
+  createApiMutation<
+    LoginFormSchema,
+    LoginFormSuccess,
+    LoginFormError
+  >((params: LoginFormSchema) => ({
     url: "/api/authorization",
     method: "POST",
     body: params,
   }))
 
-export const registerFx = () =>
-  createInternalRequestFx<RegisterFormSchema, void, RegisterFormError>((params) => ({
+export const createRegisterMutation = () =>
+  createApiMutation<
+    RegisterFormSchema,
+    RegisterFormSuccess,
+    RegisterFormError
+  >((params) => ({
     url: "/api/registration",
     method: "POST",
     body: params,
   }))
 
-export const confirmEmailFx = () =>
-  createInternalRequestFx<ConfirmEmailSchema, void, ConfirmEmailError>((params) => ({
+export const createConfirmEmailMutation = () =>
+  createApiMutation<
+    ConfirmEmailSchema,
+    void,
+    ConfirmEmailError
+  >((params) => ({
     url: "/api/registration/verify",
     method: "POST",
     body: params,
   }))
 
-export const confirmCodeResendFx = () =>
-  createInternalRequestFx<ConfirmCodeResendSchema, ConfirmCodeResendSuccess, ConfirmCodeResendError>((params) => ({
+export const createConfirmCodeResendMutation = () =>
+  createApiMutation<
+    ConfirmCodeResendSchema,
+    ConfirmCodeResendSuccess,
+    ConfirmCodeResendError
+  >((params) => ({
     url: "/api/verify/code/resend",
     method: "POST",
     body: params,
   }))
 
-export const passwordRecoveryEmailFx = () =>
-  createInternalRequestFx<PasswordRecoveryEmailFormSchema, PasswordRecoveryEmailFormSuccess, PasswordRecoveryEmailFormError>((params) => ({
+export const createPasswordRecoveryEmailMutation = () =>
+  createApiMutation<
+    PasswordRecoveryEmailFormSchema,
+    PasswordRecoveryEmailFormSuccess,
+    PasswordRecoveryEmailFormError
+  >((params) => ({
     url: "/api/password/reset/email",
     method: "POST",
     body: params,
   }))
 
-export const passwordRecoveryConfirmFx = () =>
-  createInternalRequestFx<PasswordRecoveryConfirmFormSchema, PasswordRecoveryConfirmFormSuccess, PasswordRecoveryConfirmFormError>((params) => ({
+export const createPasswordRecoveryConfirmMutation = () =>
+  createApiMutation<
+    PasswordRecoveryConfirmFormSchema,
+    PasswordRecoveryConfirmFormSuccess,
+    PasswordRecoveryConfirmFormError
+  >((params) => ({
     url: "/api/password/reset/verify",
     method: "POST",
     body: params,
   }))
 
-export const passwordRecoveryFx = () =>
-  createInternalRequestFx<PasswordRecoveryFormSchema, PasswordRecoveryFormSuccess, PasswordRecoveryFormError>((params) => ({
+export const createPasswordRecoveryMutation = () =>
+  createApiMutation<
+    PasswordRecoveryFormSchema,
+    PasswordRecoveryFormSuccess,
+    PasswordRecoveryFormError
+  >((params) => ({
     url: "/api/password/reset",
     method: "POST",
     body: params,
