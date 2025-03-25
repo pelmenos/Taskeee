@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\InviteEmailRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SendInviteSpaceRequest extends FormRequest
 {
@@ -48,5 +50,13 @@ class SendInviteSpaceRequest extends FormRequest
             'role.string' => 'Поле Роль должно содержать строковой тип данных',
             'role.exists' => 'Поле Роль должно относится к существующей роли'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при отправлении приглашения',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

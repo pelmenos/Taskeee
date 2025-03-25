@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\DeleteProjectRequest;
 use App\Http\Requests\GetProjectRequest;
 use App\Http\Requests\GetProjectsRequest;
 use App\Http\Requests\UpdateProjectRequest;
@@ -29,11 +30,15 @@ class ProjectController extends Controller
         foreach ($spaceUsers as $spaceUser)
         {
             if($spaceUser->space_id !== $request->space_id){
-                return response()->json(['message' => 'Один из пользователей не относится к данному пространству'], 422);
+                return response()->json(['message' => 'Ошибка при создании проекта',
+                    'errors' => ['members' =>
+                        ['Пользователь с почтой '.$spaceUser->email.' не относится к данному пространству']]], 422);
             }
 
             if($spaceUser->role->permissions['projects_access'] !== true){
-                return response()->json(['message' => 'Один из пользователей не имеет прав на доступ к проектам'], 422);
+                return response()->json(['message' => 'Ошибка при создании проекта',
+                    'errors' => ['members' =>
+                        ['Пользователь с почтой '.$spaceUser->email.' не имеет прав на доступ к проектам']]], 422);
             }
         }
 
@@ -105,15 +110,21 @@ class ProjectController extends Controller
         foreach ($spaceUsers as $spaceUser)
         {
             if($spaceUser->space_id !== $project->space->id){
-                return response()->json(['message' => 'Один из пользователей не относится к данному пространству'], 422);
+                return response()->json(['message' => 'Ошибка при обновлении проекта',
+                    'errors' => ['members' =>
+                        ['Пользователь с почтой '.$spaceUser->email.' не относится к данному пространству']]], 422);
             }
 
             if($spaceUser->role->permissions['projects_access'] !== true){
-                return response()->json(['message' => 'Один из пользователей не имеет прав на доступ к проектам'], 422);
+                return response()->json(['message' => 'Ошибка при обновлении проекта',
+                    'errors' => ['members' =>
+                        ['Пользователь с почтой '.$spaceUser->email.' не имеет прав на доступ к проектам']]], 422);
             }
 
             if(ProjectSpaceUser::where('project_id', $request->id)->where('space_user_id', $spaceUser->id)->exists()){
-                return response()->json(['message' => 'Один из пользователей уже является участником данного проекта'], 422);
+                return response()->json(['message' => 'Ошибка при обновлении проекта',
+                    'errors' => ['members' =>
+                        ['Пользователь с почтой '.$spaceUser->email.' уже является участником данного проекта']]], 422);
             }
         }
 
@@ -135,7 +146,7 @@ class ProjectController extends Controller
         return response()->json(new ProjectResource($project, true, true));
     }
 
-    public function deleteProject(GetProjectRequest $request)
+    public function deleteProject(DeleteProjectRequest $request)
     {
         $project = Project::find($request->id);
 

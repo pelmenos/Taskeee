@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateSpaceRequest extends FormRequest
 {
@@ -44,5 +46,13 @@ class CreateSpaceRequest extends FormRequest
             'tariff.required' => 'Поле Тариф обязательно для заполнения',
             'tariff.in' => 'Поле Тариф должно содержать одно из значений: Free, Pro, Enterprise'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

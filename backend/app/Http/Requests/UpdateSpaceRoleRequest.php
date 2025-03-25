@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateSpaceRoleRequest extends FormRequest
 {
@@ -66,5 +68,13 @@ class UpdateSpaceRoleRequest extends FormRequest
             'permissions.team_access.boolean' => 'Поле Доступ к команде должно содержать логический тип данных',
             'permissions.full_access.boolean' => 'Поле Полный доступ должно содержать логический тип данных'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при обновлении роли пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

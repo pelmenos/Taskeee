@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateProjectRequest extends FormRequest
 {
@@ -69,5 +71,13 @@ class UpdateProjectRequest extends FormRequest
             'boards.*.description.string' => 'Все доски должны иметь описание строкового типа данных',
             'boards.*.description.max' => 'Все доски должны иметь описание не более 500 символов'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при обновлении проекта',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

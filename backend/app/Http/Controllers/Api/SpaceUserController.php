@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSpaceUserRequest;
 use App\Http\Requests\DeleteSpaceUserRequest;
 
+use App\Http\Resources\SpaceUserResource;
 use App\Models\Space;
 use App\Models\SpaceUser;
 
@@ -18,12 +19,13 @@ class SpaceUserController extends Controller
         $this->authorize('spaceAdmin', $space);
 
         if(SpaceUser::where([['space_id', '=', $request->space_id], ['email', '=', $request->email]])->exists()){
-            return response()->json(['message' => 'Пользователь уже находится в пространстве'], 422);
+            return response()->json(['message' => 'Ошибка при создании пользователя пространства',
+                'errors' => ['email' => ['Пользователь уже находится в пространстве']]], 422);
         }
 
-        SpaceUser::create($request->validated());
+        $spaceUser = SpaceUser::create($request->validated());
 
-        return response()->json(['message' => 'Пользователь добавлен в пространство']);
+        return response()->json(new SpaceUserResource($spaceUser));
     }
 
     public function deleteSpaceUser(DeleteSpaceUserRequest $request)
@@ -41,6 +43,6 @@ class SpaceUserController extends Controller
 
         $spaceUser->delete();
 
-        return response()->json(['message' => 'Пользователь успешно удален']);
+        return response()->json(['message' => 'Пользователь успешно удален из пространства']);
     }
 }

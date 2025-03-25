@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateSpaceUserRequest extends FormRequest
 {
@@ -47,5 +49,13 @@ class CreateSpaceUserRequest extends FormRequest
             'role_id.uuid' => 'Поле Роль пространства должно иметь тип данных UUID',
             'role_id.exists' => 'Поле Роль пространства должно относится к существующей роли пространства'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании пользователя пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class DeleteTaskRequest extends FormRequest
 {
@@ -39,5 +41,13 @@ class DeleteTaskRequest extends FormRequest
             'id.uuid' => 'Идентификатор задачи должен иметь тип данных UUID',
             'id.exists' => 'Идентификатор задачи не относится ни к одной из задач'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при удалении задачи',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateUserSpaceRoleRequest extends FormRequest
 {
@@ -47,5 +49,13 @@ class UpdateUserSpaceRoleRequest extends FormRequest
             'role.string' => 'Поле Роль пространства должно содержать строковой тип данных',
             'role.exists' => 'Поле Роль пространства должно относится к существующей роли пространства'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при обновлении роли пользователя пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

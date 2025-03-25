@@ -8,6 +8,7 @@ use App\Http\Requests\PasswordResetEmailRequest;
 use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\PasswordResetVerifyRequest;
 use App\Http\Requests\RegistrationRequest;
+use App\Http\Requests\VerifyCodeResendRequest;
 use App\Http\Requests\VerifyRegistrationRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -38,16 +39,18 @@ class UserController extends Controller
         if(VerificationCode::verify($request->verify_code, $request->email)){
             $user->markEmailAsVerified();
 
-            return response()->json(['message' => 'Пользователь подтвердил свой аккаунт']);
+            return response()->json(['message' => 'Пользователь подтвердил свою эл. почту']);
         }
 
-        return response()->json(['message' => 'Введенный код не относится ни к одному из пользователей'], 422);
+        return response()->json(['message' => 'Ошибка при подтверждении почты',
+            'errors' => ['verify_code' => ['Введенный код не относится ни к одному из пользователей']]], 422);
     }
 
     public function authorization(AuthorizationRequest $request)
     {
         if(!Auth::attempt($request->only(['email', 'password']))){
-            return response()->json(['message' => 'Введенные данные не относятся к существующему аккаунту'], 422);
+            return response()->json(['message' => 'Ошибка при авторизации',
+                'errors' => ['auth' => ['Введенные данные не относятся к существующему аккаунту']]], 422);
         }
 
         $user = Auth::user();
@@ -68,7 +71,8 @@ class UserController extends Controller
 
         VerificationCode::send($user->email);
 
-        return response()->json(['message' => 'Код для восстановления пароля был отправлен на почту', 'email' => $user->email]);
+        return response()->json(['message' =>
+            'Код для восстановления пароля был отправлен на почту', 'email' => $user->email]);
     }
 
     public function passwordResetVerify(PasswordResetVerifyRequest $request)
@@ -80,7 +84,8 @@ class UserController extends Controller
                 'email' => $user->email, 'verify_code' => $request->verify_code]);
         }
 
-        return response()->json(['message' => 'Введенный код не относится ни к одному из пользователей'], 422);
+        return response()->json(['message' => 'Ошибка при восстановлении пароля',
+            'errors' => ['verify_code' => ['Введенный код не относится ни к одному из пользователей']]], 422);
     }
 
     public function passwordReset(PasswordResetRequest $request)
@@ -95,20 +100,13 @@ class UserController extends Controller
             return response()->json(['message' => 'Пароль был успешно изменен']);
         }
 
-        return response()->json(['message' => 'Использованный код не относится ни к одному из пользователей'], 422);
+        return response()->json(['message' => 'Ошибка при восстановлении пароля',
+            'errors' => ['verify_code' => ['Используемый код не относится ни к одному из пользователей']]], 422);
     }
 
-    public function verifyCodeResend(PasswordResetEmailRequest $request)
+    public function verifyCodeResend(VerifyCodeResendRequest $request)
     {
-        VerifyModel::where([['verifiable', '=', $request->email],
-            ['expires_at', '<=', now()]])->delete();
-
         $codes = VerifyModel::where('verifiable', $request->email)->get();
-
-        if($codes->isEmpty())
-        {
-            return response()->json(['message' => 'Ранее запрошенных кодов нету'], 422);
-        }
 
         foreach($codes as $code)
         {

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class DeleteSpaceRoleRequest extends FormRequest
 {
@@ -43,5 +45,13 @@ class DeleteSpaceRoleRequest extends FormRequest
             'role_id.uuid' => 'Идентификатор роли пространства должен иметь тип данных UUID',
             'role_id.exists' => 'Идентификатор роли пространства должен быть относится к существующей роли пространства'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при удалении роли пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

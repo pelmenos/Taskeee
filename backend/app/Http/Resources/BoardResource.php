@@ -38,7 +38,7 @@ class BoardResource extends JsonResource
         $data['project_id'] = $this->resource->project_id;
 
         if ($this->withTasks) {
-            $data['tasks'] = $this->resource->tasks;
+            $data['tasks'] = TaskResource::collection($this->tasks);
         }
 
         $data['created_at'] = $this->resource->created_at;

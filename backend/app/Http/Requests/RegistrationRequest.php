@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueEmailRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegistrationRequest extends FormRequest
 {
@@ -23,7 +26,7 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:36|regex:/^[А-ЯЁ][аА-яЯёЁ]+\s+[А-ЯЁ][аА-яЯёЁ]*$/u',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
             'password' => [
                 'required',
                 'min:8',
@@ -48,5 +51,13 @@ class RegistrationRequest extends FormRequest
             'password.min' => 'Поле Пароль должно быть длинной минимум в 8 символов',
             'password.regex' => 'Поле Пароль должно содержать латинские прописные и строчные буквы, цифры и специальные символы'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при регистрации пользователя',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

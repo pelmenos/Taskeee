@@ -20,12 +20,13 @@ class SpaceRoleController extends Controller
         $this->authorize('spaceAdmin', $space);
 
         if(SpaceRole::where([['space_id', '=', $request->space_id], ['name', '=', $request->name]])->exists()){
-            return response()->json(['message' => 'Пространство уже содержит такую роль'], 422);
+            return response()->json(['message' => 'Ошибка при создании роли пространства',
+                'errors' => ['name' => ['Пространство уже содержит такую роль']]], 422);
         }
 
         $spaceRole = SpaceRole::create($request->validated());
 
-        return response()->json(new SpaceRoleResource($spaceRole, true));
+        return response()->json(new SpaceRoleResource($spaceRole));
     }
 
     public function updateSpaceRole(UpdateSpaceRoleRequest $request)
@@ -36,14 +37,15 @@ class SpaceRoleController extends Controller
 
         if(SpaceRole::where([['space_id', '=', $request->id], ['name', '=', $request->name]])
             ->where('id', '!=', $request->role_id)->exists()){
-            return response()->json(['message' => 'Пространство уже содержит такую роль'], 422);
+            return response()->json(['message' => 'Ошибка при обновлении роли пространства',
+                'errors' => ['name' => ['Пространство уже содержит такую роль']]], 422);
         }
 
         $spaceRole = SpaceRole::find($request->role_id);
 
         $spaceRole->update($request->validated());
 
-        return response()->json(['message' => 'Роль успешно обновлена']);
+        return response()->json(new SpaceRoleResource($spaceRole));
     }
 
     public function deleteSpaceRole(DeleteSpaceRoleRequest $request)

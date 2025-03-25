@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class getSpaceRequest extends FormRequest
 {
@@ -39,5 +41,13 @@ class getSpaceRequest extends FormRequest
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
             'id.exists' => 'Идентификатор пространства должен относится к существующему пространству'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при получении пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }
