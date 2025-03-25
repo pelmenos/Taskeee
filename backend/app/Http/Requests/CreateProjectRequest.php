@@ -26,9 +26,11 @@ class CreateProjectRequest extends FormRequest
             'description' => 'string|max:500',
             'space_id' => 'required|uuid|exists:spaces,id',
             'members' => 'required|array|min:1',
-            'members.*' => 'uuid', // тут также проверка exists потом должна быть на юзеров спейса
-            'boards' => 'required|array|min:1|max:20',
-            'boards.*' => 'string'
+            'members.*' => 'uuid|exists:space_users,id',
+            'boards' => 'required|array|max:1',
+            'boards.*' => 'array',
+            'boards.*.name' => 'required|string|max:100',
+            'boards.*.description' => 'required|string|max:500'
         ];
     }
 
@@ -43,15 +45,21 @@ class CreateProjectRequest extends FormRequest
             'space_id.required' => 'Идентификатор пространства должен быть передан для запроса',
             'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
             'space_id.exists' => 'Идентификатор пространства не относится ни к одному пространству',
-            'members.required' => 'Поле участники обязательно для заполнения',
-            'members.array' => 'Поле участники должно быть массивом',
-            'members.min' => 'Поле участники должно содержать хотя бы одного участника',
+            'members.required' => 'Поле Участники обязательно для заполнения',
+            'members.array' => 'Поле Участники должно быть массивом',
+            'members.min' => 'Поле Участники должно содержать хотя бы одного участника',
             'members.*.uuid' => 'Идентификаторы всех участников должны иметь тип данных UUID',
-            'boards.required' => 'Поле доски обязательно для заполнения',
-            'boards.array' => 'Поле доски должно быть массивом',
-            'boards.min' => 'Поле доски должно содержать хотя бы одну доску',
-            'boards.max' => 'Поле доски должно содержать максимум 20 досок',
-            'boards.*.string' => 'Доски должны иметь тип данных string'
+            'members.*.exists' => 'Идентификаторы всех участников должны относится к существующим пользователям пространств',
+            'boards.required' => 'Поле Доски обязательно для заполнения',
+            'boards.array' => 'Поле Доски должно быть массивом',
+            'boards.max' => 'Поле Доски должно содержать одну доску по умолчанию',
+            'boards.*.array' => 'Все доски должны быть массивами',
+            'boards.*.name.required' => 'Все доски должны иметь название',
+            'boards.*.name.string' => 'Все доски должны иметь название строкового типа данных',
+            'boards.*.name.max' => 'Все доски должны иметь название не более 100 символов',
+            'boards.*.description.required' => 'Все доски должны иметь описание',
+            'boards.*.description.string' => 'Все доски должны иметь описание строкового типа данных',
+            'boards.*.description.max' => 'Все доски должны иметь описание не более 500 символов'
         ];
     }
 }

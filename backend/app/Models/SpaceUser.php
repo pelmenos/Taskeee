@@ -20,9 +20,16 @@ class SpaceUser extends Model
         'role_id'
     ];
 
+
+    public function role()
+    {
+        return $this->belongsTo(SpaceRole::class, 'role_id', 'id');
+    }
+
     public function projects()
     {
-        return Project::where('space_id', $this->space_id);
+        return $this->belongsToMany(Project::class, 'project_space_users',
+             'space_user_id', 'project_id');
     }
 
     public function users()

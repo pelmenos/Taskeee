@@ -27,7 +27,7 @@ class SpaceController extends Controller
             return response()->json(['message' => 'Пользователь уже имеет данное пространство'], 422);
         }
 
-        $space = Space::create($request->all());
+        $space = Space::create($request->validated());
 
         return response()->json($space);
     }
@@ -68,7 +68,7 @@ class SpaceController extends Controller
             return response()->json(['message' => 'Пользователь уже имеет данное пространство'], 422);
         }
 
-        $space->update($request->all());
+        $space->update($request->validated());
 
         return response()->json($space);
     }
@@ -108,7 +108,7 @@ class SpaceController extends Controller
         return response()->json(['message' => 'Приглашение успешно отправлено']);
     }
 
-    public function acceptInviteSpace(AcceptInviteSpaceRequest $request) // Тут также проверка на то, что юзера нету в таблице юзеров спейса из 1.4
+    public function acceptInviteSpace(AcceptInviteSpaceRequest $request)
     {
         $token = InviteToken::where('token', $request->token)->first();
 

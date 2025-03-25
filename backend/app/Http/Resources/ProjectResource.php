@@ -5,16 +5,25 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SpaceRoleResource extends JsonResource
+class ProjectResource extends JsonResource
 {
     private $withCreatedAt;
     private $withUpdatedAt;
+    private $withTasks;
 
-    public function __construct($resource, $withCreatedAt = false, $withUpdatedAt = false)
+    public function __construct($resource, $withCreatedAt = false, $withUpdatedAt = false, $withTasks = false)
     {
         parent::__construct($resource);
         $this->withCreatedAt = $withCreatedAt;
         $this->withUpdatedAt = $withUpdatedAt;
+        $this->withTasks = $withTasks;
+    }
+
+    public static function collectionWithFlags($collection, $withCreatedAt = false, $withUpdatedAt = false, $withTasks = false)
+    {
+        return $collection->map(function ($resource) use ($withCreatedAt, $withUpdatedAt, $withTasks) {
+            return new self($resource, $withCreatedAt, $withUpdatedAt, $withTasks,);
+        });
     }
 
     /**
@@ -29,7 +38,13 @@ class SpaceRoleResource extends JsonResource
         $data['id'] = $this->resource->id;
         $data['name'] = $this->resource->name;
         $data['description'] = $this->resource->description;
-        $data['permissions'] = $this->resource->permissions;
+        $data['space_id'] = $this->resource->space_id;
+        $data['members'] = SpaceUserResource::collection($this->spaceUsers);
+        $data['boards'] = BoardResource::collectionWithTasks($this->boards);
+
+        if ($this->withTasks) {
+            $data['tasks'] = $this->resource->boards->flatMap->tasks;
+        }
 
         if ($this->withCreatedAt) {
             $data['created_at'] = $this->resource->created_at;
