@@ -7,81 +7,142 @@ use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\GetProjectRequest;
 use App\Http\Requests\GetProjectsRequest;
 use App\Http\Requests\UpdateProjectRequest;
-use App\Models\Project;
+use App\Http\Resources\ProjectResource;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Space;
+use App\Models\Board;
+use App\Models\Project;
+use App\Models\ProjectSpaceUser;
+use App\Models\SpaceUser;
 
 class ProjectController extends Controller
 {
-    public function createProject(CreateProjectRequest $request) // Тут надо будет ещё проверку добавить на то, что все указанные id юзеров в массиве имеют право на просмотр проектов
+    public function createProject(CreateProjectRequest $request)
     {
         $space = Space::find($request->space_id);
 
         $this->authorize('spaceAdmin', $space);
 
-        $project = Project::create($request->all());
+        $spaceUsers = SpaceUser::whereIn('id', $request->members)->get();
 
-        return response()->json($project);
+        foreach ($spaceUsers as $spaceUser)
+        {
+            if($spaceUser->space_id !== $request->space_id){
+                return response()->json(['message' => 'Один из пользователей не относится к данному пространству'], 422);
+            }
+
+            if($spaceUser->role->permissions['projects_access'] !== true){
+                return response()->json(['message' => 'Один из пользователей не имеет прав на доступ к проектам'], 422);
+            }
+        }
+
+        $project = Project::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'space_id' => $request->space_id
+        ]);
+
+        $project->spaceUsers()->attach($request->input('members'));
+
+        Board::create([
+            'name' => $request->boards[0]['name'],
+            'description' => $request->boards[0]['description'],
+            'project_id' => $project->id
+        ]);
+
+        return response()->json(new ProjectResource($project, true, true));
     }
 
-    public function getProjects(GetProjectsRequest $request) // Добавить остальную логику на участника проекта
+    public function getProjects(GetProjectsRequest $request)
     {
-        if(Space::where([['id', '=', $request->space_id], ['admin_id', '=', Auth::user()->id]])->exists()){
-            $projects = Project::where('space_id', $request->space_id)->get();
+        $spaceAdmin = Space::where([['id', '=', $request->space_id],
+            ['admin_id', '=', Auth::user()->id]])->first();
+
+        if($spaceAdmin){
+            $projects = $spaceAdmin->projects;
 
             if($projects->isEmpty()){
                 return response()->json(['message' => 'На данный момент у вас нету проектов']);
             }
 
-            return response()->json($projects);
+            return response()->json(ProjectResource::collectionWithFlags($projects, true));
         }
 
-        //Ну здесь по сути передаем уже space_id в политику
+        $spaceMember = Space::where('id', $request->space_id)->first();
 
-        return response()->json(['message' => 'Ну а тут остальная логика']);
+        $this->authorize('memberSpaceWithProjectsAccess', $spaceMember);
+
+        $spaceUser = SpaceUser::where('space_id', $request->space_id)
+            ->where('email', Auth::user()->email)->first();
+
+        $projects = $spaceUser->projects;
+
+        if($projects->isEmpty()){
+            return response()->json(['message' => 'На данный момент у вас нету проектов']);
+        }
+
+        return response()->json(ProjectResource::collectionWithFlags($projects, true));
     }
 
-    public function getProject(GetProjectRequest $request) // Тут также добавить остальную логику на участника проекта
+    public function getProject(GetProjectRequest $request)
     {
         $project = Project::find($request->id);
 
-        if(Space::where([['id', '=', $project->space_id], ['admin_id', '=', Auth::user()->id]])->exists()){ // Выносим в политику
-            return response()->json($project);
-        }
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $project);
 
-        // Тут у нас как бы политика в которой проверяется админ или юзер пространства чел, причем чел должен также иметь права на просмотр
-
-        //А дальше после этой проверки мы ищем по его id все записи проектов, то есть ищем записи через массив members, и который в
-        // итоге проверяем на пустоту
-
-        return response()->json(['message' => 'Ну а тут остальная логика']);
+        return response()->json(new ProjectResource($project, true, true, true));
     }
 
-    public function updateProject(UpdateProjectRequest $request) // Возможно нужно все поля сделать обязательными в запросе, но если че сделаем
+    public function updateProject(UpdateProjectRequest $request)
     {
         $project = Project::find($request->id);
 
-        $space = Space::find($project->space_id);
+        $this->authorize('spaceAdmin', $project->space);
 
-        $this->authorize('spaceAdmin', $space);
+        $spaceUsers = SpaceUser::whereIn('id', $request->members)->get();
 
-        $project->update($request->all());
+        foreach ($spaceUsers as $spaceUser)
+        {
+            if($spaceUser->space_id !== $project->space->id){
+                return response()->json(['message' => 'Один из пользователей не относится к данному пространству'], 422);
+            }
 
-        return response()->json($project);
+            if($spaceUser->role->permissions['projects_access'] !== true){
+                return response()->json(['message' => 'Один из пользователей не имеет прав на доступ к проектам'], 422);
+            }
+
+            if(ProjectSpaceUser::where('project_id', $request->id)->where('space_user_id', $spaceUser->id)->exists()){
+                return response()->json(['message' => 'Один из пользователей уже является участником данного проекта'], 422);
+            }
+        }
+
+        $project->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        $project->spaceUsers()->attach($request->input('members'));
+
+        foreach ($request->boards as $board){
+            Board::create([
+                'name' => $board['name'],
+                'description' => $board['description'],
+                'project_id' => $project->id
+            ]);
+        }
+
+        return response()->json(new ProjectResource($project, true, true));
     }
 
     public function deleteProject(GetProjectRequest $request)
     {
         $project = Project::find($request->id);
 
-        $space = Space::find($project->space_id);
-
-        $this->authorize('spaceAdmin', $space);
+        $this->authorize('spaceAdmin', $project->space);
 
         $project->delete();
 
         return response()->json(['message' => 'Проект успешно удален']);
     }
-
 }
