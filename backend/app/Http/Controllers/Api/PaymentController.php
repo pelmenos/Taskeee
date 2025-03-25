@@ -98,7 +98,7 @@ class PaymentController extends Controller
             $duplicate = Payment::create($payment->toArray());
             return response()->json([
                 'data' => PaymentResource::make($duplicate)
-            ]);
+            ], Response::HTTP_CREATED);
         }
 
         return response()->json([
