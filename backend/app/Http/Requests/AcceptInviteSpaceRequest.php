@@ -30,7 +30,7 @@ class AcceptInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'exists:invite_tokens,token', // и проверка что юзер не переходит по ссылке сам, типо сам отправил приглос и сам переходит, для этого надо добавить поле user_id в invite_tokens
+            'token' => 'exists:invite_tokens,token',
         ];
     }
 
