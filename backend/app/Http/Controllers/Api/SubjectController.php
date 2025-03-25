@@ -37,8 +37,7 @@ class SubjectController extends Controller
     {
         $this->authorize('inSpaceEntity', auth()->user());
         $subject = Subject::create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
+            ...$request->all(),
             'space_id' => auth()->user()->getSpaceId()
         ]);
 

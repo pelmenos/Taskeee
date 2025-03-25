@@ -50,16 +50,8 @@ class PaymentController extends Controller
     {
         $this->authorize('inSpaceEntity', auth()->user());
         $payment = Payment::create([
-            'sum' => $request->input('sum'),
-            'comment' => $request->input('comment'),
+            ...$request->all(),
             'type' => $request->input('sum') >= 0 ? 'Доходы' : 'Расходы',
-            'status_id' => $request->input('status_id'),
-            'finance_project_id' => $request->input('finance_project_id'),
-            'subject_id' => $request->input('subject_id'),
-            'director_id' => $request->input('director_id'),
-            'recipient_id' => $request->input('recipient_id'),
-            'condition_id' => $request->input('condition_id'),
-            'method' => $request->input('method'),
             'space_id' => auth()->user()->getSpaceId()
         ]);
 
