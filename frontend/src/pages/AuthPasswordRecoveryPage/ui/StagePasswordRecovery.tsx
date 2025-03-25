@@ -1,23 +1,22 @@
-import { Form } from "shared/ui/Form"
-import { useForm } from "react-hook-form"
+import { Form } from "shared/ui/Form/Form"
 import { useUnit } from "effector-react/compat"
-import { Password } from "shared/ui/assets/icons/Password"
-import { Button } from "shared/ui/Button"
-import { FormFooterContainer } from "shared/ui/Form/FormFooterContainer"
-import { FormTitle } from "shared/ui/Form/FormTitle"
-import { FormFieldContainer } from "shared/ui/Form/FormFieldContainer"
 import React, { useEffect } from "react"
-import { FormField } from "shared/ui/Form/FormField"
-import { passwordRecoveryModel, StagePasswordRecoveryFields } from "features/password-recovery-flow"
+import { passwordRecoveryModel } from "features/password-recovery-flow"
+import { Stack, Title } from "@mantine/core"
+import { FormText } from "shared/ui/Form/FormText"
+import { FormInput } from "shared/ui/Form/FormInput"
+import { Mail } from "shared/ui/assets/icons/Mail"
+import { FormSubmit } from "shared/ui/Form/FormSubmit"
+import { useForm } from "@mantine/form"
 
 
 export const StagePasswordRecovery = () => {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<StagePasswordRecoveryFields>()
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      password: "",
+    },
+  })
 
   const {
     submitted,
@@ -28,29 +27,43 @@ export const StagePasswordRecovery = () => {
   })
 
   useEffect(() => {
-    Object.entries(formErrors).forEach(([field, error]) =>
-      error && setError(field as keyof StagePasswordRecoveryFields, { message: error }),
-    )
-  }, [setError, formErrors])
+    form.setErrors(formErrors)
+  }, [formErrors])
+
+  const handleSubmit = (fields: typeof form.values) => {
+    submitted(fields)
+  }
 
   return (
-    <Form onSubmit={handleSubmit(submitted)}>
-      <FormTitle>Восстановление пароля</FormTitle>
+    <Form onSubmit={form.onSubmit(handleSubmit)}>
 
-      <FormFieldContainer>
-        {errors.root && (<span>{errors.root.message}</span>)}
+      <Stack gap="xxl">
+        <Title
+          order={1}
+          ff="Montserrat, serif"
+          fz={{
+            base: "2rem",
+            "512px": "1.5rem",
+          }}
+        >
+          Восстановление пароля
+        </Title>
 
-        <FormField placeholder="Новый пароль" icon={Password} inputProps={{
-          type: "password",
-          ...register("password"),
-        }} />
+        <FormText>
+          Код для подтверждения пароля будет отправлен на ваш E-mail.
+        </FormText>
 
-        {errors.password && (<span>{errors.password.message}</span>)}
-      </FormFieldContainer>
+        <FormInput
+          icon={Mail}
+          placeholder="Новый пароль"
+          key={form.key("password")}
+          {...form.getInputProps("password")}
+        />
 
-      <FormFooterContainer>
-        <Button type="submit">Подтвердить</Button>
-      </FormFooterContainer>
+        <FormSubmit>
+          Подтвердить
+        </FormSubmit>
+      </Stack>
     </Form>
   )
 }

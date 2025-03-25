@@ -14,11 +14,9 @@ export const passwordRecoveryModel = atom(() => {
 
   const submitted = createEvent<StagePasswordRecoveryFields>()
 
-  const $errorRoot = createStore<string | null>(null)
   const $errorFieldPassword = createStore<string | null>(null)
 
   const $formErrors = combine({
-    root: $errorRoot,
     password: $errorFieldPassword,
   })
 
@@ -44,7 +42,6 @@ export const passwordRecoveryModel = atom(() => {
   reset({
     clock: [submitted, passwordRecoveryMutation.finished.success],
     target: [
-      $errorRoot,
       $errorFieldPassword,
     ],
   })
@@ -57,18 +54,15 @@ export const passwordRecoveryModel = atom(() => {
         const errors = source.error.data!.errors
 
         return {
-          root: null,
           password: errors.password ? errors.password[0] : null,
         }
       }
 
       return {
-        root: source.error.data!.message,
-        password: null,
+        password: source.error.data!.message,
       }
     },
     target: spread({
-      root: $errorRoot,
       password: $errorFieldPassword,
     }),
   })

@@ -1,0 +1,17 @@
+.mantine-PinInput-root {
+  .mantine-PinInput-pinInput {
+    .mantine-PinInput-input {
+      background: var(--mantine-color-surfaceHighest-1);
+      color: var(--mantine-color-onSurfaceHighest-1);
+      font-weight: 600;
+
+      &[data-error] {
+        background: var(--mantine-color-error);
+      }
+
+      &:not([data-error]):not([value=""]) {
+        background: var(--mantine-color-primary-1);
+      }
+    }
+  }
+}

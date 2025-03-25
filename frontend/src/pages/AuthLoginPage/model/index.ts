@@ -20,12 +20,10 @@ export const authLoginModel = atom(() => {
 
   const submitted = createEvent<LoginFormSchema>()
 
-  const $errorRoot = createStore<string | null>(null)
   const $errorFieldEmail = createStore<string | null>(null)
   const $errorFieldPassword = createStore<string | null>(null)
 
   const $formErrors = combine({
-    root: $errorRoot,
     email: $errorFieldEmail,
     password: $errorFieldPassword,
   })
@@ -53,7 +51,6 @@ export const authLoginModel = atom(() => {
   reset({
     clock: loginMutation.finished.success,
     target: [
-      $errorRoot,
       $errorFieldEmail,
       $errorFieldPassword,
     ],
@@ -67,20 +64,17 @@ export const authLoginModel = atom(() => {
         const errors = source.error.data!.errors
 
         return {
-          errorRoot: null,
           errorFieldEmail: errors.email ? errors.email[0] : null,
           errorFieldPassword: errors.password ? errors.password[0] : null,
         }
       }
 
       return {
-        errorRoot: source.error.data!.message,
-        errorFieldEmail: null,
+        errorFieldEmail: source.error.data!.message,
         errorFieldPassword: null,
       }
     },
     target: spread({
-      errorRoot: $errorRoot,
       errorFieldEmail: $errorFieldEmail,
       errorFieldPassword: $errorFieldPassword,
     }),

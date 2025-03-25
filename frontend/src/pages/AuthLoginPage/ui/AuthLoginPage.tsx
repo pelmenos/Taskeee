@@ -1,35 +1,32 @@
 import { FormLayout } from "widgets/layouts/form-layout"
-import { Form } from "shared/ui/Form"
 import { Mail } from "shared/ui/assets/icons/Mail"
 import { Password } from "shared/ui/assets/icons/Password"
-import { useForm } from "react-hook-form"
 import { authLoginModel } from "../model"
 import { useUnit } from "effector-react"
-import { Button } from "shared/ui/Button"
 import "./AuthLoginPage.css"
 import React, { useEffect } from "react"
-import { FormTitle } from "shared/ui/Form/FormTitle"
-import { FormFallbackContainer } from "shared/ui/Form/FormFallbackContainer"
-import { FormText } from "shared/ui/Form/FormText"
-import { FormFallbackLink } from "shared/ui/Form/FormFallbackLink"
-import { FormFieldContainer } from "shared/ui/Form/FormFieldContainer"
 import { routes } from "shared/routing"
-import { FormField } from "shared/ui/Form/FormField"
-import { FormCheckBox } from "shared/ui/Form/FormCheckBox"
-import { FormFooterContainer } from "shared/ui/Form/FormFooterContainer"
-import { FormFooterContainerDivider } from "shared/ui/Form/FormFooterContainerDivider"
+import { Checkbox, Group, Stack, Text, Title } from "@mantine/core"
 import { FormSocials } from "shared/ui/Form/FormSocials"
+import { Check } from "shared/ui/assets/icons/Check"
+import { useForm } from "@mantine/form"
 import { Link } from "atomic-router-react"
-import { LoginFormSchema } from "entities/auth/model"
+import { Form } from "shared/ui/Form/Form"
+import { FormInput } from "shared/ui/Form/FormInput"
+import { FormText } from "shared/ui/Form/FormText"
+import { FormDivider } from "shared/ui/Form/FormDivider"
+import { FormSubmit } from "shared/ui/Form/FormSubmit"
 
 
 export const AuthLoginPage = () => {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<LoginFormSchema>()
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      email: "",
+      password: "",
+      remember_me: false,
+    },
+  })
 
   const {
     submitted,
@@ -40,62 +37,100 @@ export const AuthLoginPage = () => {
   })
 
   useEffect(() => {
-    Object.entries(formErrors).forEach(([field, error]) =>
-      error && setError(field as keyof LoginFormSchema, {message: error})
-    )
-  }, [setError, formErrors])
+    form.setErrors(formErrors)
+  }, [formErrors])
 
   // Serialize remember_me to string
-  const onSubmit = handleSubmit((data) => submitted({
-    ...data,
-    remember_me: data.remember_me.toString(),
-  }))
+  const handleSubmit = ({ remember_me, ...fields }: typeof form.values) => {
+    submitted({
+      ...fields,
+      remember_me: remember_me.toString(),
+    })
+  }
 
   return (
-    <FormLayout className="login-page">
-      <Form onSubmit={onSubmit}>
-        <FormTitle>Авторизация</FormTitle>
-
-        <FormFallbackContainer>
-          <FormText>Нет аккаунта?</FormText>
-
-          <FormFallbackLink to={routes.auth.register}>Создать аккаунт</FormFallbackLink>
-        </FormFallbackContainer>
-
-        <FormFieldContainer>
-          {errors.root && (<span>{errors.root.message}</span>)}
-
-          <FormField placeholder="Электронная почта" icon={Mail} inputProps={register("email")} />
-
-          {errors.email && (<span>{errors.email.message}</span>)}
-
-          <FormField
-            placeholder="Пароль"
-            icon={Password}
-            inputProps={{
-              type: "password",
-              ...register("password"),
+    <FormLayout>
+      <Form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="lg">
+          <Title
+            order={1}
+            ff="Montserrat, serif"
+            fz={{
+              base: "2rem",
+              "512px": "1.5rem",
             }}
-          />
+          >
+            Авторизация
+          </Title>
 
-          {errors.password && (<span>{errors.password.message}</span>)}
+          <Group justify="space-between">
+            <FormText>
+              Нет аккаунта?
+            </FormText>
 
-          <div className="remember-field">
-            <FormCheckBox label="Запомнить меня" inputProps={register("remember_me")} />
-
-            <Link to={routes.auth.passwordRecovery} className="forget-password">
-              Забыли пароль
+            <Link
+              style={{ textDecoration: "none" }}
+              to={routes.auth.register}>
+              <Text
+                fz="0.825rem"
+                fw={500}
+                c="onSurface"
+                span
+              >
+                Создать аккаунт
+              </Text>
             </Link>
-          </div>
-        </FormFieldContainer>
+          </Group>
 
-        <FormFooterContainer>
-          <Button type="submit">Войти в аккаунт</Button>
+          <Stack gap="xl">
+            <FormInput
+              icon={Mail}
+              type="text"
+              placeholder="Электронная почта"
+              key={form.key("email")}
+              {...form.getInputProps("email")}
+            />
 
-          <FormFooterContainerDivider />
+            <FormInput
+              icon={Password}
+              type="password"
+              placeholder="Пароль"
+              key={form.key("password")}
+              {...form.getInputProps("password")}
+            />
 
-          <FormSocials />
-        </FormFooterContainer>
+            <Group justify="space-between">
+              <Checkbox
+                icon={Check}
+                label="Запомнить меня"
+                key={form.key("remember_me")}
+                {...form.getInputProps("remember_me")}
+              />
+
+              <Link
+                style={{ textDecoration: "none" }}
+                to={routes.auth.passwordRecovery}
+              >
+                <FormText fw={500}>
+                  Забыли пароль
+                </FormText>
+              </Link>
+            </Group>
+          </Stack>
+
+          <Stack
+            mt="2rem"
+            gap="xl"
+          >
+            <FormSubmit>
+              Войти в аккаунт
+            </FormSubmit>
+
+            <FormDivider />
+
+            <FormSocials />
+          </Stack>
+        </Stack>
       </Form>
     </FormLayout>
   )

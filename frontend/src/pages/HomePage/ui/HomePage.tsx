@@ -1,13 +1,13 @@
 import { Button } from "shared/ui/Button"
-import { useTheme } from "shared/ui/ThemeProvider"
 import { useUnit } from "effector-react"
 import { router } from "shared/routing"
 import { Link } from "atomic-router-react"
 import { $session, $user } from "shared/api"
 import { logouted } from "shared/session/logouted"
+import { useMantineColorScheme } from "@mantine/core"
 
 export const HomePage = () => {
-  const { theme, setTheme } = useTheme()
+  const { colorScheme, setColorScheme } = useMantineColorScheme()
 
   const {
     logout,
@@ -24,7 +24,7 @@ export const HomePage = () => {
       maxWidth: "64rem",
       margin: "0 auto",
     }}>
-      <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>toggle ({theme})</Button>
+      <Button onClick={() => setColorScheme(colorScheme === "dark" ? "light" : "dark")}>toggle ({colorScheme})</Button>
 
       <Button onClick={logout}>logout</Button>
 

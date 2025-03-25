@@ -1,17 +1,21 @@
 import React, { ComponentProps } from "react"
-import "./Form.css"
-import { clsx } from "clsx"
+import { Paper, Stack } from "@mantine/core"
 
-interface Props extends ComponentProps<"form"> {
+interface Props extends ComponentProps<typeof Paper<"form">> {
 }
 
-export const Form = ({ className, children, ...props }: Props) => {
+export const Form = ({ children, ...props }: Props) => {
   return (
-    <form
-      className={clsx("form", className)}
+    <Paper
+      component="form"
+      bg="surface"
+      p="2.5rem"
+      radius="xxl"
       {...props}
     >
-      {children}
-    </form>
+      <Stack gap="lg">
+        {children}
+      </Stack>
+    </Paper>
   )
 }

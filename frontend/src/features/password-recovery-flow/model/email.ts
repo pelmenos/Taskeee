@@ -13,7 +13,6 @@ export const emailModel = atom(() => {
 
   const submitted = createEvent<StageEmailFields>()
 
-  const $errorRoot = createStore<string | null>(null)
   const $errorFieldEmail = createStore<string | null>(null)
 
   const $formErrors = combine({
@@ -41,7 +40,6 @@ export const emailModel = atom(() => {
   reset({
     clock: [submitted, passwordRecoveryEmailMutation.finished.success],
     target: [
-      $errorRoot,
       $errorFieldEmail,
     ],
   })
@@ -60,18 +58,15 @@ export const emailModel = atom(() => {
         const errors = source.error.data!.errors
 
         return {
-          root: null,
           email: errors.email ? errors.email[0] : null,
         }
       }
 
       return {
-        root: source.error.data!.message,
-        email: null,
+        email: source.error.data!.message,
       }
     },
     target: spread({
-      root: $errorRoot,
       email: $errorFieldEmail,
     }),
   })

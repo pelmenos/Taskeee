@@ -1,15 +1,19 @@
 import React, { ComponentProps } from "react"
-import { clsx } from "clsx"
+import { Text } from "@mantine/core"
 
-interface Props extends ComponentProps<"span"> {
+interface Props extends ComponentProps<typeof Text<"span">> {
 }
 
-export const FormText = ({ className, children, ...props }: Props) => {
+export const FormText = ({ children, ...props }: Props) => {
   return (
-    <span
-      className={clsx("form__text", className)}
+    <Text
+      ff="Montserrat, serif"
+      fz="0.825rem"
+      fw={400}
+      c="onSurface"
+      span
       {...props}>
-    {children}
-  </span>
+      {children}
+    </Text>
   )
 }

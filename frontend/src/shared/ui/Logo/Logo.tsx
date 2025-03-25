@@ -1,9 +1,9 @@
 import React, { ComponentProps } from "react"
 import { HPACE } from "../assets/icons/HPACE"
-import "./Logo.css"
+import "./Logo.scss"
 import { routes } from "../../routing"
 import { Link } from "atomic-router-react"
-import { clsx } from "clsx"
+import { Flex, Text } from "@mantine/core"
 
 interface Props extends Omit<ComponentProps<typeof Link>, "to" | "params"> {
 
@@ -12,13 +12,39 @@ interface Props extends Omit<ComponentProps<typeof Link>, "to" | "params"> {
 export const Logo = ({ className, ...props }: Props) => {
   return (
     <Link
-      className={clsx("logo", className)}
+      style={{
+        textDecoration: "none",
+      }}
       to={routes.home}
       {...props}
     >
-      <HPACE className="logo__icon" />
+      <Flex
+        direction="row"
+        align="center"
+        justify="flex-start"
+        flex={0}
+        gap={{
+          base: "xs",
+          "512px": "sm",
+        }}
+      >
+        <HPACE
+          w="2rem"
+          h="2rem"
+          className="logo__icon" />
 
-      <span className="logo__title">hpace crm</span>
+        <Text
+          span
+          w="3rem"
+          lh={1}
+          ff="Manrope, serif"
+          td="none"
+          fw={800}
+          c="var(--logo-color)"
+        >
+          hpace crm
+        </Text>
+      </Flex>
     </Link>
   )
 }

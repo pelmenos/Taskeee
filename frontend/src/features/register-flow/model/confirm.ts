@@ -1,10 +1,14 @@
 import { atom } from "shared/lib/factory"
 import { createConfirmCodeResendMutation, createConfirmEmailMutation } from "entities/auth/api"
 import { createGate } from "effector-react"
-import { combine, createEvent, createStore, restore, sample } from "effector"
+import { combine, createEvent, createStore, sample } from "effector"
 import { interval, reset, spread } from "patronum"
 import { routes } from "shared/routing"
 import { stagesModel } from "./stages"
+
+type StageConfirmFields = {
+  code: number,
+}
 
 export const confirmModel = atom(() => {
   const confirmEmailMutation = createConfirmEmailMutation()
@@ -13,17 +17,12 @@ export const confirmModel = atom(() => {
 
   const Gate = createGate<void>()
 
-  const submitted = createEvent()
+  const submitted = createEvent<StageConfirmFields>()
   const codeResent = createEvent()
 
-  const codeChanged = createEvent<number>()
-  const $code = restore(codeChanged, 0)
-
-  const $errorRoot = createStore<string | null>(null)
   const $errorFieldCode = createStore<string | null>(null)
 
   const $formErrors = combine({
-    root: $errorRoot,
     code: $errorFieldCode,
   })
 
@@ -68,15 +67,18 @@ export const confirmModel = atom(() => {
     source: confirmCodeResendMutation.finished.failure,
     filter: (source) => !!source.error.data,
     fn: (source) => source.error.data!.message,
-    target: $errorRoot,
+    target: $errorFieldCode,
   })
 
   sample({
     clock: submitted,
     source: {
-      verify_code: $code,
       email: stagesModel.$email,
     },
+    fn: (source, clock) => ({
+      ...source,
+      verify_code: clock.code,
+    }),
     target: confirmEmailMutation.start,
   })
 
@@ -88,7 +90,6 @@ export const confirmModel = atom(() => {
   reset({
     clock: [codeResent, submitted, confirmEmailMutation.finished.success],
     target: [
-      $errorRoot,
       $errorFieldCode,
     ],
   })
@@ -101,18 +102,15 @@ export const confirmModel = atom(() => {
         const errors = source.error.data!.errors
 
         return {
-          root: null,
           code: errors?.verify_code ? errors.verify_code[0] : null,
         }
       }
 
       return {
-        root: source.error.data!.message,
-        code: null,
+        code: source.error.data!.message,
       }
     },
     target: spread({
-      root: $errorRoot,
       code: $errorFieldCode,
     }),
   })
@@ -121,11 +119,9 @@ export const confirmModel = atom(() => {
     Gate,
 
     submitted,
-    codeChanged,
     codeResent,
 
     $formErrors,
-    $code,
     $buttonUnlockedAfterTime,
     $buttonResentIsDisabled,
   }

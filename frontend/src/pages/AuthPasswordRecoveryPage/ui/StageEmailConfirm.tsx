@@ -1,63 +1,98 @@
-import { Form } from "shared/ui/Form"
+import { Form } from "shared/ui/Form/Form"
 import { useUnit } from "effector-react/compat"
-import { PinInput } from "shared/ui/PinInput"
-import { Button } from "shared/ui/Button"
-import { FormTitle } from "shared/ui/Form/FormTitle"
 import { FormText } from "shared/ui/Form/FormText"
-import { FormFallbackContainer } from "shared/ui/Form/FormFallbackContainer"
-import { FormFallbackButton } from "shared/ui/Form/FormFallbackButton"
-import { FormFieldContainer } from "shared/ui/Form/FormFieldContainer"
-import { FormFooterContainer } from "shared/ui/Form/FormFooterContainer"
 import { emailConfirmModel } from "features/password-recovery-flow"
+import { Button, Group, PinInput, Stack, Title } from "@mantine/core"
+import { FormSubmit } from "shared/ui/Form/FormSubmit"
+import React, { useEffect } from "react"
+import { useForm } from "@mantine/form"
+import { useGate } from "effector-react"
 
 
 export const StageEmailConfirm = () => {
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      code: "",
+    },
+  })
+
   const {
     submitted,
-    codeChanged,
     codeResent,
     buttonUnlockedAfterTime,
     buttonResentIsDisabled,
     formErrors,
   } = useUnit({
     submitted: emailConfirmModel.submitted,
-    codeChanged: emailConfirmModel.codeChanged,
     codeResent: emailConfirmModel.codeResent,
     buttonUnlockedAfterTime: emailConfirmModel.$buttonUnlockedAfterTime,
     buttonResentIsDisabled: emailConfirmModel.$buttonResentIsDisabled,
     formErrors: emailConfirmModel.$formErrors,
   })
 
+  useGate(emailConfirmModel.Gate)
+
+  useEffect(() => {
+    form.setErrors(formErrors)
+  }, [formErrors])
+
+  const handleSubmit = ({ code }: typeof form.values) => {
+    submitted({
+      code: Number(code),
+    })
+  }
+
   return (
-    <Form
-      onSubmit={(e) => {
-        e.preventDefault()
-        submitted()
-      }}
-    >
-      <FormTitle>Восстановление пароля</FormTitle>
+    <Form onSubmit={form.onSubmit(handleSubmit)}>
 
-      <FormText>Код для подтверждения пароля отправлен на ваш E-mail.</FormText>
+      <Stack gap="xxl">
+        <Title
+          order={1}
+          ff="Montserrat, serif"
+          fz={{
+            base: "2rem",
+            "512px": "1.5rem",
+          }}
+        >
+          Восстановление пароля
+        </Title>
 
-      <FormFallbackContainer>
-        <FormText>Не пришел код?</FormText>
+        <FormText>
+          Код для подтверждения пароля отправлен на ваш E-mail.
+        </FormText>
 
-        <FormFallbackButton onClick={codeResent} disabled={buttonResentIsDisabled}>
-          Отправить еще раз {buttonResentIsDisabled && <span>({buttonUnlockedAfterTime} с.)</span>}
-        </FormFallbackButton>
-      </FormFallbackContainer>
+        <Group justify="space-between">
+          <FormText>
+            Не пришел код?
+          </FormText>
 
-      <FormFieldContainer>
-        {formErrors.root && <span>{formErrors.root}</span>}
+          <Button
+            variant="transparent"
+            bg="transparent"
+            p={0}
+            c="onSurfaceHighest"
+            onClick={codeResent}
+            disabled={buttonResentIsDisabled}
+          >
+            Отправить еще раз{" "}
+            {buttonResentIsDisabled && <span>({buttonUnlockedAfterTime} с.)</span>}
+          </Button>
+        </Group>
 
-        <PinInput length={6} onChange={codeChanged} />
+        <PinInput
+          length={6}
+          type="number"
+          placeholder=""
+          size="lg"
+          key={form.key("code")}
+          {...form.getInputProps("code")}
+        />
 
-        {formErrors.code && <span>{formErrors.code}</span>}
-      </FormFieldContainer>
-
-      <FormFooterContainer>
-        <Button type="submit">Следующий шаг</Button>
-      </FormFooterContainer>
+        <FormSubmit>
+          Следующий шаг
+        </FormSubmit>
+      </Stack>
     </Form>
   )
 }

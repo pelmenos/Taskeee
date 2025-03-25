@@ -1,30 +1,47 @@
 import React, { ComponentProps } from "react"
-import { clsx } from "clsx"
 import { VK } from "shared/ui/assets/icons/VK"
 import { Yandex } from "shared/ui/assets/icons/Yandex"
 import { Telegram } from "shared/ui/assets/icons/Telegram"
-import { Button } from "../Button"
+import { Center, Paper, SimpleGrid } from "@mantine/core"
 
-interface Props extends ComponentProps<"div"> {
+interface Props extends ComponentProps<typeof SimpleGrid> {
 }
 
-export const FormSocials = ({ className, ...props }: Props) => {
-	return (
-		<div
-      className={clsx("form__socials", className)}
-      {...props}
+export const FormSocials = (props: Props) => (
+  <SimpleGrid
+    cols={3}
+    spacing="1rem"
+    {...props}
+  >
+    <Paper
+      bg="#2787F5"
+      radius="sm"
+      h="2.5rem"
     >
-			<Button className="social social-vk">
-				<VK />
-			</Button>
+      <Center h="100%">
+        <VK />
+      </Center>
+    </Paper>
 
-			<Button className="social social-ya">
-				<Yandex />
-			</Button>
+    <Paper
+      bg="#1C1C1E"
+      radius="sm"
+      h="2.5rem"
+    >
+      <Center h="100%">
+        <Yandex />
+      </Center>
+    </Paper>
 
-			<Button className="social social-tg">
-				<Telegram />
-			</Button>
-		</div>
-	)
-}
+    <Paper
+      bg="#25A3E0"
+      radius="sm"
+      h="2.5rem"
+    >
+      <Center h="100%">
+        <Telegram />
+      </Center>
+    </Paper>
+  </SimpleGrid>
+)
+

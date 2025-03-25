@@ -1,30 +1,49 @@
 import React from "react"
 import "./FormLayout.css"
-import { clsx } from "clsx"
 import { Logo } from "shared/ui/Logo"
+import { Center, Group, Stack, Text } from "@mantine/core"
 
 interface Props {
-	className?: string
-	children?: React.ReactNode
+  children?: React.ReactNode
 }
 
-export const FormLayout = ({ className, children }: Props) => {
-	return (
-		<div className={clsx("form-layout", className)}>
-			<header className="header">
-				<Logo />
-			</header>
+export const FormLayout = ({ children }: Props) => {
+  return (
+    <Stack
+      mih="100vh"
+      bg="surfaceLowest"
+    >
+      <Group
+        p="2.25rem 3rem"
+        pos="absolute"
+        top={0}
+        left={0}
+      >
+        <Logo />
+      </Group>
 
-			<main className="main">
-				<div className="form-container">
-					{children}
+      <Center
+        m="auto"
+      >
+        <Stack
+          gap="xl"
+          maw="27.5rem"
+          m="0 1.75rem"
+        >
+          {children}
 
-					<p className="disclaimer">
-						Используя HPACE.CRM, Вы подтвреждение, что прочитали и поняли, а также соглашаетесь с
-						правилами и условиями и Политикой конфиденциальности.
-					</p>
-				</div>
-			</main>
-		</div>
-	)
+          <Text
+            fz="xs"
+            fw="500"
+            ta="center"
+            component="p"
+            c="onSurfaceVariant"
+          >
+            Используя HPACE.CRM, Вы подтвреждение, что прочитали и поняли, а также соглашаетесь с
+            правилами и условиями и Политикой конфиденциальности.
+          </Text>
+        </Stack>
+      </Center>
+    </Stack>
+  )
 }

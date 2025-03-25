@@ -2,17 +2,21 @@ import { atom } from "shared/lib/factory"
 import { combine, createEvent, createStore, sample } from "effector"
 import { interval, not, reset, spread } from "patronum"
 import { createConfirmCodeResendMutation, createPasswordRecoveryConfirmMutation } from "entities/auth/api"
-import { emailModel } from "./email"
 import { PasswordRecoveryFlowStages, stagesModel } from "./stages"
+import { createGate } from "effector-react"
 
+type StageEmailConfirmFields = {
+  code: number
+}
 
 export const emailConfirmModel = atom(() => {
   const confirmCodeResendMutation = createConfirmCodeResendMutation()
   const passwordRecoveryConfirmMutation = createPasswordRecoveryConfirmMutation()
 
-  const submitted = createEvent()
+  const Gate = createGate<void>()
 
-  const codeChanged = createEvent<number>()
+  const submitted = createEvent<StageEmailConfirmFields>()
+
   const codeResent = createEvent()
 
   const $errorRoot = createStore<string | null>(null)
@@ -25,14 +29,6 @@ export const emailConfirmModel = atom(() => {
 
   const $buttonUnlockedAfterTime = createStore(0)
   const $buttonResentIsDisabled = combine($buttonUnlockedAfterTime, (source) => !!source)
-
-  const $code = createStore(0)
-
-  sample({
-    source: codeChanged,
-    filter: not(passwordRecoveryConfirmMutation.$pending),
-    target: $code,
-  })
 
   const { tick } = interval({
     timeout: 1000,
@@ -47,7 +43,7 @@ export const emailConfirmModel = atom(() => {
   })
 
   sample({
-    clock: [emailModel.submitted, codeResent],
+    clock: [Gate.open, codeResent],
     fn: () => 20,
     target: $buttonUnlockedAfterTime,
   })
@@ -79,9 +75,12 @@ export const emailConfirmModel = atom(() => {
     clock: submitted,
     source: {
       email: stagesModel.$email,
-      verify_code: $code,
     },
     filter: not(passwordRecoveryConfirmMutation.$pending),
+    fn: (source, clock) => ({
+      ...source,
+      verify_code: clock.code,
+    }),
     target: passwordRecoveryConfirmMutation.start,
   })
 
@@ -133,12 +132,12 @@ export const emailConfirmModel = atom(() => {
   })
 
   return {
+    Gate,
+
     submitted,
-    codeChanged,
     codeResent,
 
     $formErrors,
-    $code,
     $buttonUnlockedAfterTime,
     $buttonResentIsDisabled,
   }

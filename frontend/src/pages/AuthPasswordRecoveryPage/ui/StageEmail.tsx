@@ -1,24 +1,22 @@
-import { Form } from "shared/ui/Form"
+import { Form } from "shared/ui/Form/Form"
 import { Mail } from "shared/ui/assets/icons/Mail"
-import { useForm } from "react-hook-form"
 import { useUnit } from "effector-react/compat"
-import { Button } from "shared/ui/Button"
-import { FormTitle } from "shared/ui/Form/FormTitle"
 import React, { useEffect } from "react"
 import { FormText } from "shared/ui/Form/FormText"
-import { FormFieldContainer } from "shared/ui/Form/FormFieldContainer"
-import { FormField } from "shared/ui/Form/FormField"
-import { FormFooterContainer } from "shared/ui/Form/FormFooterContainer"
-import { emailModel, StageEmailFields } from "features/password-recovery-flow"
+import { emailModel } from "features/password-recovery-flow"
+import { FormSubmit } from "shared/ui/Form/FormSubmit"
+import { Stack, Title } from "@mantine/core"
+import { FormInput } from "shared/ui/Form/FormInput"
+import { useForm } from "@mantine/form"
 
 
 export const StageEmail = () => {
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<StageEmailFields>()
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      email: "",
+    },
+  })
 
   const {
     submitted,
@@ -29,29 +27,42 @@ export const StageEmail = () => {
   })
 
   useEffect(() => {
-    Object.entries(formErrors).forEach(([field, error]) =>
-      error && setError(field as keyof StageEmailFields, { message: error }),
-    )
-  }, [setError, formErrors])
+    form.setErrors(formErrors)
+  }, [formErrors])
+
+  const handleSubmit = (fields: typeof form.values) => {
+    submitted(fields)
+  }
 
   return (
-    <Form onSubmit={handleSubmit(submitted)}>
-      <FormTitle>Восстановление пароля</FormTitle>
+    <Form onSubmit={form.onSubmit(handleSubmit)}>
+      <Stack gap="xxl">
+        <Title
+          order={1}
+          ff="Montserrat, serif"
+          fz={{
+            base: "2rem",
+            "512px": "1.5rem",
+          }}
+        >
+          Восстановление пароля
+        </Title>
 
-      <FormText>Код для подтверждения пароля будет отправлен на ваш E-mail.</FormText>
+        <FormText>
+          Код для подтверждения пароля будет отправлен на ваш E-mail.
+        </FormText>
 
-      <FormFieldContainer>
-        {errors.root && (<span>{errors.root.message}</span>)}
+        <FormInput
+          icon={Mail}
+          placeholder="Электронная почта"
+          key={form.key("email")}
+          {...form.getInputProps("email")}
+        />
 
-        <FormField placeholder="Электронная почта" icon={Mail} inputProps={register("email")} />
-
-        {errors.email && (<span>{errors.email.message}</span>)}
-
-      </FormFieldContainer>
-
-      <FormFooterContainer>
-        <Button type="submit">Следующий шаг</Button>
-      </FormFooterContainer>
+        <FormSubmit>
+          Следующий шаг
+        </FormSubmit>
+      </Stack>
     </Form>
   )
 }

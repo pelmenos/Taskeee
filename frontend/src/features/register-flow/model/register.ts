@@ -51,12 +51,20 @@ export const registerModel = atom(() => {
     source: registerMutation.finished.failure,
     filter: (source) => !!source.error.data,
     fn: (source) => {
-      const errors = source.error.data!.errors
+      if (source.error.data!.errors) {
+        const errors = source.error.data!.errors
+
+        return {
+          errorFieldName: errors.name ? errors.name[0] : null,
+          errorFieldEmail: errors.email ? errors.email[0] : null,
+          errorPassword: errors.password ? errors.password[0] : null,
+        }
+      }
 
       return {
-        errorFieldName: errors?.name ? errors.name[0] : null,
-        errorFieldEmail: errors?.email ? errors.email[0] : null,
-        errorPassword: errors?.password ? errors.password[0] : null,
+        errorFieldName: source.error.data!.message,
+        errorFieldEmail: null,
+        errorPassword: null,
       }
     },
     target: spread({
