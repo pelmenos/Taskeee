@@ -49,14 +49,7 @@ class FinanceProjectController extends Controller
     {
         $this->authorize('inSpaceEntity', auth()->user());
         $financeProject = FinanceProject::create([
-            'comment' => $request->input('comment'),
-            'price' => $request->input('price'),
-            'status_id' => $request->input('status_id'),
-            'project_id' => $request->input('project_id'),
-            'coordinator_id' => $request->input('coordinator_id'),
-            'lead_id' => $request->input('lead_id'),
-            'customer_id' => $request->input('customer_id'),
-            'source_id' => $request->input('source_id'),
+            ...$request->all(),
             'space_id' => auth()->user()->getSpaceId()
         ]);
 

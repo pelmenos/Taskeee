@@ -86,38 +86,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('tasks/{id}', [TaskController::class, 'updateTask']);
     Route::delete('tasks/{id}', [TaskController::class, 'deleteTask']);
     Route::group([
-        'prefix' => 'finances'
+        'prefix' => 'finances',
+        'middleware' => 'finance.access'
     ], function () {
         Route::post('projects', [FinanceProjectController::class, 'store']);
         Route::get('projects', [FinanceProjectController::class, 'index']);
         Route::get('projects/{project_id}', [FinanceProjectController::class, 'view']);
         Route::match(['put', 'patch'], 'projects/{project_id}', [FinanceProjectController::class, 'update']);
         Route::delete('projects/{project_id}', [FinanceProjectController::class, 'delete']);
-    });
 
-    Route::group([
-        'prefix' => 'finances'
-    ], function () {
         Route::post('subjects', [SubjectController::class, 'store']);
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject_id}', [SubjectController::class, 'view']);
         Route::match(['put', 'patch'], 'subjects/{subject_id}', [SubjectController::class, 'update']);
         Route::delete('subjects/{subject_id}', [SubjectController::class, 'delete']);
-    });
 
-    Route::group([
-        'prefix' => 'finances'
-    ], function () {
         Route::post('conditions', [ConditionController::class, 'store']);
         Route::get('conditions', [ConditionController::class, 'index']);
         Route::get('conditions/{condition_id}', [ConditionController::class, 'view']);
         Route::match(['put', 'patch'], 'conditions/{condition_id}', [ConditionController::class, 'update']);
         Route::delete('conditions/{condition_id}', [ConditionController::class, 'delete']);
-    });
 
-    Route::group([
-        'prefix' => 'finances'
-    ], function () {
         Route::post('payments', [PaymentController::class, 'store']);
         Route::get('payments', [PaymentController::class, 'index']);
         Route::get('payments/{payment_id}', [PaymentController::class, 'view']);

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('sum', 14, 2);
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('finance_project_id');
-            $table->integer('subject_id');
+            $table->unsignedBigInteger('subject_id');
             $table->string('type', 50);
             $table->uuid('director_id');
             $table->uuid('recipient_id');
