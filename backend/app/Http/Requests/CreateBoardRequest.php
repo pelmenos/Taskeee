@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateBoardRequest extends FormRequest
 {
@@ -40,5 +42,13 @@ class CreateBoardRequest extends FormRequest
             'project_id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID',
             'project_id.exists' => 'Идентификатор проекта не относится ни к одному проекту'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании доски',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

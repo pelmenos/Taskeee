@@ -32,7 +32,7 @@ Route::post('authorization', [UserController::class, 'authorization'])->middlewa
 Route::post('password/reset/email', [UserController::class, 'passwordResetEmail'])->middleware('guestUser');
 Route::post('password/reset/verify', [UserController::class, 'passwordResetVerify'])->middleware('guestUser');
 Route::post('password/reset', [UserController::class, 'passwordReset'])->middleware('guestUser');
-Route::post('verify/code/resend', [UserController::class, 'verifyCodeResend']);
+Route::post('verify/code/resend', [UserController::class, 'verifyCodeResend'])->middleware('guestUser');
 
 Route::post('file', function(Request $request){
     $file = $request->file('file');
@@ -52,6 +52,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request){
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('logout', [UserController::class, 'logout']);
+    Route::get('delete/account', [UserController::class, 'deleteUser']);
+
     Route::post('spaces/{id}/roles', [SpaceRoleController::class, 'createSpaceRole']);
     Route::put('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'updateSpaceRole']);
     Route::delete('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'deleteSpaceRole']);

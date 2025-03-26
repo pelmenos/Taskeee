@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class DeleteSpaceRoleRequest extends FormRequest
 {
@@ -18,7 +20,7 @@ class DeleteSpaceRoleRequest extends FormRequest
     {
         $this->merge([
             'id' => $this->route('id'),
-            'role_id' => $this->route('role_id'),
+            'role_id' => $this->route('role_id')
         ]);
     }
 
@@ -30,18 +32,26 @@ class DeleteSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
-            'role_id' => 'uuid|exists:space_roles,id',
+            'id' => 'uuid|exists:spaces,id',
+            'role_id' => 'uuid|exists:space_roles,id'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор роли пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор роли пространства должен относится к существующей роли пространства',
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'role_id.uuid' => 'Идентификатор роли пространства должен иметь тип данных UUID',
             'role_id.exists' => 'Идентификатор роли пространства должен быть относится к существующей роли пространства'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при удалении роли пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBoardRequest;
+use App\Http\Requests\DeleteBoardRequest;
 use App\Http\Requests\GetBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Http\Resources\BoardResource;
@@ -21,7 +22,7 @@ class BoardController extends Controller
 
         $board = Board::create($request->validated());
 
-        return response()->json($board);
+        return response()->json(new BoardResource($board));
     }
 
     public function getBoard(GetBoardRequest $request)
@@ -44,7 +45,7 @@ class BoardController extends Controller
         return response()->json(new BoardResource($board));
     }
 
-    public function deleteBoard(GetBoardRequest $request)
+    public function deleteBoard(DeleteBoardRequest $request)
     {
         $board = Board::find($request->id);
 

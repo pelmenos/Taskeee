@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AcceptInviteSpaceRequest;
 use App\Http\Requests\CreateSpaceRequest;
+use App\Http\Requests\DeleteSpaceRequest;
 use App\Http\Requests\GetSpaceRequest;
 use App\Http\Requests\SendInviteSpaceRequest;
 use App\Http\Requests\UpdateSpaceRequest;
@@ -24,12 +25,13 @@ class SpaceController extends Controller
     public function createSpace(CreateSpaceRequest $request)
     {
         if(Space::where([['admin_id', '=', $request->admin_id], ['name', '=', $request->name]])->exists()){
-            return response()->json(['message' => 'Пользователь уже имеет данное пространство'], 422);
+            return response()->json(['message' => 'Ошибка при создании пространства',
+                'errors' => ['space' => ['Пользователь уже имеет данное пространство']]], 422);
         }
 
         $space = Space::create($request->validated());
 
-        return response()->json($space);
+        return response()->json(new SpaceResource($space, true, true));
     }
 
     public function getSpaces()
@@ -42,7 +44,8 @@ class SpaceController extends Controller
         $allSpaces = $adminSpaces->merge($memberSpaces);
 
         if($allSpaces->isEmpty()){
-            return response()->json(['message' => 'На данный момент вы не владеете и не являетесь участником какого-либо пространства']);
+            return response()->json(['message' =>
+                'На данный момент вы не владеете и не являетесь участником какого-либо пространства']);
         }
 
         return response()->json(SpaceResource::collectionWithFlags($allSpaces, true));
@@ -54,7 +57,7 @@ class SpaceController extends Controller
 
         $this->authorize('adminOrMemberSpace', $space);
 
-        return response()->json($space);
+        return response()->json(new SpaceResource($space, true, true));
     }
 
     public function updateSpace(UpdateSpaceRequest $request)
@@ -65,19 +68,22 @@ class SpaceController extends Controller
 
         if(Space::where([['admin_id', '=', Auth::user()->id], ['name', '=', $request->name]])
             ->where('id', '!=', $space->id)->exists()){
-            return response()->json(['message' => 'Пользователь уже имеет данное пространство'], 422);
+            return response()->json(['message' => 'Ошибка при обновлении пространства',
+                'errors' => ['name' => ['Пользователь уже имеет данное пространство']]], 422);
         }
 
         $space->update($request->validated());
 
-        return response()->json($space);
+        return response()->json(new SpaceResource($space, true, true));
     }
 
-    public function deleteSpace(GetSpaceRequest $request)
+    public function deleteSpace(DeleteSpaceRequest $request)
     {
         $space = Space::find($request->id);
 
         $this->authorize('spaceAdmin', $space);
+
+        $space->inviteTokens()->delete();
 
         $space->delete();
 
@@ -91,14 +97,16 @@ class SpaceController extends Controller
         $this->authorize('spaceAdmin', $space); // Тут возможно не только админ будет отправлять приглосы
 
         if(SpaceUser::where([['space_id', '=', $request->id],['email', '=', $request->email]])->exists()){
-            return response()->json(['message' => 'Пользователь уже является участником данного пространства'], 422);
+            return response()->json(['message' => 'Ошибка при отправлении приглашения',
+                'errors' => ['email' => ['Пользователь уже является участником данного пространства']]], 422);
         }
 
         $spaceRole = SpaceRole::where([['space_id', '=', $request->id],
             ['name', '=', $request->role]])->first();
 
         if(!$spaceRole){
-            return response()->json(['message' => 'Указанная роль не относится к данному пространству'], 422);
+            return response()->json(['message' => 'Ошибка при отправлении приглашения',
+                'errors' => ['role' => ['Указанная роль не относится к данному пространству']]], 422);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -113,17 +121,20 @@ class SpaceController extends Controller
         $token = InviteToken::where('token', $request->token)->first();
 
         if($token->sender_id === Auth::user()->id){
-            return response()->json(['message' => 'Вы не можете принять приглашение, которое сами отправили'], 422);
+            return response()->json(['message' => 'Ошибка при принятии приглашения',
+                'errors' => ['sender_id' => ['Вы не можете принять приглашение, которое сами отправили']]], 422);
         }
 
         if(SpaceUser::where([['space_id', '=', $token->space_id],['email', '=', Auth::user()->email]])->exists()){
-            return response()->json(['message' => 'Вы уже являетесь участником данного пространства'], 422);
+            return response()->json(['message' => 'Ошибка при принятии приглашения',
+                'errors' => ['space_user' => ['Вы уже являетесь участником данного пространства']]], 422);
         }
 
         if($token->expires_at <= now()->format('Y-m-d H:i:s')){
             $token->delete();
 
-            return response()->json(['message' => 'Срок действия ссылки на приглашение истек'], 422);
+            return response()->json(['message' => 'Ошибка при принятии приглашения',
+                'errors' => ['token' => ['Срок действия токена приглашения истек']]], 422);
         }
 
         SpaceUser::create([
@@ -146,14 +157,16 @@ class SpaceController extends Controller
         $spaceUser = SpaceUser::find($request->user_id);
 
         if($spaceUser->space_id !== $request->id){
-            return response()->json(['message' => 'Идентификатор пользователя не относится к указанному пространству'], 422);
+            return response()->json(['message' => 'Ошибка при обновлении роли пользователя пространства',
+                'errors' => ['user_id' => ['Пользователь не относится к указанному пространству']]], 422);
         }
 
         $spaceRole = SpaceRole::where([['space_id', '=', $request->id],
             ['name', '=', $request->role]])->first();
 
         if(!$spaceRole){
-            return response()->json(['message' => 'Роль не относится к указанному пространству'], 422);
+            return response()->json(['message' => 'Ошибка при обновлении роли пользователя пространства',
+                'errors' => ['role' => ['Указанная роль не относится к данному пространству']]], 422);
         }
 
         $spaceUser->update([
@@ -162,5 +175,4 @@ class SpaceController extends Controller
 
         return response()->json(['message' => 'Роль пользователя успешно обновлена']);
     }
-
 }

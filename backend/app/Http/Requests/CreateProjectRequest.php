@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateProjectRequest extends FormRequest
 {
@@ -53,7 +55,7 @@ class CreateProjectRequest extends FormRequest
             'boards.required' => 'Поле Доски обязательно для заполнения',
             'boards.array' => 'Поле Доски должно быть массивом',
             'boards.max' => 'Поле Доски должно содержать одну доску по умолчанию',
-            'boards.*.array' => 'Все доски должны быть массивами',
+            'boards.*.array' => 'Все доски должны быть JSON-объектами',
             'boards.*.name.required' => 'Все доски должны иметь название',
             'boards.*.name.string' => 'Все доски должны иметь название строкового типа данных',
             'boards.*.name.max' => 'Все доски должны иметь название не более 100 символов',
@@ -61,5 +63,13 @@ class CreateProjectRequest extends FormRequest
             'boards.*.description.string' => 'Все доски должны иметь описание строкового типа данных',
             'boards.*.description.max' => 'Все доски должны иметь описание не более 500 символов'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании проекта',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

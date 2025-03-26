@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class VerifyRegistrationRequest extends FormRequest
 {
@@ -22,8 +24,8 @@ class VerifyRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users|email',
-            'verify_code' => 'required|integer|max_digits:6'
+            'email' => 'required|email|exists:users,email',
+            'verify_code' => 'required|integer|min_digits:6'
         ];
     }
 
@@ -34,8 +36,16 @@ class VerifyRegistrationRequest extends FormRequest
             'email.email' => 'Электронная почта должна соответствовать формату эл. почт',
             'email.exists' => 'Введенная почта не относится ни к одному из пользователей',
             'verify_code.required' => 'Поле с кодом обязательно для заполнения',
-            'verify_code.integer' => 'Значение введенное в поле с кодом должно быть числом',
-            'verify_code.max_digits' => 'Значение введенное в поле с кодом вмещает максимум 6 чисел'
+            'verify_code.integer' => 'Поле с кодом должно содержать число',
+            'verify_code.min_digits' => 'Поле с кодом должно содержать код длинной в 6 символов'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при подтверждении почты',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

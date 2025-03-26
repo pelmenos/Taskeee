@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GetProjectsRequest extends FormRequest
+class DeleteSpaceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,6 +14,13 @@ class GetProjectsRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'id' => $this->route('id')
+        ]);
     }
 
     /**
@@ -24,23 +31,22 @@ class GetProjectsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'space_id' => 'required|uuid|exists:spaces,id'
+            'id' => 'uuid|exists:spaces,id'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'space_id.required' => 'Идентификатор пространства должен быть передан для запроса',
-            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'space_id.exists' => 'Идентификатор пространства не относится ни к одному пространству'
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству'
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при получении проектов',
+            'message' => 'Ошибка при удалении пространства',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

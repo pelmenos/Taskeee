@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\InviteEmailRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AcceptInviteSpaceRequest extends FormRequest
 {
@@ -18,7 +20,7 @@ class AcceptInviteSpaceRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'token' => $this->route('token'),
+            'token' => $this->route('token')
         ]);
     }
 
@@ -30,14 +32,22 @@ class AcceptInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'exists:invite_tokens,token',
+            'token' => 'exists:invite_tokens,token'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'token.exists' => 'Токен приглашения должен существовать',
+            'token.exists' => 'Токен приглашения должен существовать'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при принятии приглашения',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

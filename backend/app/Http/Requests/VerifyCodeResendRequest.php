@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AuthorizationRequest extends FormRequest
+class VerifyCodeResendRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class AuthorizationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required',
-            'remember_me' => 'required|string|in:true,false'
+            'email' => 'required|email|exists:users,email'
         ];
     }
 
@@ -35,17 +33,14 @@ class AuthorizationRequest extends FormRequest
         return [
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
-            'password.required' => 'Поле Пароль обязательно для заполнения',
-            'remember_me.required' => 'Поле Запомнить меня обязательно для заполнения',
-            'remember_me.string' => 'Поле Запомнить меня должно быть строкового типа',
-            'remember_me.in' => 'Поле Запомнить меня должно содержать значения: true, false'
+            'email.exists' => 'Введенная почта не относится ни к одному из пользователей'
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при авторизации',
+            'message' => 'Ошибка при повторной отправке кода',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

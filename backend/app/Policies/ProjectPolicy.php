@@ -25,9 +25,7 @@ class ProjectPolicy
             return false;
         }
 
-        $spaceRole = SpaceRole::find($spaceUser->role_id);
-
-        return ($spaceRole->permissions['projects_access'] === true) && (ProjectSpaceUser::
+        return ($spaceUser->role->permissions['projects_access'] === true) && (ProjectSpaceUser::
             where('project_id', $project->id)->where('space_user_id', $spaceUser->id)->exists());
     }
 }

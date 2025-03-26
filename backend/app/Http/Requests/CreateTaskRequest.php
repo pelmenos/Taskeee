@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateTaskRequest extends FormRequest
 {
@@ -42,5 +44,13 @@ class CreateTaskRequest extends FormRequest
             'board_id.required' => 'Идентификатор доски должен быть передан для запроса',
             'board_id.exists' => 'Идентификатор доски не относится ни к одной из досок'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании задачи',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateUserSpaceRoleRequest extends FormRequest
 {
@@ -30,9 +32,9 @@ class UpdateUserSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
+            'id' => 'uuid|exists:spaces,id',
             'user_id' => 'uuid|exists:space_users,id',
-            'role' => 'required|string|exists:space_roles,name',
+            'role' => 'required|string|exists:space_roles,name'
         ];
     }
 
@@ -40,12 +42,20 @@ class UpdateUserSpaceRoleRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
+            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'user_id.uuid' => 'Идентификатор пользователя пространства должен иметь тип данных UUID',
             'user_id.exists' => 'Идентификатор пользователя пространства должен относится к существующему пользователю пространства',
-            'role.required' => 'Поле Роль обязательно для заполнения',
-            'role.string' => 'Поле Роль должно содержать строковой тип данных',
-            'role.exists' => 'Поле Роль должно относится к существующей роли пространства'
+            'role.required' => 'Поле Роль пространства обязательно для заполнения',
+            'role.string' => 'Поле Роль пространства должно содержать строковой тип данных',
+            'role.exists' => 'Поле Роль пространства должно относится к существующей роли пространства'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при обновлении роли пользователя пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

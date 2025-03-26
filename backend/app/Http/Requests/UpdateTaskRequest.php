@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -50,5 +52,13 @@ class UpdateTaskRequest extends FormRequest
             'status.required' => 'Поле Статус обязательно для заполнения',
             'status.in' => 'Поле Статус должно содержать одно из значений: Выполнена, В процессе'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при обновлении задачи',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

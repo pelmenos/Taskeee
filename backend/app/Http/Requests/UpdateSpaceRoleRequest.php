@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateSpaceRoleRequest extends FormRequest
 {
@@ -18,7 +20,7 @@ class UpdateSpaceRoleRequest extends FormRequest
     {
         $this->merge([
             'id' => $this->route('id'),
-            'role_id' => $this->route('role_id'),
+            'role_id' => $this->route('role_id')
         ]);
     }
 
@@ -38,7 +40,7 @@ class UpdateSpaceRoleRequest extends FormRequest
             'permissions.finance_access' => 'required|boolean',
             'permissions.projects_access' => 'required|boolean',
             'permissions.team_access' => 'required|boolean',
-            'permissions.full_access' => 'required|boolean',
+            'permissions.full_access' => 'required|boolean'
         ];
     }
 
@@ -64,7 +66,15 @@ class UpdateSpaceRoleRequest extends FormRequest
             'permissions.finance_access.boolean' => 'Поле Доступ к финансам должно содержать логический тип данных',
             'permissions.projects_access.boolean' => 'Поле Доступ к проектам должно содержать логический тип данных',
             'permissions.team_access.boolean' => 'Поле Доступ к команде должно содержать логический тип данных',
-            'permissions.full_access.boolean' => 'Поле Полный доступ должно содержать логический тип данных',
+            'permissions.full_access.boolean' => 'Поле Полный доступ должно содержать логический тип данных'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при обновлении роли пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

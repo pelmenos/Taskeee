@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GetProjectRequest extends FormRequest
 {
@@ -17,7 +19,7 @@ class GetProjectRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'id' => $this->route('id')
         ]);
     }
 
@@ -29,7 +31,7 @@ class GetProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:projects,id',
+            'id' => 'uuid|exists:projects,id'
         ];
     }
 
@@ -37,7 +39,15 @@ class GetProjectRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор проекта не относится ни к одному проекту',
+            'id.exists' => 'Идентификатор проекта не относится ни к одному проекту'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при получении проекта',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

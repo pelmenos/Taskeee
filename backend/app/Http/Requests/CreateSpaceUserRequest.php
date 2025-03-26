@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateSpaceUserRequest extends FormRequest
 {
@@ -17,7 +19,7 @@ class CreateSpaceUserRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'space_id' => $this->route('id'),
+            'space_id' => $this->route('id')
         ]);
     }
 
@@ -38,8 +40,8 @@ class CreateSpaceUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
+            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'space_id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
             'email.exists' => 'Поле Электронная почта должна принадлежать существующему аккаунту',
@@ -47,5 +49,13 @@ class CreateSpaceUserRequest extends FormRequest
             'role_id.uuid' => 'Поле Роль пространства должно иметь тип данных UUID',
             'role_id.exists' => 'Поле Роль пространства должно относится к существующей роли пространства'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании пользователя пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

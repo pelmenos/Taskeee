@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use Askedio\SoftCascade\Traits\SoftCascadeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Board extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, SoftDeletes, SoftCascadeTrait;
 
     public $incrementing = false;
 
     public $keyType = 'string';
+
+    protected $softCascade = ['tasks'];
 
     protected $fillable = [
         'name',

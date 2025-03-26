@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\InviteEmailRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SendInviteSpaceRequest extends FormRequest
 {
@@ -18,7 +20,7 @@ class SendInviteSpaceRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
+            'id' => $this->route('id')
         ]);
     }
 
@@ -30,9 +32,9 @@ class SendInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces',
-            'email' => ['required', 'email','exists:users,email', new InviteEmailRule()], // тут также дописать проверку что юзер есть в табличке из 1.4, либо же в контроллере это чекать
-            'role' => 'required|string|exists:space_roles,name', // Как будет табличка из 1.4 то проверять нужно что роль существует(скорее всего именно как в спейсе)
+            'id' => 'uuid|exists:spaces,id',
+            'email' => ['required', 'email','exists:users,email', new InviteEmailRule()],
+            'role' => 'required|string|exists:space_roles,name'
         ];
     }
 
@@ -48,5 +50,13 @@ class SendInviteSpaceRequest extends FormRequest
             'role.string' => 'Поле Роль должно содержать строковой тип данных',
             'role.exists' => 'Поле Роль должно относится к существующей роли'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при отправлении приглашения',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

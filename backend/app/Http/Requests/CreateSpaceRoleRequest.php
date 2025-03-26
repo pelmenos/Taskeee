@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CreateSpaceRoleRequest extends FormRequest
 {
@@ -17,7 +19,7 @@ class CreateSpaceRoleRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'space_id' => $this->route('id'),
+            'space_id' => $this->route('id')
         ]);
     }
 
@@ -36,15 +38,15 @@ class CreateSpaceRoleRequest extends FormRequest
             'permissions.finance_access' => 'required|boolean',
             'permissions.projects_access' => 'required|boolean',
             'permissions.team_access' => 'required|boolean',
-            'permissions.full_access' => 'required|boolean',
+            'permissions.full_access' => 'required|boolean'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
+            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
+            'space_id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',
@@ -59,7 +61,15 @@ class CreateSpaceRoleRequest extends FormRequest
             'permissions.finance_access.boolean' => 'Поле Доступ к финансам должно содержать логический тип данных',
             'permissions.projects_access.boolean' => 'Поле Доступ к проектам должно содержать логический тип данных',
             'permissions.team_access.boolean' => 'Поле Доступ к команде должно содержать логический тип данных',
-            'permissions.full_access.boolean' => 'Поле Полный доступ должно содержать логический тип данных',
+            'permissions.full_access.boolean' => 'Поле Полный доступ должно содержать логический тип данных'
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Ошибка при создании роли пространства',
+            'errors' => $validator->errors()->getMessages(),
+        ], 422));
     }
 }

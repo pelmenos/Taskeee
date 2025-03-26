@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->foreign('space_id', 'fk-project-space_id')
                 ->on('spaces')->references('id');
+
+            $table->softDeletes();
         });
     }
 

@@ -43,7 +43,7 @@ class ProjectResource extends JsonResource
         $data['boards'] = BoardResource::collectionWithTasks($this->boards);
 
         if ($this->withTasks) {
-            $data['tasks'] = $this->resource->boards->flatMap->tasks;
+            $data['tasks'] = TaskResource::collection($this->resource->boards->flatMap->tasks);
         }
 
         if ($this->withCreatedAt) {
