@@ -1,6 +1,6 @@
 import { colorsTuple, virtualColor } from "@mantine/core"
 
-export const COLORS = {
+export const colors = {
   darkPrimary: colorsTuple("#af38ff"),
   darkOnPrimary: colorsTuple("#ffffff"),
 

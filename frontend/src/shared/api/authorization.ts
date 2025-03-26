@@ -1,7 +1,6 @@
 import { createStore, sample } from "effector"
 import { persist } from "../lib/local-storage"
 import { obj, or, str, val } from "@withease/contracts"
-import { debug } from "patronum"
 
 export enum SessionStatus {
   Initial,
@@ -12,8 +11,6 @@ export enum SessionStatus {
 export const $status = createStore<SessionStatus>(SessionStatus.Initial)
 export const $session = createStore<string>("")
 export const $user = createStore<User | null>(null)
-
-debug($status)
 
 // Set anonymous status if token is empty.
 sample({
@@ -26,6 +23,11 @@ sample({
 persist({
   key: "session",
   source: $session,
+})
+
+persist({
+  key: "user",
+  source: $user,
 })
 
 export const UserContract = obj({

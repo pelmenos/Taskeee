@@ -5,6 +5,7 @@ import { Link } from "atomic-router-react"
 import { $session, $user } from "shared/api"
 import { logouted } from "shared/session/logouted"
 import { useMantineColorScheme } from "@mantine/core"
+import { MainLayout } from "widgets/layouts/MainLayout"
 
 export const HomePage = () => {
   const { colorScheme, setColorScheme } = useMantineColorScheme()
@@ -20,10 +21,7 @@ export const HomePage = () => {
   })
 
   return (
-    <div className="home-page" style={{
-      maxWidth: "64rem",
-      margin: "0 auto",
-    }}>
+    <MainLayout>
       <Button onClick={() => setColorScheme(colorScheme === "dark" ? "light" : "dark")}>toggle ({colorScheme})</Button>
 
       <Button onClick={logout}>logout</Button>
@@ -46,6 +44,6 @@ export const HomePage = () => {
           {JSON.stringify(session, null, 2)}
         </pre>
       </div>
-    </div>
+    </MainLayout>
   )
 }

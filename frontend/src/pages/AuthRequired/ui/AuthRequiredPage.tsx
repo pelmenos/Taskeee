@@ -1,7 +1,10 @@
+import { MainLayout } from "widgets/layouts/MainLayout"
+import { Onboarding } from "widgets/Onboarding"
+
 export const AuthRequiredPage = () => {
   return (
-    <div className="">
-      AuthRequiredPage
-    </div>
+    <MainLayout className="">
+      <Onboarding />
+    </MainLayout>
   )
 }

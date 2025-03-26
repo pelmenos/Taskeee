@@ -6,10 +6,10 @@ import { Link } from "atomic-router-react"
 import { Flex, Text } from "@mantine/core"
 
 interface Props extends Omit<ComponentProps<typeof Link>, "to" | "params"> {
-
+  onlyIcon?: boolean,
 }
 
-export const Logo = ({ className, ...props }: Props) => {
+export const Logo = ({ className, onlyIcon, ...props }: Props) => {
   return (
     <Link
       style={{
@@ -33,17 +33,19 @@ export const Logo = ({ className, ...props }: Props) => {
           h="2rem"
           className="logo__icon" />
 
-        <Text
-          span
-          w="3rem"
-          lh={1}
-          ff="Manrope, serif"
-          td="none"
-          fw={800}
-          c="var(--logo-color)"
-        >
-          hpace crm
-        </Text>
+        {!onlyIcon && (
+          <Text
+            span
+            w="3rem"
+            lh={1}
+            ff="Manrope, serif"
+            td="none"
+            fw={800}
+            c="var(--logo-color)"
+          >
+            hpace crm
+          </Text>
+        )}
       </Flex>
     </Link>
   )

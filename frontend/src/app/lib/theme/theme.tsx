@@ -1,16 +1,17 @@
 import "./styles/index.scss"
-import { Checkbox, createTheme, rem, TextInput } from "@mantine/core"
-import { COLORS } from "./colors"
+import {Checkbox, createTheme, FileInput, rem, TextInput} from "@mantine/core"
+import {colors} from "./colors"
 
 export const initTheme = () =>
   createTheme({
     fontFamily: "Manrope, sans-serif",
 
-    colors: COLORS,
+    colors: colors,
 
     primaryColor: "primary",
 
     radius: {
+      max: "calc(infinity * 1px)",
       xxl: rem(20),
       xl: rem(16),
       lg: rem(12),
@@ -30,6 +31,28 @@ export const initTheme = () =>
     },
 
     defaultRadius: "md",
+
+    fontSizes: {
+      sm: rem(12),
+      md: rem(14),
+      lg: rem(16),
+    },
+
+    headings: {
+      sizes: {
+        h1: {
+          fontSize: rem(32),
+          fontWeight: "700",
+          lineHeight: "1",
+        },
+        h2: {
+          fontSize: rem(24),
+          fontWeight: "500",
+          lineHeight: "1",
+        }
+      },
+      fontFamily: "Montserrat, serif",
+    },
 
     components: {
       Checkbox: Checkbox.extend({
@@ -59,13 +82,27 @@ export const initTheme = () =>
             "512px": rem(12),
           },
           ff: "Montserrat, serif",
+          variant: "filled",
         },
-        styles: () => ({
+        styles: (theme) => ({
           input: {
-            border: "0",
+            // border: "0",
+            background: theme.colors.surfaceHighest[0]
           },
         }),
       }),
-    },
 
+      FileInput: FileInput.extend({
+        defaultProps: {
+          ff: "Montserrat, serif",
+          variant: "filled"
+        },
+        styles: (theme) => ({
+          input: {
+            // border: "0",
+            background: theme.colors.surfaceHighest[0]
+          },
+        }),
+      })
+    },
   })
