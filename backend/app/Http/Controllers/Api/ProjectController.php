@@ -25,20 +25,23 @@ class ProjectController extends Controller
 
         $this->authorize('spaceAdmin', $space);
 
-        $spaceUsers = SpaceUser::whereIn('id', $request->members)->get();
+        if($request->input('members')){
+            $spaceUsers = SpaceUser::whereIn('id', $request->input('members'))->get();
 
-        foreach ($spaceUsers as $spaceUser)
-        {
-            if($spaceUser->space_id !== $request->space_id){
-                return response()->json(['message' => 'Ошибка при создании проекта',
-                    'errors' => ['members' =>
-                        ['Пользователь с почтой '.$spaceUser->email.' не относится к данному пространству']]], 422);
-            }
+            foreach ($spaceUsers as $spaceUser)
+            {
+                if($spaceUser->space_id !== $request->space_id){
+                    return response()->json(['message' => 'Ошибка при создании проекта',
+                        'errors' => ['members' =>
+                            ['Пользователь с почтой '.$spaceUser->email.' не относится к данному пространству']]], 422);
+                }
 
-            if($spaceUser->role->permissions['projects_access'] !== true){
-                return response()->json(['message' => 'Ошибка при создании проекта',
-                    'errors' => ['members' =>
-                        ['Пользователь с почтой '.$spaceUser->email.' не имеет прав на доступ к проектам']]], 422);
+                if(($spaceUser->role->permissions['projects_access'] !== true) &&
+                    ($spaceUser->role->permissions['full_access'] !== true)){
+                    return response()->json(['message' => 'Ошибка при создании проекта',
+                        'errors' => ['members' =>
+                            ['Пользователь с почтой '.$spaceUser->email.' не имеет прав на доступ к проектам']]], 422);
+                }
             }
         }
 
@@ -48,13 +51,15 @@ class ProjectController extends Controller
             'space_id' => $request->space_id
         ]);
 
-        $project->spaceUsers()->attach($request->input('members'));
-
         Board::create([
             'name' => $request->boards[0]['name'],
             'description' => $request->boards[0]['description'],
             'project_id' => $project->id
         ]);
+
+        if($request->input('members')){
+            $project->spaceUsers()->attach($request->input('members'));
+        }
 
         return response()->json(new ProjectResource($project, true, true));
     }
@@ -105,27 +110,32 @@ class ProjectController extends Controller
 
         $this->authorize('spaceAdmin', $project->space);
 
-        $spaceUsers = SpaceUser::whereIn('id', $request->members)->get();
+        if($request->input('members')){
+            $spaceUsers = SpaceUser::whereIn('id', $request->input('members'))->get();
 
-        foreach ($spaceUsers as $spaceUser)
-        {
-            if($spaceUser->space_id !== $project->space->id){
-                return response()->json(['message' => 'Ошибка при обновлении проекта',
-                    'errors' => ['members' =>
-                        ['Пользователь с почтой '.$spaceUser->email.' не относится к данному пространству']]], 422);
+            foreach ($spaceUsers as $spaceUser)
+            {
+                if($spaceUser->space_id !== $project->space->id){
+                    return response()->json(['message' => 'Ошибка при обновлении проекта',
+                        'errors' => ['members' =>
+                            ['Пользователь с почтой '.$spaceUser->email.' не относится к данному пространству']]], 422);
+                }
+
+                if(($spaceUser->role->permissions['projects_access'] !== true) &&
+                    ($spaceUser->role->permissions['full_access'] !== true)){
+                    return response()->json(['message' => 'Ошибка при обновлении проекта',
+                        'errors' => ['members' =>
+                            ['Пользователь с почтой '.$spaceUser->email.' не имеет прав на доступ к проектам']]], 422);
+                }
+
+                if(ProjectSpaceUser::where('project_id', $request->id)->where('space_user_id', $spaceUser->id)->exists()){
+                    return response()->json(['message' => 'Ошибка при обновлении проекта',
+                        'errors' => ['members' =>
+                            ['Пользователь с почтой '.$spaceUser->email.' уже является участником данного проекта']]], 422);
+                }
             }
 
-            if($spaceUser->role->permissions['projects_access'] !== true){
-                return response()->json(['message' => 'Ошибка при обновлении проекта',
-                    'errors' => ['members' =>
-                        ['Пользователь с почтой '.$spaceUser->email.' не имеет прав на доступ к проектам']]], 422);
-            }
-
-            if(ProjectSpaceUser::where('project_id', $request->id)->where('space_user_id', $spaceUser->id)->exists()){
-                return response()->json(['message' => 'Ошибка при обновлении проекта',
-                    'errors' => ['members' =>
-                        ['Пользователь с почтой '.$spaceUser->email.' уже является участником данного проекта']]], 422);
-            }
+            $project->spaceUsers()->attach($request->input('members'));
         }
 
         $project->update([
@@ -133,14 +143,14 @@ class ProjectController extends Controller
             'description' => $request->description
         ]);
 
-        $project->spaceUsers()->attach($request->input('members'));
-
-        foreach ($request->boards as $board){
-            Board::create([
-                'name' => $board['name'],
-                'description' => $board['description'],
-                'project_id' => $project->id
-            ]);
+        if($request->input('boards')){
+            foreach ($request->input('boards') as $board){
+                Board::create([
+                    'name' => $board['name'],
+                    'description' => $board['description'],
+                    'project_id' => $project->id
+                ]);
+            }
         }
 
         return response()->json(new ProjectResource($project, true, true));
