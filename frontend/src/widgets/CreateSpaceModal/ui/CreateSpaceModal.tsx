@@ -34,7 +34,6 @@ export const CreateSpaceModal = (props: Props) => {
   })
 
   const handleSubmit = (fields: typeof form.values) => {
-    console.log(fields);
     submitted(fields)
   }
 

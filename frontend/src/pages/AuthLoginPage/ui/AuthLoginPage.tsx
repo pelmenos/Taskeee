@@ -54,11 +54,7 @@ export const AuthLoginPage = () => {
         <Stack gap="lg">
           <Title
             order={1}
-            ff="Montserrat, serif"
-            fz={{
-              base: "2rem",
-              "512px": "1.5rem",
-            }}
+            size="h1"
           >
             Авторизация
           </Title>
@@ -68,18 +64,16 @@ export const AuthLoginPage = () => {
               Нет аккаунта?
             </FormText>
 
-            <Link
-              style={{ textDecoration: "none" }}
-              to={routes.auth.register}>
-              <Text
-                fz="0.825rem"
-                fw={500}
-                c="onSurface"
-                span
-              >
-                Создать аккаунт
-              </Text>
-            </Link>
+            <Text
+              component={Link}
+              to={routes.auth.register}
+              fz="0.825rem"
+              fw={500}
+              c="onSurface"
+              span
+            >
+              Создать аккаунт
+            </Text>
           </Group>
 
           <Stack gap="xl">
@@ -107,14 +101,16 @@ export const AuthLoginPage = () => {
                 {...form.getInputProps("remember_me")}
               />
 
-              <Link
-                style={{ textDecoration: "none" }}
+              <Text
+                component={Link}
                 to={routes.auth.passwordRecovery}
+                fz="0.825rem"
+                fw={500}
+                c="onSurface"
+                span
               >
-                <FormText fw={500}>
-                  Забыли пароль
-                </FormText>
-              </Link>
+                Забыли пароль
+              </Text>
             </Group>
           </Stack>
 

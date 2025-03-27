@@ -1,11 +1,11 @@
 import { atom } from "shared/lib/factory"
 import { createStore, sample } from "effector"
-import { SpaceListItem } from "entities/space/model"
+import type { SpaceListItem } from "entities/space/model"
 import { createSpaceListQuery } from "entities/space/api"
 import { $status, SessionStatus } from "shared/api"
 
 
-export const currentSpaceModel = atom(() => {
+export const spaceModel = atom(() => {
   const spaceListQuery = createSpaceListQuery()
 
   const $availableSpaces = createStore<Array<SpaceListItem>>([])

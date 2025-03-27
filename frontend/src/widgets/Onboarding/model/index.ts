@@ -1,12 +1,13 @@
-import {update} from "@farfetched/core";
-import {currentSpaceModel} from "features/current-space/model";
-import {createSpaceModel} from "../../CreateSpaceModal/model";
+import { update } from "@farfetched/core"
+import { spaceModel } from "features/current-space/model/space"
+import { createSpaceModel } from "../../CreateSpaceModal/model"
 
-update(currentSpaceModel.spaceListQuery,
+
+update(spaceModel.spaceListQuery,
   {
     on: createSpaceModel.createSpaceMutation,
     by: {
-      success: ({query}) => {
+      success: ({ query }) => {
         let result = null
 
         if ("result" in query) {
@@ -15,9 +16,9 @@ update(currentSpaceModel.spaceListQuery,
 
         return ({
           result: result,
-          refetch: true
+          refetch: true,
         })
-      }
-    }
-  }
+      },
+    },
+  },
 )

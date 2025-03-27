@@ -1,17 +1,17 @@
-import {atom} from "shared/lib/factory"
-import {createStore, sample} from "effector"
-import {currentSpaceModel} from "../../current-space/model";
+import { atom } from "shared/lib/factory"
+import { createStore, sample } from "effector"
+import { spaceModel } from "./space"
 
 export enum OnboardingFlowStages {
   CreateSpaceStage = "create-space",
   CreateProjectStage = "create-project",
 }
 
-export const stagesModel = atom(() => {
+export const onboardingModel = atom(() => {
   const $stage = createStore(OnboardingFlowStages.CreateSpaceStage)
 
   sample({
-    source: currentSpaceModel.$currentSpace,
+    source: spaceModel.$currentSpace,
     filter: Boolean,
     fn: () => OnboardingFlowStages.CreateProjectStage,
     target: $stage,

@@ -17,6 +17,11 @@ export const routes = {
     passwordRecovery: createRoute(),
   },
 
+  project: {
+    list: createRoute(),
+    detail: createRoute<{id: string}>()
+  }
+
 } as const
 
 export const router = createHistoryRouter({
@@ -26,6 +31,9 @@ export const router = createHistoryRouter({
     { path: "/auth/password-recovery", route: routes.auth.passwordRecovery },
 
     { path: "/auth/required", route: routes.authRequired },
+
+    { path: "/project/list", route: routes.project.list},
+    { path: "/project/detail/:id", route: routes.project.detail},
 
     { path: "/", route: routes.home },
   ],

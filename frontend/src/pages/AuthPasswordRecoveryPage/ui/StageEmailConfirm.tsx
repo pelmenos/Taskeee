@@ -49,11 +49,7 @@ export const StageEmailConfirm = () => {
       <Stack gap="xxl">
         <Title
           order={1}
-          ff="Montserrat, serif"
-          fz={{
-            base: "2rem",
-            "512px": "1.5rem",
-          }}
+          size="h1"
         >
           Восстановление пароля
         </Title>

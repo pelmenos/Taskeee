@@ -1,15 +1,15 @@
 import { Button } from "shared/ui/Button"
 import { useUnit } from "effector-react"
 import { router } from "shared/routing"
-import { Link } from "atomic-router-react"
 import { $session, $user } from "shared/api"
 import { logouted } from "shared/session/logouted"
-import { useMantineColorScheme } from "@mantine/core"
+import { Group, Paper, Text } from "@mantine/core"
 import { MainLayout } from "widgets/layouts/MainLayout"
+import { Onboarding } from "widgets/Onboarding"
+import { $onboardingIsVisible } from "../model"
+
 
 export const HomePage = () => {
-  const { colorScheme, setColorScheme } = useMantineColorScheme()
-
   const {
     logout,
     user,
@@ -20,30 +20,42 @@ export const HomePage = () => {
     session: $session,
   })
 
+  const onboardingIsVisible = useUnit($onboardingIsVisible)
+
   return (
-    <MainLayout>
-      <Button onClick={() => setColorScheme(colorScheme === "dark" ? "light" : "dark")}>toggle ({colorScheme})</Button>
+    <MainLayout
+      display="grid"
+    >
+      <Paper
+        bg="surface"
+        p="xl"
+      >
+        {onboardingIsVisible ? (
+          <Onboarding />
+        ) : (
+          <Text>there has been onboarding</Text>
+        )}
 
-      <Button onClick={logout}>logout</Button>
+        <Button onClick={logout}>logout</Button>
 
-      <nav style={{
-        display: "flex",
-        gap: "1rem",
-      }}>
-        {router.routes.map(value => <Link key={value.path} to={value.route}>{value.path}</Link>)}
-      </nav>
+        <Group>
+          {router.routes.map(value =>
+            <Text component="a" href={value.path} key={value.path}>
+              {value.path}
+            </Text>,
+          )}
+        </Group>
 
-      <div className="">
-        <h1>User:</h1>
         <pre>
           {JSON.stringify(user, null, 2)}
         </pre>
 
-        <h1>session:</h1>
         <pre>
           {JSON.stringify(session, null, 2)}
         </pre>
-      </div>
+
+      </Paper>
+
     </MainLayout>
   )
 }

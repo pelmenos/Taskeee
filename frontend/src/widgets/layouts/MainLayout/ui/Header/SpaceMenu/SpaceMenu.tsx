@@ -1,10 +1,10 @@
 import "./SpaceMenu.scss"
 import { ComponentProps } from "react"
-import { Group, Menu, MenuDropdown, MenuTarget, Paper, Text, UnstyledButton } from "@mantine/core"
+import {Group, Menu, MenuDropdown, MenuItem, MenuTarget, Paper, Text, UnstyledButton} from "@mantine/core"
 import { StackIcon } from "shared/ui/assets/icons/StackIcon"
 import { ChevronRightIcon } from "shared/ui/assets/icons/ChevronRightIcon"
 import { useUnit } from "effector-react"
-import { currentSpaceModel } from "features/current-space/model"
+import { spaceModel } from "features/current-space/model/space"
 
 
 interface Props extends ComponentProps<"div"> {
@@ -12,8 +12,8 @@ interface Props extends ComponentProps<"div"> {
 }
 
 export const SpaceMenu = ({}: Props) => {
-  const currentSpace = useUnit(currentSpaceModel.$currentSpace)
-  const availableSpaces = useUnit(currentSpaceModel.$availableSpaces)
+  const currentSpace = useUnit(spaceModel.$currentSpace)
+  const availableSpaces = useUnit(spaceModel.$availableSpaces)
 
   return (
     <Menu>
@@ -38,6 +38,7 @@ export const SpaceMenu = ({}: Props) => {
               h="100%"
               align="center"
               px="md"
+              wrap="nowrap"
             >
               <StackIcon />
 
@@ -62,6 +63,7 @@ export const SpaceMenu = ({}: Props) => {
               h="100%"
               align="center"
               px="md"
+              wrap="nowrap"
             >
               <Text
                 span
@@ -80,7 +82,7 @@ export const SpaceMenu = ({}: Props) => {
       {!!availableSpaces.length && (
         <MenuDropdown>
           {availableSpaces.map(item => (
-            <span key={item.id}>{item.name}</span>
+            <MenuItem key={item.id}>{item.name}</MenuItem>
           ))}
         </MenuDropdown>
       )}

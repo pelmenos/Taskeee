@@ -20,6 +20,7 @@ export const Header = ({ onSidebarToggle }: Props) => {
         h="100%"
         align="center"
         justify="space-between"
+        wrap="nowrap"
       >
         <ActionIcon
           onClick={onSidebarToggle}
@@ -33,6 +34,7 @@ export const Header = ({ onSidebarToggle }: Props) => {
           h="100%"
           align="center"
           justify="space-between"
+          wrap="nowrap"
         >
           <SpaceMenu/>
 

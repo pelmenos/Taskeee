@@ -12,10 +12,8 @@ type CreateSpaceFormSchema = {
   avatar: File | null,
 }
 
-type SuccessCallback = () => void
-
 export const createSpaceModel = atom(() => {
-  const Gate = createGate<SuccessCallback>()
+  const Gate = createGate<() => void>()
 
   const $successCallback = restore(Gate.open, null)
 
@@ -89,9 +87,8 @@ export const createSpaceModel = atom(() => {
   sample({
     clock: fileUploaded,
     source: $spaceFormSchema,
-    filter: Boolean,
     fn: (source, clock) => ({
-      ...source,
+      ...source!,
       avatar: clock,
     }),
     target: createSpaceMutation.start,

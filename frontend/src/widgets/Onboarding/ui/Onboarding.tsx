@@ -1,6 +1,6 @@
 import "./Onboarding.scss"
-import { ComponentProps } from "react"
-import { OnboardingFlowStages, stagesModel } from "features/onboarding-flow/model/stages"
+import type { ComponentProps } from "react"
+import { OnboardingFlowStages, onboardingModel } from "features/current-space"
 import { useUnit } from "effector-react"
 import { StageCreateSpace } from "./StageCreateSpace"
 import { StageCreateProject } from "./StageCreateProject"
@@ -12,15 +12,15 @@ interface Props extends ComponentProps<typeof Box> {
 }
 
 export const Onboarding = (props: Props) => {
-  const stage = useUnit(stagesModel.$stage)
+  const stage = useUnit(onboardingModel.$stage)
 
   return (
     <Box
       p="xxl"
       {...props}
     >
-      {stage === OnboardingFlowStages.CreateSpaceStage && <StageCreateSpace/>}
-      {stage === OnboardingFlowStages.CreateProjectStage && <StageCreateProject/>}
+      {stage === OnboardingFlowStages.CreateSpaceStage && <StageCreateSpace />}
+      {stage === OnboardingFlowStages.CreateProjectStage && <StageCreateProject />}
     </Box>
   )
 }

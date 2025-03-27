@@ -36,7 +36,8 @@ export const UserMenu = (props: Props) => {
             w="2.25rem"
             h="2.25rem"
             radius="max"
-            src="https://imgur.com/gwHhOGF.gif"
+            src={null} // TODO: no user avatar on backend!
+            fallbackSrc="https://imgur.com/gwHhOGF.gif"
             alt="avatar"
           />
 
@@ -71,7 +72,8 @@ export const UserMenu = (props: Props) => {
             w="2.25rem"
             h="2.25rem"
             radius="max"
-            src="https://imgur.com/gwHhOGF.gif"
+            src={null} // TODO: no user avatar on backend!
+            fallbackSrc="https://imgur.com/gwHhOGF.gif"
             alt="avatar"
           />
 

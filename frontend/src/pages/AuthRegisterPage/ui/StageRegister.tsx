@@ -46,11 +46,7 @@ export const StageRegister = () => {
       <Stack gap="xxl">
         <Title
           order={1}
-          ff="Montserrat, serif"
-          fz={{
-            base: "2rem",
-            "512px": "1.5rem",
-          }}
+          size="h1"
         >
           Регистрация
         </Title>
@@ -59,19 +55,16 @@ export const StageRegister = () => {
           <FormText>
             Уже есть аккаунт?
           </FormText>
-
-          <Link
-            style={{ textDecoration: "none" }}
-            to={routes.auth.login}>
-            <Text
-              fz="0.825rem"
-              fw={500}
-              c="onSurface"
-              span
-            >
-              Войти в аккаунт
-            </Text>
-          </Link>
+          <Text
+            component={Link}
+            to={routes.auth.login}
+            fz="0.825rem"
+            fw={500}
+            c="onSurface"
+            span
+          >
+            Войти в аккаунт
+          </Text>
         </Group>
 
         <Stack gap="xl">

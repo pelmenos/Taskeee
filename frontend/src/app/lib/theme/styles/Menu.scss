@@ -1,0 +1,16 @@
+.mantine-Menu-dropdown {
+  border-color: var(--mantine-color-primary-0);
+  background: var(--mantine-color-surfaceHighest-0);
+  padding: var(--mantine-spacing-md);
+
+  .mantine-Menu-item {
+    &[data-hovered] {
+      background: var(--mantine-color-surfaceHighestHover-0)
+    }
+
+    .mantine-Menu-itemLabel {
+      font-size: var(--mantine-font-size-sm);
+      font-weight: 700;
+    }
+  }
+}
