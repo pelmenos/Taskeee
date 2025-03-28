@@ -26,7 +26,8 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'avatar' => $request->avatar ?? null,
+            'password' => Hash::make($request->password)
         ]);
 
         return response()->json(['message' => 'Пользователь прошел базовую регистрацию', 'email' => $user->email]);
