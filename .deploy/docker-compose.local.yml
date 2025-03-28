@@ -1,5 +1,17 @@
 services:
 
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: .deploy/Dockerfile
+    container_name: frontend
+    image: frontend
+    restart: unless-stopped
+    depends_on:
+      - backend-proxy
+    networks:
+      - service
+
   backend:
     build:
       context: ../backend
@@ -37,6 +49,7 @@ services:
     container_name: nginx
     restart: unless-stopped
     depends_on:
+      - frontend
       - backend-proxy
     ports:
       - "80:80"

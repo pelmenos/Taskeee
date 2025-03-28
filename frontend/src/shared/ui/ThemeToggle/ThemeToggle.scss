@@ -1,0 +1,42 @@
+:root[data-mantine-color-scheme=light] {
+  --tt-border: 1px solid #28303F;
+  --tt-sun-control-bg: transparent;
+  --tt-sun-control-color: #363853;
+  --tt-moon-control-bg: #363853;
+  --tt-moon-control-color: #FFFFFF;
+}
+
+:root[data-mantine-color-scheme=dark] {
+  --tt-border: 1px solid #A2A2A2;
+  --tt-sun-control-bg: transparent;
+  --tt-sun-control-color: #A2A2A2;
+  --tt-moon-control-bg: var(--mantine-color-primary-0);
+  --tt-moon-control-color: var(--mantine-color-onPrimary-0);
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  border: var(--tt-border);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+
+  .theme-toggle__control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 2.5rem;
+
+    &:has(.theme-toggle__icon.sun) {
+      background: var(--tt-sun-control-bg);
+      color: var(--tt-sun-control-color);
+    }
+
+    &:has(.theme-toggle__icon.moon) {
+      background: var(--tt-moon-control-bg);
+      color: var(--tt-moon-control-color);
+    }
+  }
+}
