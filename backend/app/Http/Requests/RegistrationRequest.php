@@ -27,6 +27,7 @@ class RegistrationRequest extends FormRequest
         return [
             'name' => 'required|string|max:36|regex:/^[А-ЯЁ][аА-яЯёЁ]+\s+[А-ЯЁ][аА-яЯёЁ]*$/u',
             'email' => 'required|email|unique:users,email',
+            'avatar' => 'url',
             'password' => [
                 'required',
                 'min:8',
@@ -47,6 +48,7 @@ class RegistrationRequest extends FormRequest
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
             'email.unique' => 'Введенная эл. почта уже относится к зарегистрированному пользователю',
+            'avatar.url' => 'Поле Изображение должно содержать валидную по формату ссылку',
             'password.required' => 'Поле Пароль обязательно для заполнения',
             'password.min' => 'Поле Пароль должно быть длинной минимум в 8 символов',
             'password.regex' => 'Поле Пароль должно содержать латинские прописные и строчные буквы, цифры и специальные символы'
