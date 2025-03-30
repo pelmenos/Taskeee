@@ -61,6 +61,8 @@ class Payment extends Model
             ->where('sum', 'like', '%' . $term . '%')
             ->orWhere('comment', 'like', '%' . $term . '%')
             ->orWhere('id', 'like', '%' . $term . '%')
+            ->orWhere('type', 'like', '%' . $term . '%')
+            ->orWhere('method', 'like', '%' . $term . '%')
             ->orWhereHas('status', function ($query) use ($term) {
                 $query->where('name', 'like', '%' . $term . '%');
             })
