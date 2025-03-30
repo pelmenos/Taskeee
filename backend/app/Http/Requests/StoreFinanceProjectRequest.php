@@ -35,7 +35,7 @@ class StoreFinanceProjectRequest extends FormRequest
             'status_id' => 'integer|required|in:'
                 . implode(',', FinanceProjectStatus::pluck('id')->toArray()),
             'project_id' => 'uuid|required|in:'
-                . implode(',', $space->projects()->pluck('id')->toArray()),
+                . implode(',', $space->projects()->pluck('project_id')->toArray()),
             'coordinator_id' => 'uuid|required|in:'
                 . implode(',', $space->users()->pluck('id')->toArray()),
             'lead_id' => 'uuid|required|in:'
