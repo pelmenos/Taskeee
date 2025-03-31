@@ -16,7 +16,7 @@ import { useForm } from "@mantine/form"
 import { ProfileIcon } from "shared/ui/assets/icons/ProfileIcon"
 
 export const StageRegister = () => {
-  const form = useForm({
+  const { setErrors, ...form } = useForm({
     mode: "uncontrolled",
     initialValues: {
       name: "",
@@ -34,8 +34,8 @@ export const StageRegister = () => {
   })
 
   useEffect(() => {
-    form.setErrors(formErrors)
-  }, [formErrors])
+    setErrors(formErrors)
+  }, [setErrors, formErrors])
 
   const handleSubmit = (fields: typeof form.values) => {
     submitted(fields)

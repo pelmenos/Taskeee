@@ -1,9 +1,10 @@
 import { atom } from "shared/lib/factory"
-import { createConfirmCodeResendMutation, createConfirmEmailMutation } from "entities/auth/api"
+import { createConfirmCodeResendMutation, createConfirmEmailMutation } from "entities/auth"
 import { createGate } from "effector-react"
 import { combine, createEvent, createStore, sample } from "effector"
 import { interval, reset, spread } from "patronum"
 import { routes } from "shared/routing"
+import { mapFormError } from "shared/lib/map-form-errors"
 import { stagesModel } from "./stages"
 
 type StageConfirmFields = {
@@ -97,19 +98,10 @@ export const confirmModel = atom(() => {
   sample({
     source: confirmEmailMutation.finished.failure,
     filter: (source) => !!source.error.data,
-    fn: (source) => {
-      if (source.error.data!.errors) {
-        const errors = source.error.data!.errors
-
-        return {
-          code: errors?.verify_code ? errors.verify_code[0] : null,
-        }
-      }
-
-      return {
-        code: source.error.data!.message,
-      }
-    },
+    fn: (source) => mapFormError(
+      source,
+      (message) => ({ verify_code: message }),
+    ),
     target: spread({
       code: $errorFieldCode,
     }),

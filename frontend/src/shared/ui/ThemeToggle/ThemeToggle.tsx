@@ -1,11 +1,11 @@
 import "./ThemeToggle.scss"
 
-import { Box, UnstyledButton, useMantineColorScheme } from "@mantine/core"
-import { ComponentProps } from "react"
+import { UnstyledButtonProps , Box, UnstyledButton, useMantineColorScheme } from "@mantine/core"
+
 import { MoonIcon } from "../assets/icons/MoonIcon"
 import { SunIcon } from "../assets/icons/SunIcon"
 
-interface Props extends Omit<ComponentProps<typeof UnstyledButton>, "onClick"> {
+interface Props extends Omit<UnstyledButtonProps, "onClick"> {
 
 }
 

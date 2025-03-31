@@ -1,4 +1,4 @@
-import { SvgIcon, type SvgIconProps } from "shared/ui/SvgIcon"
+import { SvgIcon, SvgIconProps } from "../../SvgIcon"
 
 export const HPACE = (props: SvgIconProps) => (
 	<SvgIcon

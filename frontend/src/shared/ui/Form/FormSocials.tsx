@@ -1,10 +1,11 @@
-import React, { ComponentProps } from "react"
-import { VK } from "shared/ui/assets/icons/VK"
-import { Yandex } from "shared/ui/assets/icons/Yandex"
-import { Telegram } from "shared/ui/assets/icons/Telegram"
-import { Center, Paper, SimpleGrid } from "@mantine/core"
+import React from "react"
+import { SimpleGridProps , Center, Paper, SimpleGrid } from "@mantine/core"
 
-interface Props extends ComponentProps<typeof SimpleGrid> {
+import { VK } from "../assets/icons/VK"
+import { Yandex } from "../assets/icons/Yandex"
+import { Telegram } from "../assets/icons/Telegram"
+
+interface Props extends SimpleGridProps {
 }
 
 export const FormSocials = (props: Props) => (

@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "shared/ui/SvgIcon"
+import { SvgIcon, SvgIconProps } from "../../SvgIcon"
 
 export const ChevronRightIcon = (props: SvgIconProps) => (
   <SvgIcon

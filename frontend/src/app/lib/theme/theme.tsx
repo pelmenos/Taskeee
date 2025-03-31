@@ -1,5 +1,5 @@
 import "./styles/index.scss"
-import {Checkbox, createTheme, FileInput, rem, TextInput} from "@mantine/core"
+import {Checkbox, FileInput, TextInput, createTheme, rem} from "@mantine/core"
 import {colors} from "./colors"
 
 export const initTheme = () =>

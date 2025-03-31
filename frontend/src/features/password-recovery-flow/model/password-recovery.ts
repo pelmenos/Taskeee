@@ -2,8 +2,9 @@ import { atom } from "shared/lib/factory"
 import { combine, createEvent, createStore, sample } from "effector"
 import { not, reset, spread } from "patronum"
 import { routes } from "shared/routing"
+import { createPasswordRecoveryMutation } from "entities/auth"
+import { mapFormError } from "shared/lib/map-form-errors"
 import { stagesModel } from "./stages"
-import { createPasswordRecoveryMutation } from "entities/auth/api"
 
 export type StagePasswordRecoveryFields = {
   password: string
@@ -49,19 +50,13 @@ export const passwordRecoveryModel = atom(() => {
   sample({
     source: passwordRecoveryMutation.finished.failure,
     filter: (source) => !!source.error.data,
-    fn: (source) => {
-      if (source.error.data!.errors) {
-        const errors = source.error.data!.errors
-
-        return {
-          password: errors.password ? errors.password[0] : null,
-        }
-      }
-
-      return {
-        password: source.error.data!.message,
-      }
-    },
+    fn: (source) =>
+      mapFormError(
+        source,
+        (message) => ({
+          password: message,
+        }),
+      ),
     target: spread({
       password: $errorFieldPassword,
     }),

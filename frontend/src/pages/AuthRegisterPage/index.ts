@@ -1,6 +1,6 @@
 import { routes } from "shared/routing"
-import { AuthRegisterPage } from "./ui/AuthRegisterPage"
 import { createRouteView } from "atomic-router-react"
+import { AuthRegisterPage } from "./ui/AuthRegisterPage"
 import { anonymousRoute } from "./model"
 
 

@@ -1,9 +1,10 @@
 import { atom } from "shared/lib/factory"
 import { combine, createEvent, createStore, sample } from "effector"
 import { interval, not, reset, spread } from "patronum"
-import { createConfirmCodeResendMutation, createPasswordRecoveryConfirmMutation } from "entities/auth/api"
-import { PasswordRecoveryFlowStages, stagesModel } from "./stages"
+import { createConfirmCodeResendMutation, createPasswordRecoveryConfirmMutation } from "entities/auth"
 import { createGate } from "effector-react"
+import { mapFormError } from "shared/lib/map-form-errors"
+import { PasswordRecoveryFlowStages, stagesModel } from "./stages"
 
 type StageEmailConfirmFields = {
   code: number
@@ -19,11 +20,9 @@ export const emailConfirmModel = atom(() => {
 
   const codeResent = createEvent()
 
-  const $errorRoot = createStore<string | null>(null)
   const $errorFieldCode = createStore<string | null>(null)
 
   const $formErrors = combine({
-    root: $errorRoot,
     code: $errorFieldCode,
   })
 
@@ -68,7 +67,7 @@ export const emailConfirmModel = atom(() => {
     source: confirmCodeResendMutation.finished.failure,
     filter: (source) => !!source.error.data,
     fn: (source) => source.error.data!.message,
-    target: $errorRoot,
+    target: $errorFieldCode,
   })
 
   sample({
@@ -102,7 +101,6 @@ export const emailConfirmModel = atom(() => {
   reset({
     clock: [submitted, passwordRecoveryConfirmMutation.finished.success],
     target: [
-      $errorRoot,
       $errorFieldCode,
     ],
   })
@@ -110,24 +108,15 @@ export const emailConfirmModel = atom(() => {
   sample({
     source: passwordRecoveryConfirmMutation.finished.failure,
     filter: (source) => !!source.error.data,
-    fn: (source) => {
-      if (source.error.data!.errors) {
-        const errors = source.error.data!.errors
-
-        return {
-          root: null,
-          code: errors.verify_code ? errors.verify_code[0] : null,
-        }
-      }
-
-      return {
-        root: source.error.data!.message,
-        code: null,
-      }
-    },
+    fn: (source) =>
+      mapFormError(
+        source,
+        (message) => ({
+          verify_code: message,
+        }),
+      ),
     target: spread({
-      root: $errorRoot,
-      code: $errorFieldCode,
+      verify_code: $errorFieldCode,
     }),
   })
 

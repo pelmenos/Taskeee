@@ -1,6 +1,6 @@
 import { routes } from "shared/routing"
-import { AuthLoginPage } from "./ui/AuthLoginPage"
 import { createRouteView } from "atomic-router-react"
+import { AuthLoginPage } from "./ui/AuthLoginPage"
 import { authLoginModel } from "./model"
 
 

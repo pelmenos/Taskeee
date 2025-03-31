@@ -1,15 +1,15 @@
 import { createApiMutation } from "shared/lib/createApiMutation"
-import type {
+import { createApiQuery } from "shared/lib/createApiQuery"
+import {
+  CreateProjectFormSchema,
   ProjectCreateError,
   ProjectCreateSuccess,
   ProjectDetailError,
   ProjectDetailParams,
   ProjectDetailSuccess,
-  CreateProjectFormSchema,
   ProjectListParams,
   ProjectListSuccess,
 } from "../model"
-import { createApiQuery } from "shared/lib/createApiQuery"
 
 export const createCreateProjectMutation = () =>
   createApiMutation<

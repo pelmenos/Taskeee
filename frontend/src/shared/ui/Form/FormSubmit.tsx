@@ -1,7 +1,7 @@
-import { Button } from "@mantine/core"
-import { ComponentProps } from "react"
+import { ButtonProps , Button } from "@mantine/core"
 
-interface Props extends ComponentProps<typeof Button<"button">> {
+
+interface Props extends ButtonProps {
 
 }
 

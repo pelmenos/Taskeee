@@ -1,6 +1,6 @@
 import { reset } from "patronum"
 import { routes } from "shared/routing"
-import { stagesModel } from "features/register-flow/model/stages"
+import { stagesModel } from "features/register-flow"
 import { chainAnonymous } from "shared/session"
 
 

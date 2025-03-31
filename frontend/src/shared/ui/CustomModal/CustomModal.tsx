@@ -1,15 +1,25 @@
 import "./CustomModal.scss"
-import type {ComponentProps} from "react"
-import {ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, ModalRoot, rem} from "@mantine/core";
-import {clsx} from "clsx";
-import {ChevronLeftIcon} from "../assets/icons/ChevronLeftIcon";
+import {
+  ModalOverlayProps,
+  ModalRootProps,
+
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  ModalRoot,
+  rem} from "@mantine/core"
+
+import { clsx } from "clsx"
+import { ChevronLeftIcon } from "../assets/icons/ChevronLeftIcon"
 
 
-interface Props extends ComponentProps<typeof ModalRoot> {
-  overlayProps?: ComponentProps<typeof ModalOverlay>
+interface Props extends ModalRootProps {
+  overlayProps?: ModalOverlayProps
 }
 
-export const CustomModal = ({className, children, overlayProps, ...props}: Props) => {
+export const CustomModal = ({ className, children, overlayProps, ...props }: Props) => {
   return (
     <ModalRoot
       centered
@@ -26,7 +36,7 @@ export const CustomModal = ({className, children, overlayProps, ...props}: Props
         <ModalHeader>
           <ModalCloseButton
             icon={
-              <ChevronLeftIcon/>
+              <ChevronLeftIcon />
             }
           >
             Назад

@@ -1,4 +1,7 @@
 export { stagesModel, PasswordRecoveryFlowStages } from "./model/stages"
-export { emailModel, type StageEmailFields } from "./model/email"
+export { emailModel } from "./model/email"
+export type { StageEmailFields } from "./model/email"
 export { emailConfirmModel } from "./model/email-confirm"
-export { passwordRecoveryModel, type StagePasswordRecoveryFields } from "./model/password-recovery"
+export { passwordRecoveryModel } from "./model/password-recovery"
+export type { StagePasswordRecoveryFields } from "./model/password-recovery"
+

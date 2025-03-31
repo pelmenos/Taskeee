@@ -1,6 +1,7 @@
 import { attach, createEffect } from "effector"
+import { FetchError, FetchOptions, ofetch } from "ofetch";
+
 import { $session } from "../api"
-import { FetchError, FetchOptions, ofetch } from "ofetch"
 
 
 const getTokenFx = attach({
@@ -13,7 +14,7 @@ export const createRequestInstance = <P = RequestInit, R = void, E = void>({
   payload,
 }: Omit<CreateRequestInstanceParams<P>, "url">) =>
   createEffect<P, R, FetchError<E>>(async (params) => {
-    const { url, query, headers, ...fetchOptions } = getConfig(payload, params)
+    const { url, headers, ...fetchOptions } = getConfig(payload, params)
 
     const newHeaders = new Headers(headers)
 

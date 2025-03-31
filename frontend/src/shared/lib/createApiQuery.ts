@@ -1,5 +1,7 @@
-import { createQuery, DynamicallySourcedField } from "@farfetched/core"
-import { createRequestInstance, Payload } from "./createRequestInstance"
+import { DynamicallySourcedField , createQuery } from "@farfetched/core";
+
+import { Payload , createRequestInstance } from "./createRequestInstance";
+
 import { API_URL } from "./config"
 
 interface QueryParameters<
@@ -45,9 +47,9 @@ export const createApiQuery = <
     initialData: initialData,
   })
 
-  query.finished.failure.watch(({ error }) => {
-    console.error(error)
-  })
+  // query.finished.failure.watch(({ error }) => {
+  //   console.error(error)
+  // })
 
   return query
 }

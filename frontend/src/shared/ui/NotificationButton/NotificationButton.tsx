@@ -1,10 +1,10 @@
 import "./NotificationButton.scss"
-import { ComponentProps } from "react"
-import { Center, Flex } from "@mantine/core"
+import { FlexProps , Center } from "@mantine/core"
+
 import { RingIcon } from "../assets/icons/RingIcon"
 
 
-interface Props extends ComponentProps<typeof Flex> {
+interface Props extends FlexProps {
 
 }
 
