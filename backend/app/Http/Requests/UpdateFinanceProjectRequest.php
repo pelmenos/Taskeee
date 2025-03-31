@@ -36,7 +36,7 @@ class UpdateFinanceProjectRequest extends FormRequest
             'status_id' => 'integer|in:'
                 . implode(',', FinanceProjectStatus::pluck('id')->toArray()),
             'project_id' => 'uuid|in:'
-                . implode(',', $space->projects()->pluck('id')->toArray()),
+                . implode(',', $space->projects()->pluck('project_id')->toArray()),
             'coordinator_id' => 'uuid|in:'
                 . implode(',', $space->users()->pluck('id')->toArray()),
             'lead_id' => 'uuid|in:'

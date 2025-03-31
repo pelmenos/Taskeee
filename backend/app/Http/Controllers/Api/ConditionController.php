@@ -29,7 +29,7 @@ class ConditionController extends Controller
         }
 
         return response()->json([
-            'message' => 'Предмет не найден'
+            'message' => 'Условие платежа не найдено'
         ], Response::HTTP_NOT_FOUND);
     }
 
@@ -58,7 +58,7 @@ class ConditionController extends Controller
         }
 
         return response()->json([
-            'message' => 'Предмет не найден'
+            'message' => 'Условие платежа не найдено'
         ], Response::HTTP_NOT_FOUND);
     }
 
@@ -74,7 +74,7 @@ class ConditionController extends Controller
         }
 
         return response()->json([
-            'message' => 'Предмет не найден'
+            'message' => 'Условие платежа не найдено'
         ], Response::HTTP_NOT_FOUND);
     }
 }

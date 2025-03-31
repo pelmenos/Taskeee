@@ -1,0 +1,53 @@
+@layer widget {
+	.form-layout {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+
+		background: var(--surface-lowest);
+		font-family: "Montserrat", serif;
+		font-optical-sizing: auto;
+		font-weight: 400;
+		font-style: normal;
+
+		.header {
+			padding: 2.25rem 3rem;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+
+			display: flex;
+			justify-content: flex-start;
+
+			@media (width <= 512px) {
+				justify-content: center;
+			}
+		}
+
+		.main {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex: 1 0 auto;
+
+			.form-container {
+				flex: 0 1 27.5rem;
+
+				@media (width <= 512px) {
+					margin: 0 1.5rem;
+				}
+
+				.disclaimer {
+					margin: 1.5rem 0 0 0;
+					color: var(--on-surface-variant);
+					font-size: var(--fz-xs);
+					font-weight: 500;
+					text-wrap: balance;
+					text-align: center;
+				}
+			}
+		}
+	}
+}

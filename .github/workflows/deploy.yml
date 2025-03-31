@@ -34,5 +34,6 @@ jobs:
           script: |
             cp ~/envs/deploy.env ~/Taskeee/.deploy/.env
             cp ~/envs/backend.env ~/Taskeee/backend/.env
+            cp ~/envs/frontend.env ~/Taskeee/frontend/.env
             cd ~/Taskeee/.deploy
             docker compose up -d --build

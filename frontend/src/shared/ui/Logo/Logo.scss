@@ -1,0 +1,15 @@
+:root[data-mantine-color-scheme="light"] {
+  --logo-fill: url(#logo-light-gradient);
+  --logo-color: #1e1f2e;
+}
+
+:root[data-mantine-color-scheme="dark"] {
+  --logo-fill: url(#logo-dark-gradient);
+  --logo-color: #fbfbfb;
+}
+
+.logo__icon {
+  path {
+    fill: var(--logo-fill);
+  }
+}
