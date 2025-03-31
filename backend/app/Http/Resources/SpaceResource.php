@@ -10,17 +10,20 @@ class SpaceResource extends JsonResource
     private $withCreatedAt;
     private $withUpdatedAt;
 
-    public function __construct($resource, $withCreatedAt = false, $withUpdatedAt = false)
+    private $withMembers;
+
+    public function __construct($resource, $withCreatedAt = false, $withUpdatedAt = false, $withMembers = false)
     {
         parent::__construct($resource);
         $this->withCreatedAt = $withCreatedAt;
         $this->withUpdatedAt = $withUpdatedAt;
+        $this->withMembers = $withMembers;
     }
 
-    public static function collectionWithFlags($collection, $withCreatedAt = false, $withUpdatedAt = false)
+    public static function collectionWithFlags($collection, $withCreatedAt = false, $withUpdatedAt = false, $withMembers = false)
     {
-        return $collection->map(function ($resource) use ($withCreatedAt, $withUpdatedAt) {
-            return new self($resource, $withCreatedAt, $withUpdatedAt);
+        return $collection->map(function ($resource) use ($withCreatedAt, $withUpdatedAt, $withMembers) {
+            return new self($resource, $withCreatedAt, $withUpdatedAt, $withMembers);
         });
     }
 
@@ -39,6 +42,10 @@ class SpaceResource extends JsonResource
         $data['avatar'] = $this->resource->avatar;
         $data['admin_id'] = $this->resource->admin_id;
         $data['tariff'] = $this->resource->tariff;
+
+        if ($this->withMembers) {
+            $data['members'] = SpaceUserResource::collection($this->spaceUsers);
+        }
 
         if ($this->withCreatedAt) {
             $data['created_at'] = $this->resource->created_at;

@@ -26,7 +26,7 @@ class SpaceController extends Controller
     {
         if(Space::where([['admin_id', '=', $request->admin_id], ['name', '=', $request->name]])->exists()){
             return response()->json(['message' => 'Ошибка при создании пространства',
-                'errors' => ['space' => ['Пользователь уже имеет данное пространство']]], 422);
+                'errors' => ['name' => ['Пользователь уже имеет данное пространство']]], 422);
         }
 
         $space = Space::create($request->validated());
@@ -57,7 +57,7 @@ class SpaceController extends Controller
 
         $this->authorize('adminOrMemberSpace', $space);
 
-        return response()->json(new SpaceResource($space, true, true));
+        return response()->json(new SpaceResource($space, true, true, true));
     }
 
     public function updateSpace(UpdateSpaceRequest $request)
@@ -122,12 +122,12 @@ class SpaceController extends Controller
 
         if($token->sender_id === Auth::user()->id){
             return response()->json(['message' => 'Ошибка при принятии приглашения',
-                'errors' => ['sender_id' => ['Вы не можете принять приглашение, которое сами отправили']]], 422);
+                'errors' => ['token' => ['Вы не можете принять приглашение, которое сами отправили']]], 422);
         }
 
         if(SpaceUser::where([['space_id', '=', $token->space_id],['email', '=', Auth::user()->email]])->exists()){
             return response()->json(['message' => 'Ошибка при принятии приглашения',
-                'errors' => ['space_user' => ['Вы уже являетесь участником данного пространства']]], 422);
+                'errors' => ['token' => ['Вы уже являетесь участником данного пространства']]], 422);
         }
 
         if($token->expires_at <= now()->format('Y-m-d H:i:s')){
