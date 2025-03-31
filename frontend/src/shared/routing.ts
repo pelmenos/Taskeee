@@ -1,15 +1,13 @@
 import { createHistoryRouter, createRoute, createRouterControls } from "atomic-router"
-import { appStarted } from "./app"
 import { createBrowserHistory } from "history"
 import { sample } from "effector"
+import { appStarted } from "./app"
 
 
 export const controls = createRouterControls()
 
 export const routes = {
   home: createRoute(),
-
-  authRequired: createRoute(),
 
   auth: {
     login: createRoute(),
@@ -19,9 +17,8 @@ export const routes = {
 
   project: {
     list: createRoute(),
-    detail: createRoute<{id: string}>()
-  }
-
+    detail: createRoute<{ id: string }>(),
+  },
 } as const
 
 export const router = createHistoryRouter({
@@ -30,10 +27,8 @@ export const router = createHistoryRouter({
     { path: "/auth/register", route: routes.auth.register },
     { path: "/auth/password-recovery", route: routes.auth.passwordRecovery },
 
-    { path: "/auth/required", route: routes.authRequired },
-
-    { path: "/project/list", route: routes.project.list},
-    { path: "/project/detail/:id", route: routes.project.detail},
+    { path: "/project/list", route: routes.project.list },
+    { path: "/project/detail/:id", route: routes.project.detail },
 
     { path: "/", route: routes.home },
   ],

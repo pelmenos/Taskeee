@@ -1,3 +1,1 @@
-import "./model"
-
-export { Onboarding } from "./ui/Onboarding"
+export { Onboarding } from "./Onboarding"

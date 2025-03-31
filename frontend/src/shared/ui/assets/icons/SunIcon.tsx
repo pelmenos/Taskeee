@@ -1,4 +1,5 @@
-import { SvgIcon, SvgIconProps } from "../../SvgIcon"
+import { SvgIconProps , SvgIcon } from "../../SvgIcon";
+
 
 export const SunIcon = (props: SvgIconProps) => (
   <SvgIcon

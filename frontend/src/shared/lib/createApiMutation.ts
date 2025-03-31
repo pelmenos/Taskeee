@@ -1,5 +1,6 @@
 import {createMutation} from "@farfetched/core";
-import {createRequestInstance, Payload} from "./createRequestInstance";
+import { Payload,createRequestInstance} from "./createRequestInstance";
+
 import {API_URL} from "./config";
 
 export const createApiMutation = <
@@ -16,9 +17,9 @@ export const createApiMutation = <
     effect: fx,
   })
 
-  mutation.finished.failure.watch(({error}) => {
-    console.error(error);
-  });
+  // mutation.finished.failure.watch(({error}) => {
+  //   console.error(error);
+  // });
 
   return mutation
 }

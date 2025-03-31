@@ -1,4 +1,5 @@
-import { Box, MantineSpacing, TextProps } from '@mantine/core';
+import { MantineSpacing, TextProps , Box } from '@mantine/core';
+
 import React from 'react';
 
 import { filterUndefinedValues } from '../../lib/filterUndefinedValues';

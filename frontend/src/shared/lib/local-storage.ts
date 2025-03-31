@@ -1,5 +1,5 @@
-import type { StoreWritable } from "effector"
-import { createEvent, sample } from "effector"
+import { StoreWritable , createEvent, sample } from "effector"
+
 
 type PersistOptions<T> = {
 	key: string

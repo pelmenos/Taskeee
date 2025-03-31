@@ -1,5 +1,4 @@
-import React from "react"
-import { SvgIcon, type SvgIconProps } from "shared/ui/SvgIcon"
+import { SvgIcon, SvgIconProps } from "../../SvgIcon"
 
 export const Check = (props: SvgIconProps) => (
 	<SvgIcon
@@ -13,7 +12,7 @@ export const Check = (props: SvgIconProps) => (
 	>
 		<path
 			d="M11.5 3.625L5.3125 9.8125L2.5 7"
-			stroke="#AF38FF"
+			stroke="currentColor"
 			strokeWidth="2"
 			strokeLinecap="round"
 			strokeLinejoin="round"

@@ -1,4 +1,5 @@
 import { createApiQuery } from "shared/lib/createApiQuery"
+import { createApiMutation } from "shared/lib/createApiMutation"
 import {
   SpaceCreateError,
   SpaceCreateSuccess,
@@ -8,7 +9,6 @@ import {
   SpaceFormSchema,
   SpaceListSuccess,
 } from "../model"
-import { createApiMutation } from "shared/lib/createApiMutation"
 
 export const createCreateSpaceMutation = () =>
   createApiMutation<

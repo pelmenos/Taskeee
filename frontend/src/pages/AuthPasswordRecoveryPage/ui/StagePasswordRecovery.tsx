@@ -11,7 +11,7 @@ import { useForm } from "@mantine/form"
 
 
 export const StagePasswordRecovery = () => {
-  const form = useForm({
+  const { setErrors, ...form } = useForm({
     mode: "uncontrolled",
     initialValues: {
       password: "",
@@ -27,8 +27,8 @@ export const StagePasswordRecovery = () => {
   })
 
   useEffect(() => {
-    form.setErrors(formErrors)
-  }, [formErrors])
+    setErrors(formErrors)
+  }, [setErrors, formErrors])
 
   const handleSubmit = (fields: typeof form.values) => {
     submitted(fields)

@@ -1,7 +1,10 @@
-import React, { ComponentProps } from "react"
-import { Text } from "@mantine/core"
+import React, { ReactNode } from "react"
 
-interface Props extends ComponentProps<typeof Text<"span">> {
+import { TextProps , Text } from "@mantine/core"
+
+
+interface Props extends TextProps {
+  children?: ReactNode
 }
 
 export const FormText = ({ children, ...props }: Props) => {

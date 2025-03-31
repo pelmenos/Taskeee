@@ -1,9 +1,9 @@
 import React from "react"
-import { FormLayout } from "widgets/layouts/form-layout"
 import { useUnit } from "effector-react"
+import { RegisterFlowStages, stagesModel } from "features/register-flow"
+import { FormLayout } from "widgets/FormLayout"
 import { StageRegister } from "./StageRegister"
 import { StageConfirm } from "./StageConfirm"
-import { RegisterFlowStages, stagesModel } from "features/register-flow/model/stages"
 
 
 export const AuthRegisterPage = () => {

@@ -1,8 +1,9 @@
 import { atom } from "shared/lib/factory"
-import { createRegisterMutation } from "entities/auth/api"
+import { RegisterFormSchema , createRegisterMutation } from "entities/auth"
+
 import { combine, createEvent, createStore, sample } from "effector"
-import { RegisterFormSchema } from "entities/auth/model"
 import { not, reset, spread } from "patronum"
+import { mapFormError } from "shared/lib/map-form-errors"
 import { RegisterFlowStages, stagesModel } from "./stages"
 
 export const registerModel = atom(() => {
@@ -50,27 +51,19 @@ export const registerModel = atom(() => {
   sample({
     source: registerMutation.finished.failure,
     filter: (source) => !!source.error.data,
-    fn: (source) => {
-      if (source.error.data!.errors) {
-        const errors = source.error.data!.errors
-
-        return {
-          errorFieldName: errors.name ? errors.name[0] : null,
-          errorFieldEmail: errors.email ? errors.email[0] : null,
-          errorPassword: errors.password ? errors.password[0] : null,
-        }
-      }
-
-      return {
-        errorFieldName: source.error.data!.message,
-        errorFieldEmail: null,
-        errorPassword: null,
-      }
-    },
+    fn: (source) =>
+      mapFormError(
+        source,
+        (message) => ({
+          name: message,
+          email: null,
+          password: null,
+        }),
+      ),
     target: spread({
-      errorFieldName: $errorFieldName,
-      errorFieldEmail: $errorFieldEmail,
-      errorPassword: $errorPassword,
+      name: $errorFieldName,
+      email: $errorFieldEmail,
+      password: $errorPassword,
     }),
   })
 

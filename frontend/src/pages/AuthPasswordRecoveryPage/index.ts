@@ -1,6 +1,6 @@
 import { routes } from "shared/routing"
-import { AuthPasswordRecoveryPage } from "./ui/AuthPasswordRecoveryPage"
 import { createRouteView } from "atomic-router-react"
+import { AuthPasswordRecoveryPage } from "./ui/AuthPasswordRecoveryPage"
 import { anonymousRoute } from "./model"
 
 

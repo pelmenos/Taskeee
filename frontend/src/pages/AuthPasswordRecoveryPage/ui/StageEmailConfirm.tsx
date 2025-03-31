@@ -10,7 +10,7 @@ import { useGate } from "effector-react"
 
 
 export const StageEmailConfirm = () => {
-  const form = useForm({
+  const { setErrors, ...form } = useForm({
     mode: "uncontrolled",
     initialValues: {
       code: "",
@@ -34,8 +34,8 @@ export const StageEmailConfirm = () => {
   useGate(emailConfirmModel.Gate)
 
   useEffect(() => {
-    form.setErrors(formErrors)
-  }, [formErrors])
+    setErrors(formErrors)
+  }, [setErrors, formErrors])
 
   const handleSubmit = ({ code }: typeof form.values) => {
     submitted({

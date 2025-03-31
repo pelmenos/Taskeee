@@ -1,3 +1,4 @@
+import { createApiMutation } from "shared/lib/createApiMutation"
 import {
   ConfirmCodeResendError,
   ConfirmCodeResendSchema, ConfirmCodeResendSuccess, ConfirmEmailError,
@@ -11,7 +12,6 @@ import {
   RegisterFormError,
   RegisterFormSchema, RegisterFormSuccess,
 } from "../model"
-import { createApiMutation } from "shared/lib/createApiMutation"
 
 
 export const createLoginMutation = () =>
