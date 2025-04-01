@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\UniqueEmailRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,7 +26,7 @@ class RegistrationRequest extends FormRequest
         return [
             'name' => 'required|string|max:36|regex:/^[А-ЯЁ][аА-яЯёЁ]+\s+[А-ЯЁ][аА-яЯёЁ]*$/u',
             'email' => 'required|email|unique:users,email',
-            'avatar' => 'url',
+            'avatar' => 'nullable|url',
             'password' => [
                 'required',
                 'min:8',

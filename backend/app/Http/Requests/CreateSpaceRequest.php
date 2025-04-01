@@ -25,8 +25,8 @@ class CreateSpaceRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
-            'avatar' => 'url',
+            'description' => 'nullable|string|max:500',
+            'avatar' => 'nullable|url',
             'admin_id' => 'required|exists:users,id',
             'tariff' => 'required|in:Free,Pro,Enterprise'
         ];

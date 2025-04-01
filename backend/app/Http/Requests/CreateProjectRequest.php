@@ -25,9 +25,9 @@ class CreateProjectRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
+            'description' => 'nullable|string|max:500',
             'space_id' => 'required|uuid|exists:spaces,id',
-            'members' => 'array|min:1',
+            'members' => 'nullable|array|min:1',
             'members.*' => 'uuid|exists:space_users,id',
             'boards' => 'required|array|max:1',
             'boards.*' => 'array',

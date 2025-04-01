@@ -25,7 +25,7 @@ class CreateBoardRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
+            'description' => 'nullable|string|max:500',
             'project_id' => 'required|uuid|exists:projects,id'
         ];
     }

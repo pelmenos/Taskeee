@@ -33,7 +33,7 @@ class CreateSpaceRoleRequest extends FormRequest
         return [
             'space_id' => 'uuid|exists:spaces,id',
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
+            'description' => 'nullable|string|max:500',
             'permissions' => 'required|array',
             'permissions.finance_access' => 'required|boolean',
             'permissions.projects_access' => 'required|boolean',

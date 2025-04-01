@@ -34,9 +34,9 @@ class UpdateProjectRequest extends FormRequest
             'id' => 'uuid|exists:projects,id',
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500',
-            'members' => 'array|min:1',
+            'members' => 'nullable|array|min:1',
             'members.*' => 'uuid|exists:space_users,id',
-            'boards' => 'array|min:1|max:20',
+            'boards' => 'nullable|array|min:1|max:20',
             'boards.*' => 'array',
             'boards.*.name' => 'required|string|max:100',
             'boards.*.description' => 'required|string|max:500'

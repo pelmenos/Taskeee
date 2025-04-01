@@ -25,7 +25,7 @@ class CreateTaskRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
+            'description' => 'nullable|string|max:500',
             'status' => 'required|in:Выполнена,В процессе',
             'board_id' => 'required|exists:boards,id'
         ];
