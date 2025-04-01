@@ -22,6 +22,7 @@ class SpaceRoleResource extends JsonResource
         $data = [];
 
         $data['id'] = $this->resource->id;
+        $data['space_id'] = $this->resource->space_id;
         $data['name'] = $this->resource->name;
         $data['description'] = $this->resource->description;
         $data['permissions'] = $this->resource->permissions;
