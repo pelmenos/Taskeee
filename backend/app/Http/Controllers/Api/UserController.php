@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        if($request->input('remember_me') === 'true') {
+        if($request->input('remember_me') === true) {
             $token = $user->createToken('token', ['*'], now()->addDays(7))->plainTextToken;
         }
         else{
@@ -73,7 +73,7 @@ class UserController extends Controller
         VerificationCode::send($user->email);
 
         return response()->json(['message' =>
-            'Код для восстановления пароля был отправлен на почту', 'email' => $user->email]);
+            'Код для сброса пароля был отправлен на почту', 'email' => $user->email]);
     }
 
     public function passwordResetVerify(PasswordResetVerifyRequest $request)
@@ -81,11 +81,11 @@ class UserController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if(VerificationCode::verify($request->verify_code, $request->email, false)){
-            return response()->json(['message' => 'Введенный код для восстановления пароля подтвержден',
-                'email' => $user->email, 'verify_code' => $request->verify_code]);
+            return response()->json(['message' => 'Введенный код для сброса пароля подтвержден',
+                'email' => $user->email, 'verify_code' => intval($request->verify_code)]);
         }
 
-        return response()->json(['message' => 'Ошибка при восстановлении пароля',
+        return response()->json(['message' => 'Ошибка при сбросе пароля',
             'errors' => ['verify_code' => ['Введенный код не относится ни к одному из пользователей']]], 422);
     }
 
@@ -101,7 +101,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Пароль был успешно изменен']);
         }
 
-        return response()->json(['message' => 'Ошибка при восстановлении пароля',
+        return response()->json(['message' => 'Ошибка при сбросе пароля',
             'errors' => ['verify_code' => ['Используемый код не относится ни к одному из пользователей']]], 422);
     }
 

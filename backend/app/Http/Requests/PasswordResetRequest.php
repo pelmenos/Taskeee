@@ -55,7 +55,7 @@ class PasswordResetRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при восстановлении пароля',
+            'message' => 'Ошибка при сбросе пароля',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

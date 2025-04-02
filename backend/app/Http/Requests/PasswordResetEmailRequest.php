@@ -33,14 +33,14 @@ class PasswordResetEmailRequest extends FormRequest
         return [
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
-            'email.exists' => 'Введенная почта не относится ни к одному из пользователей'
+            'email.exists' => 'Введенная эл. почта не относится ни к одному из пользователей'
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при восстановлении пароля',
+            'message' => 'Ошибка при сбросе пароля',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

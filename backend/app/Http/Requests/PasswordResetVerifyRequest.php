@@ -34,7 +34,7 @@ class PasswordResetVerifyRequest extends FormRequest
         return [
             'email.required' => 'Электронная почта должна быть передана для запроса',
             'email.email' => 'Электронная почта должна соответствовать формату эл. почт',
-            'email.exists' => 'Использованная почта не относится ни к одному из пользователей',
+            'email.exists' => 'Использованная эл. почта не относится ни к одному из пользователей',
             'verify_code.required' => 'Поле с кодом обязательно для заполнения',
             'verify_code.integer' => 'Поле с кодом должно содержать число',
             'verify_code.min_digits' => 'Поле с кодом должно содержать код длинной в 6 символов'
@@ -44,7 +44,7 @@ class PasswordResetVerifyRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при восстановлении пароля',
+            'message' => 'Ошибка при сбросе пароля',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

@@ -13,10 +13,10 @@ class GuestUserMiddleware
     {
         if($request->header('Authorization')){
             if (Auth::guard('api')->check()) {
-                return response()->json(['status' => false, 'message' =>
+                return response()->json(['message' =>
                     'Для использования данного функционала пользователь не должен быть аутентифицированным'], 403);
             } else {
-                return response()->json(['status' => false, 'message' => 'Невалидный токен'], 401);
+                return response()->json(['message' => 'Невалидный токен'], 401);
             }
         }
         return $next($request);
