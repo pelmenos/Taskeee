@@ -1,11 +1,22 @@
 import "./Column.scss"
-import { Card, Group, Input, Paper, Stack, StackProps, Text, Title } from "@mantine/core"
+import {
+	ActionIcon,
+	Card,
+	Group,
+	Input,
+	Paper,
+	Stack,
+	StackProps,
+	Text,
+	Title,
+} from "@mantine/core"
 import { TaskListItem, TaskStatus } from "entities/task"
 import { SortIcon } from "shared/ui/assets/icons/SortIcon"
 import { SettingIcon } from "shared/ui/assets/icons/SettingIcon"
 import { KeyboardEventHandler, useState } from "react"
 import { projectModel } from "features/current-space"
 import { useUnit } from "effector-react"
+import { TrashIcon } from "shared/ui/assets/icons/TrashIcon"
 import { CreateTaskInput } from "./CreateTaskInput"
 
 interface Props extends StackProps {
@@ -43,6 +54,7 @@ interface TaskCardProps {
 
 const TaskCard = ({ data }: TaskCardProps) => {
 	const updated = useUnit(projectModel.taskUpdated)
+	const deleted = useUnit(projectModel.taskDeleted)
 
 	const [name, setName] = useState(data.name)
 	const [isEditing, setIsEditing] = useState(false)
@@ -68,6 +80,9 @@ const TaskCard = ({ data }: TaskCardProps) => {
 			) : (
 				<Text onClick={() => setIsEditing(true)}>{name}</Text>
 			)}
+			<ActionIcon onClick={() => deleted({ id: data.id })}>
+				<TrashIcon size={24} />
+			</ActionIcon>
 		</Card>
 	)
 }

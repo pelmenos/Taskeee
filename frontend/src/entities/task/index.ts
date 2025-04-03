@@ -1,4 +1,4 @@
-export { createCreateTaskMutation, createUpdateTaskMutation } from "./api"
+export { createCreateTaskMutation, createUpdateTaskMutation, createDeleteTaskMutation } from "./api"
 
 export { TaskStatus } from "./model"
 export type {
@@ -9,4 +9,7 @@ export type {
 	TaskUpdateSchema,
 	TaskUpdateError,
 	TaskUpdateSuccess,
+	TaskDeleteSchema,
+	TaskDeleteSuccess,
+	TaskDeleteError,
 } from "./model"

@@ -42,3 +42,14 @@ export type TaskUpdateSuccess = {
 }
 
 export type TaskUpdateError = ErrorResponse<TaskUpdateSchema>
+
+export type TaskDeleteSchema = {
+	id: string
+}
+
+export type TaskDeleteSuccess = {
+	project_id: string
+	name: string
+}
+
+export type TaskDeleteError = ErrorResponse<TaskDeleteSchema>

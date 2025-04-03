@@ -1,5 +1,8 @@
 import { createApiMutation } from "shared/lib/createApiMutation"
 import {
+	TaskDeleteError,
+	TaskDeleteSchema,
+	TaskDeleteSuccess,
 	TaskFormError,
 	TaskFormSchema,
 	TaskFormSuccess,
@@ -20,4 +23,10 @@ export const createUpdateTaskMutation = () =>
 		method: "PUT",
 		url: `/api/tasks/${params.id}`,
 		body: params,
+	}))
+
+export const createDeleteTaskMutation = () =>
+	createApiMutation<TaskDeleteSchema, TaskDeleteSuccess, TaskDeleteError>((params) => ({
+		method: "DELETE",
+		url: `/api/tasks/${params.id}`,
 	}))

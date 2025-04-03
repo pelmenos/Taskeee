@@ -12,7 +12,9 @@ import { BoardDetail, BoardListItem, createBoardDetailQuery } from "entities/boa
 import { not } from "patronum"
 import {
 	createCreateTaskMutation,
+	createDeleteTaskMutation,
 	createUpdateTaskMutation,
+	TaskDeleteSchema,
 	TaskListItem,
 	TaskStatus,
 	TaskUpdateSchema,
@@ -26,6 +28,7 @@ export const projectModel = atom(() => {
 	const boardDetailQuery = createBoardDetailQuery()
 	const createTaskMutation = createCreateTaskMutation()
 	const updateTaskMutation = createUpdateTaskMutation()
+	const deleteTaskMutation = createDeleteTaskMutation()
 
 	const currentProjectChanged = createEvent<{ id: string }>()
 
@@ -33,6 +36,7 @@ export const projectModel = atom(() => {
 
 	const taskSubmitted = createEvent<{ name: string; status: TaskStatus }>()
 	const taskUpdated = createEvent<TaskUpdateSchema>()
+	const taskDeleted = createEvent<TaskDeleteSchema>()
 
 	const $availableProjects = createStore<Array<ProjectListItem>>([])
 	const $currentProject = createStore<ProjectDetail | null>(null)
@@ -126,6 +130,11 @@ export const projectModel = atom(() => {
 		target: updateTaskMutation.start,
 	})
 
+	sample({
+		clock: taskDeleted,
+		target: deleteTaskMutation.start,
+	})
+
 	update(boardDetailQuery, {
 		on: createTaskMutation,
 		by: {
@@ -162,6 +171,24 @@ export const projectModel = atom(() => {
 		},
 	})
 
+	update(boardDetailQuery, {
+		on: deleteTaskMutation,
+		by: {
+			success: ({ query }) => {
+				let result = null
+
+				if ("result" in query) {
+					result = query.result
+				}
+
+				return {
+					result: result,
+					refetch: true,
+				}
+			},
+		},
+	})
+
 	return {
 		projectListQuery,
 		projectDetailQuery,
@@ -172,6 +199,7 @@ export const projectModel = atom(() => {
 		currentBoardChanged,
 		taskSubmitted,
 		taskUpdated,
+		taskDeleted,
 
 		$availableProjects,
 		$currentProject,
