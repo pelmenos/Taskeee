@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserEmailExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -24,7 +25,7 @@ class PasswordResetEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email'
+            'email' => ['required','email', new UserEmailExistsRule()]
         ];
     }
 
@@ -32,8 +33,7 @@ class PasswordResetEmailRequest extends FormRequest
     {
         return [
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
-            'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
-            'email.exists' => 'Введенная эл. почта не относится ни к одному из пользователей'
+            'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты'
         ];
     }
 

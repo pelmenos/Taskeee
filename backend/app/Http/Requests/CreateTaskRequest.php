@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\BoardExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,7 +28,7 @@ class CreateTaskRequest extends FormRequest
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
             'status' => 'required|in:Выполнена,В процессе',
-            'board_id' => 'required|exists:boards,id'
+            'board_id' => ['required', new BoardExistsRule()]
         ];
     }
 
@@ -42,7 +43,6 @@ class CreateTaskRequest extends FormRequest
             'status.required' => 'Поле Статус обязательно для заполнения',
             'status.in' => 'Поле Статус должно содержать одно из значений: Выполнена, В процессе',
             'board_id.required' => 'Идентификатор доски должен быть передан для запроса',
-            'board_id.exists' => 'Идентификатор доски не относится ни к одной из досок'
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,7 +28,7 @@ class CreateSpaceRequest extends FormRequest
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
             'avatar' => 'nullable|url',
-            'admin_id' => 'required|exists:users,id',
+            'admin_id' => ['required', new UserExistsRule()],
             'tariff' => 'required|in:Free,Pro,Enterprise'
         ];
     }

@@ -57,7 +57,7 @@ class SpaceController extends Controller
 
         $this->authorize('adminOrMemberSpace', $space);
 
-        return response()->json(new SpaceResource($space, true, true, true));
+        return response()->json(new SpaceResource($space, true, true, true, true));
     }
 
     public function updateSpace(UpdateSpaceRequest $request)

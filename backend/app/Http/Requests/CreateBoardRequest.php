@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ProjectExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,7 +27,7 @@ class CreateBoardRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
-            'project_id' => 'required|uuid|exists:projects,id'
+            'project_id' => ['required','uuid', new ProjectExistsRule()]
         ];
     }
 
@@ -39,8 +40,7 @@ class CreateBoardRequest extends FormRequest
             'description.string' => 'Поле Описание должно содержать строковой тип данных',
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
             'project_id.required' => 'Идентификатор проекта должен быть передан для запроса',
-            'project_id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID',
-            'project_id.exists' => 'Идентификатор проекта не относится ни к одному проекту'
+            'project_id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID'
         ];
     }
 

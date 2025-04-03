@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceExistsRule;
+use App\Rules\SpaceRoleNameExistsRule;
+use App\Rules\SpaceUserExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -32,9 +35,9 @@ class UpdateUserSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces,id',
-            'user_id' => 'uuid|exists:space_users,id',
-            'role' => 'required|string|exists:space_roles,name'
+            'id' => ['uuid', new SpaceExistsRule()],
+            'user_id' => ['uuid', new SpaceUserExistsRule()],
+            'role' => ['required','string', new SpaceRoleNameExistsRule()]
         ];
     }
 
@@ -42,12 +45,9 @@ class UpdateUserSpaceRoleRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'user_id.uuid' => 'Идентификатор пользователя пространства должен иметь тип данных UUID',
-            'user_id.exists' => 'Идентификатор пользователя пространства должен относится к существующему пользователю пространства',
             'role.required' => 'Поле Роль пространства обязательно для заполнения',
-            'role.string' => 'Поле Роль пространства должно содержать строковой тип данных',
-            'role.exists' => 'Поле Роль пространства должно относится к существующей роли пространства'
+            'role.string' => 'Поле Роль пространства должно содержать строковой тип данных'
         ];
     }
 

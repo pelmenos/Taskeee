@@ -9,6 +9,7 @@ use App\Http\Requests\DeleteSpaceUserRequest;
 use App\Http\Resources\SpaceUserResource;
 use App\Models\Space;
 use App\Models\SpaceUser;
+use App\Models\SpaceRole;
 
 class SpaceUserController extends Controller
 {
@@ -23,6 +24,13 @@ class SpaceUserController extends Controller
                 'errors' => ['email' => ['Пользователь уже находится в пространстве']]], 422);
         }
 
+        $spaceRole = SpaceRole::find($request->role_id);
+
+        if($spaceRole->space_id !== $space->id){
+            return response()->json(['message' => 'Ошибка при создании пользователя пространства',
+                'errors' => ['role_id' => ['Указанная роль не относится к данному пространству']]], 422);
+        }
+
         $spaceUser = SpaceUser::create($request->validated());
 
         return response()->json(new SpaceUserResource($spaceUser));
@@ -30,16 +38,9 @@ class SpaceUserController extends Controller
 
     public function deleteSpaceUser(DeleteSpaceUserRequest $request)
     {
-        $space = Space::find($request->id);
+        $spaceUser = SpaceUser::find($request->space_user_id);
 
-        $this->authorize('spaceAdmin', $space);
-
-        $spaceUser = SpaceUser::where('space_id', $request->id)
-            ->where('email', $request->email)->first();
-
-        if(!$spaceUser){
-            return response()->json(['message' => 'Пользователь не найден в этом пространстве'], 404);
-        }
+        $this->authorize('spaceAdmin', $spaceUser->space);
 
         $spaceUser->delete();
 

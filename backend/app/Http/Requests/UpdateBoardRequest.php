@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\BoardExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,7 +32,7 @@ class UpdateBoardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:boards,id',
+            'id' => ['uuid', new BoardExistsRule()],
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500'
         ];
@@ -41,7 +42,6 @@ class UpdateBoardRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор доски должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор доски не относится ни к одной из досок',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',

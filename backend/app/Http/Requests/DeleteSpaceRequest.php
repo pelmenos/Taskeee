@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,15 +32,14 @@ class DeleteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces,id'
+            'id' => ['uuid', new SpaceExistsRule()]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству'
+            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID'
         ];
     }
 

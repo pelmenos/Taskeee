@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceUserExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -19,8 +20,7 @@ class DeleteSpaceUserRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'id' => $this->route('id'),
-            'email' => $this->route('email')
+            'space_user_id' => $this->route('id')
         ]);
     }
 
@@ -32,18 +32,14 @@ class DeleteSpaceUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces,id',
-            'email' => 'email|exists:space_users,email'
+            'space_user_id' => ['uuid', new SpaceUserExistsRule()]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
-            'email.email' => 'Электронная почта должна содержать валидный адрес эл. почты',
-            'email.exists' => 'Электронная почта должна относится к существующему пользователю пространства'
+            'space_user_id.uuid' => 'Идентификатор пользователя пространства должен иметь тип данных UUID'
         ];
     }
 

@@ -55,12 +55,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('logout', [UserController::class, 'logout']);
     Route::get('delete/account', [UserController::class, 'deleteUser']);
 
-    Route::post('spaces/{id}/roles', [SpaceRoleController::class, 'createSpaceRole']);
-    Route::put('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'updateSpaceRole']);
-    Route::delete('spaces/{id}/roles/{role_id}', [SpaceRoleController::class, 'deleteSpaceRole']);
+    Route::post('spaces/roles', [SpaceRoleController::class, 'createSpaceRole']);
+    Route::put('spaces/roles/{id}', [SpaceRoleController::class, 'updateSpaceRole']);
+    Route::delete('spaces/roles/{id}', [SpaceRoleController::class, 'deleteSpaceRole']);
 
-    Route::post('spaces/{id}/users', [SpaceUserController::class, 'createSpaceUser']);
-    Route::delete('spaces/{id}/users/{email}', [SpaceUserController::class, 'deleteSpaceUser']);
+    Route::post('spaces/users', [SpaceUserController::class, 'createSpaceUser']);
+    Route::delete('spaces/users/{id}', [SpaceUserController::class, 'deleteSpaceUser']);
 
     Route::post('spaces', [SpaceController::class, 'createSpace']);
     Route::get('spaces', [SpaceController::class, 'getSpaces']);
