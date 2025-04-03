@@ -1,6 +1,7 @@
 import "./Column.scss"
 import {
 	ActionIcon,
+	Box,
 	Card,
 	Group,
 	Input,
@@ -75,14 +76,23 @@ const TaskCard = ({ data }: TaskCardProps) => {
 
 	return (
 		<Card bg="surface" p={16}>
-			{isEditing ? (
-				<Input value={name} onChange={(e) => setName(e.target.value)} onKeyDown={handleSubmit} />
-			) : (
-				<Text onClick={() => setIsEditing(true)}>{name}</Text>
-			)}
-			<ActionIcon onClick={() => deleted({ id: data.id })}>
-				<TrashIcon size={24} />
-			</ActionIcon>
+			<Group>
+				<Box flex={1}>
+					{isEditing ? (
+						<Input
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							onKeyDown={handleSubmit}
+						/>
+					) : (
+						<Text onClick={() => setIsEditing(true)}>{name}</Text>
+					)}
+				</Box>
+
+				<ActionIcon onClick={() => deleted({ id: data.id })}>
+					<TrashIcon size={24} />
+				</ActionIcon>
+			</Group>
 		</Card>
 	)
 }
