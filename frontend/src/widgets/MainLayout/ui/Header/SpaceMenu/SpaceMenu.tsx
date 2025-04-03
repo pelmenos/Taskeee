@@ -20,6 +20,7 @@ interface Props extends UnstyledButtonProps {}
 
 export const SpaceMenu = (props: Props) => {
 	const currentSpace = useUnit(spaceModel.$currentSpace)
+	const currentSpaceChanged = useUnit(spaceModel.currentSpaceChanged)
 	const availableSpaces = useUnit(spaceModel.$availableSpaces)
 
 	const [opened, { open, close }] = useDisclosure(false)
@@ -63,7 +64,9 @@ export const SpaceMenu = (props: Props) => {
 			{!!availableSpaces.length && (
 				<MenuDropdown>
 					{availableSpaces.map((item) => (
-						<MenuItem key={item.id}>{item.name}</MenuItem>
+						<MenuItem key={item.id} onClick={() => currentSpaceChanged(item)}>
+							{item.name}
+						</MenuItem>
 					))}
 
 					<MenuItem onClick={open}>Создать пространство</MenuItem>
