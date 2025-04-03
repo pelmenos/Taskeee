@@ -1,3 +1,4 @@
-export { spaceModel } from "./model/space"
-export { projectModel } from "./model/project"
-export { onboardingModel, OnboardingFlowStages } from "./model/onboarding"
+export * from "./model"
+export { CreateSpaceModal } from "./ui/CreateSpaceModal"
+export { CreateProjectModal } from "./ui/CreateProjectModal"
+export { CreateBoardModal } from "./ui/CreateBoardModal"

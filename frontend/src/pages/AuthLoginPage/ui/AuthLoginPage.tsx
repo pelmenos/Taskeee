@@ -1,7 +1,6 @@
-import { FormLayout } from "widgets/layouts/form-layout"
+import { FormLayout } from "widgets/FormLayout"
 import { Mail } from "shared/ui/assets/icons/Mail"
 import { Password } from "shared/ui/assets/icons/Password"
-import { authLoginModel } from "../model"
 import { useUnit } from "effector-react"
 import "./AuthLoginPage.css"
 import React, { useEffect } from "react"
@@ -16,10 +15,11 @@ import { FormInput } from "shared/ui/Form/FormInput"
 import { FormText } from "shared/ui/Form/FormText"
 import { FormDivider } from "shared/ui/Form/FormDivider"
 import { FormSubmit } from "shared/ui/Form/FormSubmit"
+import { authLoginModel } from "../model"
 
 
 export const AuthLoginPage = () => {
-  const form = useForm({
+  const { setErrors, ...form } = useForm({
     mode: "uncontrolled",
     initialValues: {
       email: "",
@@ -37,8 +37,8 @@ export const AuthLoginPage = () => {
   })
 
   useEffect(() => {
-    form.setErrors(formErrors)
-  }, [formErrors])
+    setErrors(formErrors)
+  }, [setErrors, formErrors])
 
   // Serialize remember_me to string
   const handleSubmit = ({ remember_me, ...fields }: typeof form.values) => {

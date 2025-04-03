@@ -1,11 +1,11 @@
 import { atom } from "shared/lib/factory"
 import { combine, createEvent, createStore, sample } from "effector"
 import { not, reset, spread } from "patronum"
-import { LoginFormSchema } from "entities/auth/model"
+import { createLoginMutation, LoginFormSchema } from "entities/auth"
+
 import { routes } from "shared/routing"
 import { $session, $user } from "shared/api"
 import { chainAnonymous } from "shared/session"
-import { createLoginMutation } from "entities/auth/api"
 
 
 export const authLoginModel = atom(() => {
@@ -63,20 +63,26 @@ export const authLoginModel = atom(() => {
       if (source.error.data!.errors) {
         const errors = source.error.data!.errors
 
+        if (errors.auth) {
+          return {
+            email: errors.auth.at(0) ?? null,
+          }
+        }
+
         return {
-          errorFieldEmail: errors.email ? errors.email[0] : null,
-          errorFieldPassword: errors.password ? errors.password[0] : null,
+          email: errors.email?.at(0) ?? null,
+          password: errors.password?.at(0) ?? null,
         }
       }
 
       return {
-        errorFieldEmail: source.error.data!.message,
-        errorFieldPassword: null,
+        email: source.error.data!.message,
+        password: null,
       }
     },
     target: spread({
-      errorFieldEmail: $errorFieldEmail,
-      errorFieldPassword: $errorFieldPassword,
+      email: $errorFieldEmail,
+      password: $errorFieldPassword,
     }),
   })
 

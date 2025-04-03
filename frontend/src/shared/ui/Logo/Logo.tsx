@@ -1,15 +1,16 @@
-import React, { ComponentProps } from "react"
-import { HPACE } from "../assets/icons/HPACE"
-import "./Logo.scss"
-import { routes } from "../../routing"
+import React, { ComponentProps } from "react";
+
 import { Link } from "atomic-router-react"
 import { Flex, Text } from "@mantine/core"
+import { HPACE } from "../assets/icons/HPACE"
+import { routes } from "../../routing"
+import "./Logo.scss"
 
 interface Props extends Omit<ComponentProps<typeof Link>, "to" | "params"> {
   onlyIcon?: boolean,
 }
 
-export const Logo = ({ className, onlyIcon, ...props }: Props) => {
+export const Logo = ({ onlyIcon, ...props }: Props) => {
   return (
     <Link
       style={{

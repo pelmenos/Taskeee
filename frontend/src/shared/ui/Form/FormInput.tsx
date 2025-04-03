@@ -1,8 +1,9 @@
-import React, { ComponentProps } from "react"
-import { Icon } from "../SvgIcon"
-import { TextInput } from "@mantine/core"
+import React from "react"
+import { TextInputProps , TextInput } from "@mantine/core";
 
-interface Props extends ComponentProps<typeof TextInput> {
+import { Icon } from "../SvgIcon"
+
+interface Props extends TextInputProps {
   icon: Icon
 }
 

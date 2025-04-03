@@ -1,6 +1,7 @@
-import { createApiQuery } from "../lib/createApiQuery"
 import { sample } from "effector"
-import { $status, $user, SessionStatus, User } from "./authorization"
+import { createApiQuery } from "../lib/createApiQuery"
+import { User , $status, $user, SessionStatus } from "./authorization";
+
 
 export const checkSessionQuery =
   createApiQuery<void, User, void>({

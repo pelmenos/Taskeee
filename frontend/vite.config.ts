@@ -1,24 +1,19 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { defineConfig, loadEnv, UserConfig } from "vite"
+import { UserConfig , defineConfig, loadEnv } from "vite";
+
 import react from "@vitejs/plugin-react-swc"
+import tsconfigPaths from "vite-tsconfig-paths"
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
 
   const config: UserConfig = {
-    plugins: [react()],
-    resolve: {
-      alias: {
-        app: "/src/app",
-        pages: "/src/pages",
-        widgets: "/src/widgets",
-        features: "/src/features",
-        entities: "/src/entities",
-        shared: "/src/shared",
-      },
-    },
+    plugins: [
+      react({ plugins: [['@effector/swc-plugin', {}]] }),
+      tsconfigPaths(),
+    ],
     server: {},
   }
 
@@ -28,7 +23,7 @@ export default defineConfig(({ mode }) => {
     if the backend developer didn't take care of CORS.
     (c) ilfey
     */
-    config.server.proxy = {
+    config.server!.proxy = {
       "/api": {
         target: env.VITE_PUBLIC_API_URL,
       },

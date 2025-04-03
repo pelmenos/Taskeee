@@ -1,5 +1,5 @@
 import {createApiMutation} from "../lib/createApiMutation";
-import type {ErrorResponse, ResponseWithMessage} from "./types";
+import {ErrorResponse, ResponseWithMessage} from "./types";
 
 export type UploadFileSuccess = ResponseWithMessage<{
   path: string;

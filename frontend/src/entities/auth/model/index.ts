@@ -11,7 +11,9 @@ export type LoginFormSuccess = ResponseWithMessage<{
   user: User,
 }>
 
-export type LoginFormError = ErrorResponse<LoginFormSchema>
+export type LoginFormError = ErrorResponse<LoginFormSchema & {
+  auth: string
+}>
 
 export type RegisterFormSchema = {
   name: string

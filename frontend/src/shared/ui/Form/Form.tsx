@@ -1,7 +1,10 @@
 import React, { ComponentProps } from "react"
+
 import { Paper, Stack } from "@mantine/core"
 
+
 interface Props extends ComponentProps<typeof Paper<"form">> {
+
 }
 
 export const Form = ({ children, ...props }: Props) => {
