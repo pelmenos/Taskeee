@@ -22,8 +22,23 @@ export type TaskListItem = {
 	id: string
 	name: string
 	description: string | null
-	status: string
+	status: TaskStatus
 	board_id: string
 	created_at: string
 	updated_at: string
 }
+
+export type TaskUpdateSchema = {
+	id: string
+	board_id: string
+	name: string
+	description: string | null
+	status: TaskStatus
+}
+
+export type TaskUpdateSuccess = {
+	project_id: string
+	name: string
+}
+
+export type TaskUpdateError = ErrorResponse<TaskUpdateSchema>

@@ -10,7 +10,13 @@ import { createEvent, createStore, sample } from "effector"
 import { normalizeListResponse } from "shared/lib/normalizeListResponse"
 import { BoardDetail, BoardListItem, createBoardDetailQuery } from "entities/board"
 import { not } from "patronum"
-import { createCreateTaskMutation, TaskListItem, TaskStatus } from "entities/task"
+import {
+	createCreateTaskMutation,
+	createUpdateTaskMutation,
+	TaskListItem,
+	TaskStatus,
+	TaskUpdateSchema,
+} from "entities/task"
 import { update } from "@farfetched/core"
 import { spaceModel } from "./space"
 
@@ -19,12 +25,14 @@ export const projectModel = atom(() => {
 	const projectDetailQuery = createProjectDetailQuery()
 	const boardDetailQuery = createBoardDetailQuery()
 	const createTaskMutation = createCreateTaskMutation()
+	const updateTaskMutation = createUpdateTaskMutation()
 
 	const currentProjectChanged = createEvent<{ id: string }>()
 
 	const currentBoardChanged = createEvent<{ id: string }>()
 
 	const taskSubmitted = createEvent<{ name: string; status: TaskStatus }>()
+	const taskUpdated = createEvent<TaskUpdateSchema>()
 
 	const $availableProjects = createStore<Array<ProjectListItem>>([])
 	const $currentProject = createStore<ProjectDetail | null>(null)
@@ -113,8 +121,31 @@ export const projectModel = atom(() => {
 		target: createTaskMutation.start,
 	})
 
+	sample({
+		clock: taskUpdated,
+		target: updateTaskMutation.start,
+	})
+
 	update(boardDetailQuery, {
 		on: createTaskMutation,
+		by: {
+			success: ({ query }) => {
+				let result = null
+
+				if ("result" in query) {
+					result = query.result
+				}
+
+				return {
+					result: result,
+					refetch: true,
+				}
+			},
+		},
+	})
+
+	update(boardDetailQuery, {
+		on: updateTaskMutation,
 		by: {
 			success: ({ query }) => {
 				let result = null
@@ -140,6 +171,7 @@ export const projectModel = atom(() => {
 		currentProjectChanged,
 		currentBoardChanged,
 		taskSubmitted,
+		taskUpdated,
 
 		$availableProjects,
 		$currentProject,
