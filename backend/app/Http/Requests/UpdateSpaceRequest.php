@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,7 +32,7 @@ class UpdateSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces,id',
+            'id' => ['uuid', new SpaceExistsRule()],
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500',
             'avatar' => 'required|url',
@@ -43,7 +44,6 @@ class UpdateSpaceRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',

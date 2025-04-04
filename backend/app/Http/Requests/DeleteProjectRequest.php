@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ProjectExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,15 +32,14 @@ class DeleteProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:projects,id'
+            'id' => ['uuid', new ProjectExistsRule()]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор проекта не относится ни к одному проекту'
+            'id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID'
         ];
     }
 

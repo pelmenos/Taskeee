@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserEmailExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -24,7 +25,7 @@ class PasswordResetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email',
+            'email' => ['required','email', new UserEmailExistsRule()],
             'password' => [
                 'required',
                 'min:8',
@@ -42,7 +43,6 @@ class PasswordResetRequest extends FormRequest
         return [
             'email.required' => 'Электронная почта должна быть передана для запроса',
             'email.email' => 'Электронная почта должна соответствовать формату эл. почт',
-            'email.exists' => 'Использованная почта не относится ни к одному из пользователей',
             'password.required' => 'Поле Пароль обязательно для заполнения',
             'password.min' => 'Поле Пароль должно быть длинной минимум в 8 символов',
             'password.regex' => 'Поле Пароль должно содержать латинские прописные и строчные буквы, цифры и специальные символы',
@@ -55,7 +55,7 @@ class PasswordResetRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при восстановлении пароля',
+            'message' => 'Ошибка при сбросе пароля',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

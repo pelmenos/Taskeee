@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -24,7 +25,7 @@ class GetProjectsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'space_id' => 'required|uuid|exists:spaces,id'
+            'space_id' => ['required', 'uuid', new SpaceExistsRule()]
         ];
     }
 
@@ -32,8 +33,7 @@ class GetProjectsRequest extends FormRequest
     {
         return [
             'space_id.required' => 'Идентификатор пространства должен быть передан для запроса',
-            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'space_id.exists' => 'Идентификатор пространства не относится ни к одному пространству'
+            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID'
         ];
     }
 

@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CreateProjectMembersUniqueRule;
+use App\Rules\ProjectExistsRule;
+use App\Rules\SpaceUserExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,12 +34,12 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:projects,id',
+            'id' => ['uuid', new ProjectExistsRule()],
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500',
-            'members' => 'array|min:1',
-            'members.*' => 'uuid|exists:space_users,id',
-            'boards' => 'array|min:1|max:20',
+            'members' => ['nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
+            'members.*' => ['uuid', new SpaceUserExistsRule()],
+            'boards' => 'nullable|array|min:1|max:20',
             'boards.*' => 'array',
             'boards.*.name' => 'required|string|max:100',
             'boards.*.description' => 'required|string|max:500'
@@ -47,7 +50,6 @@ class UpdateProjectRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор проекта должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор проекта не относится ни к одному проекту',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',
@@ -57,7 +59,6 @@ class UpdateProjectRequest extends FormRequest
             'members.array' => 'Поле Участники должно быть массивом',
             'members.min' => 'Поле Участники должно содержать хотя бы одного участника',
             'members.*.uuid' => 'Идентификаторы всех участников должны иметь тип данных UUID',
-            'members.*.exists' => 'Идентификаторы всех участников должны относится к существующим пользователям пространств',
             'boards.array' => 'Поле Доски должно быть массивом',
             'boards.min' => 'Поле Доски должно содержать хотя бы одну доску',
             'boards.max' => 'Поле Доски должно содержать максимум 20 досок',

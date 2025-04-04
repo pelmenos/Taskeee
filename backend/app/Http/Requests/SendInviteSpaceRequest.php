@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Rules\InviteEmailRule;
+use App\Rules\SpaceExistsRule;
+use App\Rules\SpaceRoleNameExistsRule;
+use App\Rules\UserEmailExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -32,9 +35,9 @@ class SendInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:spaces,id',
-            'email' => ['required', 'email','exists:users,email', new InviteEmailRule()],
-            'role' => 'required|string|exists:space_roles,name'
+            'id' => ['uuid', new SpaceExistsRule()],
+            'email' => ['required', 'email', new UserEmailExistsRule(), new InviteEmailRule()],
+            'role' => ['required','string', new SpaceRoleNameExistsRule()]
         ];
     }
 
@@ -42,13 +45,10 @@ class SendInviteSpaceRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор пространства должен относится к существующему пространству',
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
-            'email.exists' => 'Поле Электронная почта должна принадлежать существующему аккаунту',
-            'role.required' => 'Поле Роль обязательно для заполнения',
-            'role.string' => 'Поле Роль должно содержать строковой тип данных',
-            'role.exists' => 'Поле Роль должно относится к существующей роли'
+            'role.required' => 'Поле Роль пространства обязательно для заполнения',
+            'role.string' => 'Поле Роль пространства должно содержать строковой тип данных'
         ];
     }
 

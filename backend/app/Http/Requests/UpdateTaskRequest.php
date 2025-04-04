@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\TaskExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,7 +32,7 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:tasks,id',
+            'id' => ['uuid', new TaskExistsRule()],
             'name' => 'required|string|max:100',
             'description' => 'required|string|max:500',
             'status' => 'required|in:Выполнена,В процессе'
@@ -42,7 +43,6 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'id.uuid' => 'Идентификатор задачи должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор задачи не относится ни к одной из задач',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\UniqueEmailRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,7 +26,7 @@ class RegistrationRequest extends FormRequest
         return [
             'name' => 'required|string|max:36|regex:/^[А-ЯЁ][аА-яЯёЁ]+\s+[А-ЯЁ][аА-яЯёЁ]*$/u',
             'email' => 'required|email|unique:users,email',
-            'avatar' => 'url',
+            'avatar' => 'nullable|url',
             'password' => [
                 'required',
                 'min:8',
@@ -44,7 +43,8 @@ class RegistrationRequest extends FormRequest
         return [
             'name.required' => 'Поле Имя и Фамилия обязательно для заполнения',
             'name.max' => 'Поле Имя и Фамилия вмещает максимум 36 символов',
-            'name.regex' => 'Поле Имя и Фамилия должно содержать кириллицу и соответствовать формату: Имя Фамилия',
+            'name.regex' => 'Поле Имя и Фамилия должно содержать кириллицу и соответствовать формату:
+            Имя Фамилия или Фамилия Имя',
             'email.required' => 'Поле Электронная почта обязательно для заполнения',
             'email.email' => 'Поле Электронная почта должно содержать валидный адрес эл. почты',
             'email.unique' => 'Введенная эл. почта уже относится к зарегистрированному пользователю',

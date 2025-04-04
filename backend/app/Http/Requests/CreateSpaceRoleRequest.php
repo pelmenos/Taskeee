@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -16,13 +17,6 @@ class CreateSpaceRoleRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'space_id' => $this->route('id')
-        ]);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,9 +25,9 @@ class CreateSpaceRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'space_id' => 'uuid|exists:spaces,id',
+            'space_id' => ['required', 'uuid', new SpaceExistsRule()],
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
+            'description' => 'nullable|string|max:500',
             'permissions' => 'required|array',
             'permissions.finance_access' => 'required|boolean',
             'permissions.projects_access' => 'required|boolean',
@@ -45,15 +39,15 @@ class CreateSpaceRoleRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'space_id.required' => 'Идентификатор пространства должен быть передан для запроса',
             'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
-            'space_id.exists' => 'Идентификатор пространства должен быть относится к существующему пространству',
             'name.required' => 'Поле Название обязательно для заполнения',
             'name.string' => 'Поле Название должно содержать строковой тип данных',
             'name.max' => 'Поле Название должно иметь максимальную длину в 100 символов',
             'description.string' => 'Поле Описание должно содержать строковой тип данных',
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
             'permissions.required' => 'Поле Права доступа обязательно для заполнения',
-            'permissions.array' => 'Поле Права доступа должно быть массивом',
+            'permissions.array' => 'Поле Права доступа должно быть JSON-объектом',
             'permissions.finance_access.required' => 'Поле Доступ к финансам обязательно для заполнения',
             'permissions.projects_access.required' => 'Поле Доступ к проектам обязательно для заполнения',
             'permissions.team_access.required' => 'Поле Доступ к команде обязательно для заполнения',

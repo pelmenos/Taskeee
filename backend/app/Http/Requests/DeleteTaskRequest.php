@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\TaskExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,15 +32,14 @@ class DeleteTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'uuid|exists:tasks,id'
+            'id' => ['uuid', new TaskExistsRule()],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.uuid' => 'Идентификатор задачи должен иметь тип данных UUID',
-            'id.exists' => 'Идентификатор задачи не относится ни к одной из задач'
+            'id.uuid' => 'Идентификатор задачи должен иметь тип данных UUID'
         ];
     }
 

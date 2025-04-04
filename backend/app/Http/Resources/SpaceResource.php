@@ -9,21 +9,24 @@ class SpaceResource extends JsonResource
 {
     private $withCreatedAt;
     private $withUpdatedAt;
-
     private $withMembers;
+    private $withRoles;
 
-    public function __construct($resource, $withCreatedAt = false, $withUpdatedAt = false, $withMembers = false)
+    public function __construct($resource, $withCreatedAt = false, $withUpdatedAt = false,
+                                $withMembers = false, $withRoles = false)
     {
         parent::__construct($resource);
         $this->withCreatedAt = $withCreatedAt;
         $this->withUpdatedAt = $withUpdatedAt;
         $this->withMembers = $withMembers;
+        $this->withRoles = $withRoles;
     }
 
-    public static function collectionWithFlags($collection, $withCreatedAt = false, $withUpdatedAt = false, $withMembers = false)
+    public static function collectionWithFlags($collection, $withCreatedAt = false, $withUpdatedAt = false,
+                                               $withMembers = false, $withRoles = false)
     {
-        return $collection->map(function ($resource) use ($withCreatedAt, $withUpdatedAt, $withMembers) {
-            return new self($resource, $withCreatedAt, $withUpdatedAt, $withMembers);
+        return $collection->map(function ($resource) use ($withCreatedAt, $withUpdatedAt, $withMembers, $withRoles) {
+            return new self($resource, $withCreatedAt, $withUpdatedAt, $withMembers, $withRoles);
         });
     }
 
@@ -45,6 +48,10 @@ class SpaceResource extends JsonResource
 
         if ($this->withMembers) {
             $data['members'] = SpaceUserResource::collection($this->spaceUsers);
+        }
+
+        if ($this->withRoles) {
+            $data['roles'] = SpaceRoleResource::collection($this->spaceRoles);
         }
 
         if ($this->withCreatedAt) {

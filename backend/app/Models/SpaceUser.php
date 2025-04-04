@@ -24,6 +24,10 @@ class SpaceUser extends Model
         'role_id'
     ];
 
+    public function space()
+    {
+        return $this->belongsTo(Space::class, 'space_id', 'id');
+    }
 
     public function role()
     {
