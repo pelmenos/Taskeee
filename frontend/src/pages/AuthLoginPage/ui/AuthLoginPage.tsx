@@ -34,12 +34,8 @@ export const AuthLoginPage = () => {
 		setErrors(formErrors)
 	}, [setErrors, formErrors])
 
-	// Serialize remember_me to string
-	const handleSubmit = ({ remember_me, ...fields }: typeof form.values) => {
-		submitted({
-			...fields,
-			remember_me: remember_me.toString(),
-		})
+	const handleSubmit = (fields: typeof form.values) => {
+		submitted(fields)
 	}
 
 	return (
