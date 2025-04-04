@@ -43,7 +43,7 @@ export const UserMenu = (props: Props) => {
 						w="2.25rem"
 						h="2.25rem"
 						radius="max"
-						src={null} // TODO: no user avatar on backend!
+						src={user?.avatar}
 						fallbackSrc="https://imgur.com/gwHhOGF.gif"
 						alt="avatar"
 					/>
@@ -54,7 +54,7 @@ export const UserMenu = (props: Props) => {
 						</Text>
 
 						<Text ff="Montserrat, serif" fz="sm">
-							job title
+							{user?.email}
 						</Text>
 					</Box>
 
@@ -68,7 +68,7 @@ export const UserMenu = (props: Props) => {
 						w="2.25rem"
 						h="2.25rem"
 						radius="max"
-						src={null} // TODO: no user avatar on backend!
+						src={user?.avatar}
 						fallbackSrc="https://imgur.com/gwHhOGF.gif"
 						alt="avatar"
 					/>
