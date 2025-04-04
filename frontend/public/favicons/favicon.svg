@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="1000" height="1000"><style>
+    #light-icon {
+      display: inline;
+    }
+    #dark-icon {
+      display: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #light-icon {
+        display: none;
+      }
+      #dark-icon {
+        display: inline;
+      }
+    }
+  </style><g id="light-icon"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="1000" height="1000"><g><g transform="matrix(25,0,0,25,0,0)"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="40" height="40"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2.92893 2.92893C0 5.85786 0 10.5719 0 20C0 29.4281 0 34.1421 2.92893 37.0711C5.85786 40 10.5719 40 20 40C29.4281 40 34.1421 40 37.0711 37.0711C40 34.1421 40 29.4281 40 20C40 10.5719 40 5.85786 37.0711 2.92893C34.1421 0 29.4281 0 20 0C10.5719 0 5.85786 0 2.92893 2.92893ZM17.7465 24.2097C18.3281 23.5431 19.1154 23.0333 20 23.0333C20.8846 23.0333 21.6719 23.5431 22.2535 24.2097C23.4763 25.611 25.2983 26.5 27.3333 26.5C31.0152 26.5 34 23.5899 34 20C34 16.4101 31.0152 13.5 27.3333 13.5C25.2983 13.5 23.4763 14.389 22.2535 15.7904C21.6719 16.4569 20.8846 16.9667 20 16.9667C19.1154 16.9667 18.3281 16.4569 17.7465 15.7904C16.5237 14.389 14.7017 13.5 12.6667 13.5C8.98477 13.5 6 16.4101 6 20C6 23.5899 8.98477 26.5 12.6667 26.5C14.7016 26.5 16.5237 25.611 17.7465 24.2097Z" fill="url(#paint0_radial_1642_1539)"></path>
+<defs>
+<radialGradient id="paint0_radial_1642_1539" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20) rotate(90) scale(40)">
+<stop stop-color="#5F6FFF"></stop>
+<stop offset="1" stop-color="#2339FF"></stop>
+</radialGradient>
+</defs>
+</svg></svg></g></g></svg></g><g id="dark-icon"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="1000" height="1000"><g><g transform="matrix(25,0,0,25,0,0)"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="40" height="40"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2.92893 2.92893C0 5.85786 0 10.5719 0 20C0 29.4281 0 34.1421 2.92893 37.0711C5.85786 40 10.5719 40 20 40C29.4281 40 34.1421 40 37.0711 37.0711C40 34.1421 40 29.4281 40 20C40 10.5719 40 5.85786 37.0711 2.92893C34.1421 0 29.4281 0 20 0C10.5719 0 5.85786 0 2.92893 2.92893ZM17.7465 24.2097C18.3281 23.5431 19.1154 23.0333 20 23.0333C20.8846 23.0333 21.6719 23.5431 22.2535 24.2097C23.4763 25.611 25.2983 26.5 27.3333 26.5C31.0152 26.5 34 23.5899 34 20C34 16.4101 31.0152 13.5 27.3333 13.5C25.2983 13.5 23.4763 14.389 22.2535 15.7904C21.6719 16.4569 20.8846 16.9667 20 16.9667C19.1154 16.9667 18.3281 16.4569 17.7465 15.7904C16.5237 14.389 14.7017 13.5 12.6667 13.5C8.98477 13.5 6 16.4101 6 20C6 23.5899 8.98477 26.5 12.6667 26.5C14.7016 26.5 16.5237 25.611 17.7465 24.2097Z" fill="url(#paint0_radial_1669_3395)"></path>
+<defs>
+<radialGradient id="paint0_radial_1669_3395" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20) rotate(90) scale(40)">
+<stop stop-color="#5F009F"></stop>
+<stop offset="1" stop-color="#AF38FF"></stop>
+</radialGradient>
+</defs>
+</svg></svg></g></g></svg></g></svg>
