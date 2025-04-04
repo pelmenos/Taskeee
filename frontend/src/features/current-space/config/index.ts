@@ -1,4 +1,4 @@
 export const DEFAULT_BOARD = {
-  name: "default board",
-  description: "default board description",
+	name: "Доска по умолчанию",
+	description: "Описание доски",
 }
