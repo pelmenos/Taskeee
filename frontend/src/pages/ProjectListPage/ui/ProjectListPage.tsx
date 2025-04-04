@@ -8,76 +8,75 @@ import { useUnit } from "effector-react"
 import { useDisclosure } from "@mantine/hooks"
 import { Link } from "atomic-router-react"
 import { routes } from "shared/routing"
-
+import { useEffect, useRef, useState } from "react"
+import Fuse from "fuse.js"
+import { ProjectListItem } from "entities/project"
 
 export const ProjectListPage = () => {
+	const [opened, { open, close }] = useDisclosure(false)
 
-  const [opened, { open, close }] = useDisclosure(false)
+	const availableProjects = useUnit(projectModel.$availableProjects)
 
-  const availableProjects = useUnit(projectModel.$availableProjects)
+	const [query, setQuery] = useState("")
 
-  return (
-    <MainLayout>
-      <Paper
-        bg="surface"
-        p="xl"
-      >
-        <Stack>
-          <Group justify="space-between">
-            <Group wrap="nowrap" align="start" gap="sm">
-              <Title
-                order={1}
-                size="h2"
-              >
-                Все проекты
-              </Title>
+	const fuse = useRef<Fuse<ProjectListItem> | null>(null)
 
-              <Text
-                c="onSurfaceVariant"
-                fw={600}
-                fz="md"
-                span>
-                {availableProjects.length}
-              </Text>
-            </Group>
+	useEffect(() => {
+		fuse.current = new Fuse(availableProjects, {
+			keys: ["name"],
+		})
+	}, [fuse, availableProjects])
 
-            <Group>
-              <TextInput
-                size="md"
-                placeholder="Поиск"
-                leftSection={
-                  <MagnifyIcon />
-                }
-              />
+	const projects = query
+		? fuse.current?.search(query).map((item) => item.item) ?? []
+		: availableProjects
 
-              <Button
-                size="md"
-                leftSection={
-                  <PlusIcon />
-                }
-                onClick={open}
-              >
-                Добавить проект
-              </Button>
-            </Group>
-          </Group>
+	return (
+		<MainLayout>
+			<Paper bg="surface" p="xl">
+				<Stack>
+					<Group justify="space-between">
+						<Group wrap="nowrap" align="start" gap="sm">
+							<Title order={1} size="h2">
+								Все проекты
+							</Title>
 
-          <SimpleGrid cols={6}>
-            {availableProjects.map((item) => (
-              <Button
-                key={item.id}
-                component={Link<{ id: string }>}
-                to={routes.project.detail}
-                params={{ id: item.id }}
-              >
-                {item.name}
-              </Button>
-            ))}
-          </SimpleGrid>
-        </Stack>
-      </Paper>
+							<Text c="onSurfaceVariant" fw={600} fz="md" span>
+								{availableProjects.length}
+							</Text>
+						</Group>
 
-      <CreateProjectModal opened={opened} onClose={close} />
-    </MainLayout>
-  )
+						<Group>
+							<TextInput
+								size="md"
+								placeholder="Поиск"
+								leftSection={<MagnifyIcon />}
+								value={query}
+								onChange={(e) => setQuery(e.target.value)}
+							/>
+
+							<Button size="md" leftSection={<PlusIcon />} onClick={open}>
+								Добавить проект
+							</Button>
+						</Group>
+					</Group>
+
+					<SimpleGrid cols={6}>
+						{projects.map((item) => (
+							<Button
+								key={item.id}
+								component={Link<{ id: string }>}
+								to={routes.project.detail}
+								params={{ id: item.id }}
+							>
+								{item.name}
+							</Button>
+						))}
+					</SimpleGrid>
+				</Stack>
+			</Paper>
+
+			<CreateProjectModal opened={opened} onClose={close} />
+		</MainLayout>
+	)
 }
