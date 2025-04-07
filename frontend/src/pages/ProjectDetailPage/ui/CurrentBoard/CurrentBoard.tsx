@@ -10,7 +10,7 @@ interface Props extends BoxProps {}
 export const CurrentBoard = (props: Props) => {
 	const columns = useUnit(projectModel.$columns)
 
-	if (!Object.keys(columns).length) {
+	if (!columns) {
 		return (
 			<Paper bg="surface" pos="relative" flex={1}>
 				<Image
@@ -30,7 +30,7 @@ export const CurrentBoard = (props: Props) => {
 		<Box {...props}>
 			<Group align="stretch">
 				{Object.entries(columns).map((item) => (
-					<Column flex="0 0 300px" column={item[0]} tasks={item[1]} />
+					<Column key={item[0]} flex="0 0 300px" column={item[0]} tasks={item[1]} />
 				))}
 			</Group>
 		</Box>
