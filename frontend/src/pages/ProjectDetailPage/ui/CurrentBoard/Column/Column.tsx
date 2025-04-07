@@ -1,24 +1,10 @@
 import "./Column.scss"
-import {
-	ActionIcon,
-	Box,
-	Card,
-	Group,
-	Input,
-	Paper,
-	Stack,
-	StackProps,
-	Text,
-	Title,
-} from "@mantine/core"
+import { Group, Paper, Stack, StackProps, Title } from "@mantine/core"
 import { TaskListItem, TaskStatus } from "entities/task"
 import { SortIcon } from "shared/ui/assets/icons/SortIcon"
 import { SettingIcon } from "shared/ui/assets/icons/SettingIcon"
-import { KeyboardEventHandler, useState } from "react"
-import { projectModel } from "features/current-space"
-import { useUnit } from "effector-react"
-import { TrashIcon } from "shared/ui/assets/icons/TrashIcon"
 import { CreateTaskInput } from "./CreateTaskInput"
+import { TaskCard } from "./TaskCard"
 
 interface Props extends StackProps {
 	column: string
@@ -46,53 +32,5 @@ export const Column = ({ column, tasks, ...props }: Props) => {
 				<TaskCard key={item.id} data={item} />
 			))}
 		</Stack>
-	)
-}
-
-interface TaskCardProps {
-	data: TaskListItem
-}
-
-const TaskCard = ({ data }: TaskCardProps) => {
-	const updated = useUnit(projectModel.taskUpdated)
-	const deleted = useUnit(projectModel.taskDeleted)
-
-	const [name, setName] = useState(data.name)
-	const [isEditing, setIsEditing] = useState(false)
-
-	const handleSubmit: KeyboardEventHandler<HTMLInputElement> = (e) => {
-		if (e.key === "Enter") {
-			updated({
-				id: data.id,
-				name: name,
-				description: data.description,
-				status: data.status,
-				board_id: data.board_id,
-			})
-
-			setIsEditing(false)
-		}
-	}
-
-	return (
-		<Card bg="surface" p={16}>
-			<Group>
-				<Box flex={1}>
-					{isEditing ? (
-						<Input
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							onKeyDown={handleSubmit}
-						/>
-					) : (
-						<Text onClick={() => setIsEditing(true)}>{name}</Text>
-					)}
-				</Box>
-
-				<ActionIcon onClick={() => deleted({ id: data.id })}>
-					<TrashIcon size={24} />
-				</ActionIcon>
-			</Group>
-		</Card>
 	)
 }
