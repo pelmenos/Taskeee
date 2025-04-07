@@ -8,12 +8,8 @@ import { CategoryIcon } from "shared/ui/assets/icons/CategoryIcon"
 import { Link } from "atomic-router-react"
 import { routes } from "shared/routing"
 import { clsx } from "clsx"
-import { HomeIcon } from "shared/ui/assets/icons/HomeIcon"
 
-const NAV = [
-	{ Icon: HomeIcon, label: "Главная", route: routes.home },
-	{ Icon: CategoryIcon, label: "Проекты", route: routes.project.list },
-]
+const NAV = [{ Icon: CategoryIcon, label: "Проекты", route: routes.project.list }]
 
 interface Props extends PaperProps {
 	isOpen?: boolean
