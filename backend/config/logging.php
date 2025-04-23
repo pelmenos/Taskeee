@@ -117,6 +117,12 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // Services
+        'space-service' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/services/space.log'),
+        ],
     ],
 
 ];

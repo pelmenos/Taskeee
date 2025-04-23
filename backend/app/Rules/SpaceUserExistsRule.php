@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Models\SpaceUser;
+use App\Models\Space\SpaceUser;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 

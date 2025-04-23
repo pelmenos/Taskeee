@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\Api\BoardController;
-use App\Http\Controllers\Api\ProjectController;
-use App\Http\Controllers\Api\SpaceRoleController;
-use App\Http\Controllers\Api\SpaceUserController;
-use App\Http\Controllers\Api\TaskController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\SpaceController;
-use App\Http\Controllers\Api\FinanceProjectController;
-use App\Http\Controllers\Api\SubjectController;
-use App\Http\Controllers\Api\ConditionController;
-use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\API\BoardController;
+use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\SpaceRoleController;
+use App\Http\Controllers\API\SpaceUserController;
+use App\Http\Controllers\API\TaskController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\SpaceController;
+use App\Http\Controllers\API\FinanceProjectController;
+use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\API\ConditionController;
+use App\Http\Controllers\API\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+
+Route::group([], base_path('routes/api/v1.php'));
 
 /*
 |--------------------------------------------------------------------------

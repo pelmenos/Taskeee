@@ -2,9 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Space;
-use App\Models\SpaceRole;
-use App\Models\SpaceUser;
+use App\Models\Space\SpaceRole;
+use App\Models\Space\SpaceUser;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\FinanceProjectStatus;
-use App\Models\SpaceUser;
+use App\Models\Space\SpaceUser;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -1,30 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Models\Space\SpaceRole;
+use App\Models\Space\SpaceUser;
+use App\Traits\ForModels\HasQueryFilterTrait;
 use Askedio\SoftCascade\Traits\SoftCascadeTrait;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Space extends Model
+final class Space extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, SoftCascadeTrait;
-
-    public $incrementing = false;
-
-    public $keyType = 'string';
-
-    protected $softCascade = ['spaceUsers', 'spaceRoles', 'projects'];
+    use HasUuids,
+        SoftDeletes,
+        SoftCascadeTrait,
+        HasQueryFilterTrait;
 
     protected $fillable = [
+        'owner_id',
         'name',
         'description',
-        'avatar',
-        'admin_id',
         'tariff'
     ];
+
+    protected $softCascade = [
+        'spaceUsers',
+        'spaceRoles',
+        'projects',
+    ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'admin_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function roles(): HasMany
+    {
+        return $this->hasMany(SpaceRole::class, 'space_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function users(): HasMany
+    {
+        return $this->hasMany(SpaceUser::class, 'space_id', 'id');
+    }
 
     public function financesProjects()
     {
@@ -44,16 +76,6 @@ class Space extends Model
     public function projects()
     {
         return $this->hasMany(Project::class, 'space_id', 'id');
-    }
-
-    public function spaceRoles()
-    {
-        return $this->hasMany(SpaceRole::class, 'space_id', 'id');
-    }
-
-    public function spaceUsers()
-    {
-        return $this->hasMany(SpaceUser::class, 'space_id', 'id');
     }
 
     public function inviteTokens()

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\PaymentStatus;
 use App\Models\Space;
-use App\Models\SpaceUser;
+use App\Models\Space\SpaceUser;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 

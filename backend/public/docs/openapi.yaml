@@ -1,0 +1,2104 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: null
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: 'API V1'
+    description: ''
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+security:
+  -
+    default: []
+paths:
+  /api/v1/spaces:
+    get:
+      summary: Список
+      operationId: ''
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'Поисковой запрос.'
+          example: 'Моя доска'
+          required: false
+          schema:
+            type: string
+            description: 'Поисковой запрос.'
+            example: 'Моя доска'
+            nullable: true
+        -
+          in: query
+          name: limit
+          description: 'Кол-во элементов на странице.'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Кол-во элементов на странице.'
+            example: 10
+            nullable: true
+      responses:
+        200:
+          description: success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        401:
+          description: unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'В доступе отказано'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'В доступе отказано'
+        422:
+          description: 'validation failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Errors message'
+                  errors:
+                    field:
+                      - 'Error text'
+                properties:
+                  message:
+                    type: string
+                    example: 'Errors message'
+                  errors:
+                    type: object
+                    properties:
+                      field:
+                        type: array
+                        example:
+                          - 'Error text'
+                        items:
+                          type: string
+      tags:
+        - 'API V1'
+    post:
+      summary: Создание
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        401:
+          description: unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'В доступе отказано'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'В доступе отказано'
+        422:
+          description: 'validation failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Errors message'
+                  errors:
+                    field:
+                      - 'Error text'
+                properties:
+                  message:
+                    type: string
+                    example: 'Errors message'
+                  errors:
+                    type: object
+                    properties:
+                      field:
+                        type: array
+                        example:
+                          - 'Error text'
+                        items:
+                          type: string
+        500:
+          description: 'went wrong'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Что-то пошло не так.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Что-то пошло не так.'
+      tags:
+        - 'API V1'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                owner_id:
+                  type: string
+                  description: 'ID-владельца. validation.uuid.'
+                  example: null
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Название пространства. validation.max.'
+                  example: Название
+                  nullable: false
+                description:
+                  type: string
+                  description: 'Описание пространства. validation.max.'
+                  example: 'Описание пространства'
+                  nullable: true
+                tariff:
+                  type: string
+                  description: Тариф.
+                  example: 'Хз что тут должно быть'
+                  nullable: false
+              required:
+                - owner_id
+                - name
+                - tariff
+  '/api/v1/spaces/{modelId}':
+    get:
+      summary: Детали
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        401:
+          description: unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'В доступе отказано'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'В доступе отказано'
+        404:
+          description: 'not found'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - 'API V1'
+    post:
+      summary: Обновление
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        400:
+          description: 'bad request'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Проверьте правильность данных и повторите попытку'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Проверьте правильность данных и повторите попытку'
+        401:
+          description: unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'В доступе отказано'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'В доступе отказано'
+        404:
+          description: 'not found'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        422:
+          description: 'validation failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Errors message'
+                  errors:
+                    field:
+                      - 'Error text'
+                properties:
+                  message:
+                    type: string
+                    example: 'Errors message'
+                  errors:
+                    type: object
+                    properties:
+                      field:
+                        type: array
+                        example:
+                          - 'Error text'
+                        items:
+                          type: string
+        500:
+          description: 'went wrong'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Что-то пошло не так.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Что-то пошло не так.'
+      tags:
+        - 'API V1'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Название пространства. validation.max.'
+                  example: Название
+                  nullable: true
+                description:
+                  type: string
+                  description: 'Описание пространства. validation.max.'
+                  example: 'Описание пространства'
+                  nullable: true
+                tariff:
+                  type: string
+                  description: Тариф.
+                  example: 'Хз что тут должно быть'
+                  nullable: true
+    delete:
+      summary: Удаление
+      operationId: ''
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+        400:
+          description: 'bad request'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Проверьте правильность данных и повторите попытку'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Проверьте правильность данных и повторите попытку'
+        401:
+          description: unauthenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        403:
+          description: forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'В доступе отказано'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'В доступе отказано'
+        404:
+          description: 'not found'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ''
+      tags:
+        - 'API V1'
+    parameters:
+      -
+        in: path
+        name: modelId
+        description: ID-пространства
+        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        required: true
+        schema:
+          type: uuid
+  /api/registration/verify:
+    post:
+      summary: ''
+      operationId: postApiRegistrationVerify
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: validation.email.
+                  example: gbailey@example.net
+                  nullable: false
+                verify_code:
+                  type: integer
+                  description: ''
+                  example: 16
+                  nullable: false
+              required:
+                - email
+                - verify_code
+      security: []
+  /api/authorization:
+    post:
+      summary: ''
+      operationId: postApiAuthorization
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: validation.email.
+                  example: gbailey@example.net
+                  nullable: false
+                password:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+                remember_me:
+                  type: boolean
+                  description: ''
+                  example: false
+                  nullable: false
+              required:
+                - email
+                - password
+                - remember_me
+      security: []
+  /api/password/reset/email:
+    post:
+      summary: ''
+      operationId: postApiPasswordResetEmail
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: validation.email.
+                  example: gbailey@example.net
+                  nullable: false
+              required:
+                - email
+      security: []
+  /api/password/reset/verify:
+    post:
+      summary: ''
+      operationId: postApiPasswordResetVerify
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: validation.email.
+                  example: gbailey@example.net
+                  nullable: false
+                verify_code:
+                  type: integer
+                  description: ''
+                  example: 16
+                  nullable: false
+              required:
+                - email
+                - verify_code
+      security: []
+  /api/verify/code/resend:
+    post:
+      summary: ''
+      operationId: postApiVerifyCodeResend
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: validation.email.
+                  example: gbailey@example.net
+                  nullable: false
+              required:
+                - email
+      security: []
+  /api/file:
+    post:
+      summary: ''
+      operationId: postApiFile
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  /api/logout:
+    get:
+      summary: ''
+      operationId: getApiLogout
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  /api/delete/account:
+    get:
+      summary: ''
+      operationId: getApiDeleteAccount
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  /api/spaces/roles:
+    post:
+      summary: ''
+      operationId: postApiSpacesRoles
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                space_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                name:
+                  type: string
+                  description: validation.max.
+                  example: g
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Quos velit et fugiat sunt nihil accusantium harum.'
+                  nullable: true
+                permissions:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    finance_access:
+                      type: boolean
+                      description: ''
+                      example: false
+                      nullable: false
+                    projects_access:
+                      type: boolean
+                      description: ''
+                      example: false
+                      nullable: false
+                    team_access:
+                      type: boolean
+                      description: ''
+                      example: true
+                      nullable: false
+                    full_access:
+                      type: boolean
+                      description: ''
+                      example: false
+                      nullable: false
+                  required:
+                    - finance_access
+                    - projects_access
+                    - team_access
+                    - full_access
+              required:
+                - space_id
+                - name
+                - permissions
+      security: []
+  '/api/spaces/roles/{id}':
+    put:
+      summary: ''
+      operationId: putApiSpacesRolesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                name:
+                  type: string
+                  description: validation.max.
+                  example: g
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Quos velit et fugiat sunt nihil accusantium harum.'
+                  nullable: false
+                permissions:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    finance_access:
+                      type: boolean
+                      description: ''
+                      example: false
+                      nullable: false
+                    projects_access:
+                      type: boolean
+                      description: ''
+                      example: false
+                      nullable: false
+                    team_access:
+                      type: boolean
+                      description: ''
+                      example: true
+                      nullable: false
+                    full_access:
+                      type: boolean
+                      description: ''
+                      example: false
+                      nullable: false
+                  required:
+                    - finance_access
+                    - projects_access
+                    - team_access
+                    - full_access
+              required:
+                - name
+                - description
+                - permissions
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiSpacesRolesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the role.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/spaces/users:
+    post:
+      summary: ''
+      operationId: postApiSpacesUsers
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                space_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                email:
+                  type: string
+                  description: validation.email.
+                  example: ashly64@example.com
+                  nullable: false
+                role_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 21c4122b-d554-3723-966c-6d723ea5293f
+                  nullable: false
+              required:
+                - space_id
+                - email
+                - role_id
+      security: []
+  '/api/spaces/users/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiSpacesUsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                space_user_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/spaces:
+    post:
+      summary: ''
+      operationId: postApiSpaces
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Et animi quos velit et fugiat.'
+                  nullable: true
+                avatar:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'http://www.dach.com/mollitia-modi-deserunt-aut-ab-provident-perspiciatis-quo.html'
+                  nullable: true
+                admin_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+                tariff:
+                  type: string
+                  description: ''
+                  example: Free
+                  nullable: false
+                  enum:
+                    - Free
+                    - Pro
+                    - Enterprise
+              required:
+                - name
+                - admin_id
+                - tariff
+      security: []
+    get:
+      summary: ''
+      operationId: getApiSpaces
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  '/api/spaces/{id}':
+    get:
+      summary: ''
+      operationId: getApiSpacesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    put:
+      summary: ''
+      operationId: putApiSpacesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                name:
+                  type: string
+                  description: validation.max.
+                  example: g
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Quos velit et fugiat sunt nihil accusantium harum.'
+                  nullable: false
+                avatar:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'https://www.runte.com/ab-provident-perspiciatis-quo-omnis-nostrum-aut-adipisci'
+                  nullable: false
+                tariff:
+                  type: string
+                  description: ''
+                  example: Enterprise
+                  nullable: false
+                  enum:
+                    - Free
+                    - Pro
+                    - Enterprise
+              required:
+                - name
+                - description
+                - avatar
+                - tariff
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiSpacesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the space.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/spaces/{id}/invite':
+    post:
+      summary: ''
+      operationId: postApiSpacesIdInvite
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                email:
+                  type: string
+                  description: validation.email.
+                  example: ashly64@example.com
+                  nullable: false
+                role:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+              required:
+                - email
+                - role
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the space.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/invite/{token}':
+    get:
+      summary: ''
+      operationId: getApiInviteToken
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The <code>token</code> of an existing record in the invite_tokens table.'
+                  example: null
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: token
+        description: ''
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/spaces/{id}/users/{user_id}/role':
+    put:
+      summary: ''
+      operationId: putApiSpacesIdUsersUser_idRole
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                user_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6b72fe4a-5b40-307c-bc24-f79acf9a1bb9
+                  nullable: false
+                role:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+              required:
+                - role
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the space.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/projects:
+    post:
+      summary: ''
+      operationId: postApiProjects
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Et animi quos velit et fugiat.'
+                  nullable: true
+                space_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 5707ca55-f609-3528-be8b-1baeaee1567e
+                  nullable: false
+                members:
+                  type: array
+                  description: validation.uuid.
+                  example:
+                    - 947170af-7488-3f30-a16d-723355a9502f
+                  items:
+                    type: string
+                boards:
+                  type: array
+                  description: ''
+                  example: null
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: validation.max.
+                        example: i
+                        nullable: false
+                      description:
+                        type: string
+                        description: validation.max.
+                        example: 'Deserunt aut ab provident perspiciatis quo omnis nostrum.'
+                        nullable: false
+                    required:
+                      - name
+                      - description
+              required:
+                - name
+                - space_id
+      security: []
+    get:
+      summary: ''
+      operationId: getApiProjects
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                space_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+              required:
+                - space_id
+      security: []
+  '/api/projects/{id}':
+    get:
+      summary: ''
+      operationId: getApiProjectsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    put:
+      summary: ''
+      operationId: putApiProjectsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                name:
+                  type: string
+                  description: validation.max.
+                  example: g
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Quos velit et fugiat sunt nihil accusantium harum.'
+                  nullable: false
+                members:
+                  type: array
+                  description: validation.uuid.
+                  example:
+                    - cd1eb1ea-4697-3b9a-9dd0-988044a83af6
+                  items:
+                    type: string
+                boards:
+                  type: array
+                  description: ''
+                  example: null
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: validation.max.
+                        example: h
+                        nullable: false
+                      description:
+                        type: string
+                        description: validation.max.
+                        example: 'Ab provident perspiciatis quo omnis nostrum aut adipisci.'
+                        nullable: false
+                    required:
+                      - name
+                      - description
+              required:
+                - name
+                - description
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProjectsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the project.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/boards:
+    post:
+      summary: ''
+      operationId: postApiBoards
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Et animi quos velit et fugiat.'
+                  nullable: true
+                project_id:
+                  type: string
+                  description: validation.uuid.
+                  example: 5707ca55-f609-3528-be8b-1baeaee1567e
+                  nullable: false
+              required:
+                - name
+                - project_id
+      security: []
+  '/api/boards/{id}':
+    get:
+      summary: ''
+      operationId: getApiBoardsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    put:
+      summary: ''
+      operationId: putApiBoardsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                name:
+                  type: string
+                  description: validation.max.
+                  example: g
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Quos velit et fugiat sunt nihil accusantium harum.'
+                  nullable: false
+              required:
+                - name
+                - description
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiBoardsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the board.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/tasks:
+    post:
+      summary: ''
+      operationId: postApiTasks
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Et animi quos velit et fugiat.'
+                  nullable: true
+                status:
+                  type: string
+                  description: ''
+                  example: 'В процессе'
+                  nullable: false
+                  enum:
+                    - Выполнена
+                    - 'В процессе'
+                board_id:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
+              required:
+                - name
+                - status
+                - board_id
+      security: []
+  '/api/tasks/{id}':
+    put:
+      summary: ''
+      operationId: putApiTasksId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+                name:
+                  type: string
+                  description: validation.max.
+                  example: g
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Quos velit et fugiat sunt nihil accusantium harum.'
+                  nullable: false
+                status:
+                  type: string
+                  description: ''
+                  example: Выполнена
+                  nullable: false
+                  enum:
+                    - Выполнена
+                    - 'В процессе'
+              required:
+                - name
+                - description
+                - status
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiTasksId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: validation.uuid.
+                  example: 6ff8f7f6-1eb3-3525-be4a-3932c805afed
+                  nullable: false
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the task.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/finances/projects:
+    get:
+      summary: ''
+      operationId: getApiFinancesProjects
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  '/api/finances/projects/{project_id}':
+    get:
+      summary: ''
+      operationId: getApiFinancesProjectsProject_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiFinancesProjectsProject_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/finances/subjects:
+    post:
+      summary: ''
+      operationId: postApiFinancesSubjects
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Et animi quos velit et fugiat.'
+                  nullable: false
+              required:
+                - name
+      security: []
+    get:
+      summary: ''
+      operationId: getApiFinancesSubjects
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  '/api/finances/subjects/{subject_id}':
+    get:
+      summary: ''
+      operationId: getApiFinancesSubjectsSubject_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiFinancesSubjectsSubject_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+                description:
+                  type: string
+                  description: validation.max.
+                  example: 'Et animi quos velit et fugiat.'
+                  nullable: false
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiFinancesSubjectsSubject_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: subject_id
+        description: 'The ID of the subject.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/finances/conditions:
+    post:
+      summary: ''
+      operationId: postApiFinancesConditions
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+              required:
+                - name
+      security: []
+    get:
+      summary: ''
+      operationId: getApiFinancesConditions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  '/api/finances/conditions/{condition_id}':
+    get:
+      summary: ''
+      operationId: getApiFinancesConditionsCondition_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiFinancesConditionsCondition_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: b
+                  nullable: false
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiFinancesConditionsCondition_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: condition_id
+        description: 'The ID of the condition.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  /api/finances/payments:
+    get:
+      summary: ''
+      operationId: getApiFinancesPayments
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+  '/api/finances/payments/{payment_id}':
+    get:
+      summary: ''
+      operationId: getApiFinancesPaymentsPayment_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+                properties:
+                  message:
+                    type: string
+                    example: 'Для использования данного функционала пользователь должен быть аутентифицированным'
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiFinancesPaymentsPayment_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiFinancesPaymentsPayment_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: payment_id
+        description: 'The ID of the payment.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+  '/api/finances/payments/{payment_id}/paid':
+    put:
+      summary: ''
+      operationId: putApiFinancesPaymentsPayment_idPaid
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: payment_id
+        description: 'The ID of the payment.'
+        example: architecto
+        required: true
+        schema:
+          type: string

@@ -1,0 +1,8 @@
+{
+  "message": "Errors message",
+  "errors": {
+    "field": [
+      "Error text"
+    ]
+  }
+}
