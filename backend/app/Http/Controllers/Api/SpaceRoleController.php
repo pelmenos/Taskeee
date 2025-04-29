@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSpaceRoleRequest;
 use App\Http\Requests\DeleteSpaceRoleRequest;
+use App\Http\Requests\GetSpaceRolesRequest;
 use App\Http\Requests\UpdateSpaceRoleRequest;
 use App\Http\Resources\SpaceRoleResource;
 
@@ -26,7 +27,7 @@ class SpaceRoleController extends Controller
 
         $spaceRole = SpaceRole::create($request->validated());
 
-        return response()->json(new SpaceRoleResource($spaceRole));
+        return response()->json(new SpaceRoleResource($spaceRole, true, true));
     }
 
     public function updateSpaceRole(UpdateSpaceRoleRequest $request)
@@ -43,7 +44,22 @@ class SpaceRoleController extends Controller
 
         $spaceRole->update($request->validated());
 
-        return response()->json(new SpaceRoleResource($spaceRole));
+        return response()->json(new SpaceRoleResource($spaceRole, true, true));
+    }
+
+    public function getSpaceRoles(GetSpaceRolesRequest $request)
+    {
+        $space = Space::find($request->space_id);
+
+        $this->authorize('spaceAdmin', $space);
+
+        $spaceRoles = $space->spaceRoles;
+
+        if($spaceRoles->isEmpty()){
+            return response()->json(['message' => 'На данный момент нету ролей пространства']);
+        }
+
+        return response()->json(["data" => SpaceRoleResource::collectionWithFlags($spaceRoles, true)]);
     }
 
     public function deleteSpaceRole(DeleteSpaceRoleRequest $request)

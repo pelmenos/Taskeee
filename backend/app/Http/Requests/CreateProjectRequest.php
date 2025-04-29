@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Rules\CreateProjectMembersUniqueRule;
-use App\Rules\ProjectExistsRule;
 use App\Rules\SpaceExistsRule;
 use App\Rules\SpaceUserExistsRule;
 use Illuminate\Contracts\Validation\Validator;

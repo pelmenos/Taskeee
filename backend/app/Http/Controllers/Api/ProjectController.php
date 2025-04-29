@@ -47,7 +47,7 @@ class ProjectController extends Controller
 
         $project = Project::create([
             'name' => $request->name,
-            'description' => $request->description ?? null,
+            'description' => $request->description,
             'space_id' => $request->space_id
         ]);
 

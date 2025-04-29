@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Project;
 use App\Models\ProjectSpaceUser;
 use App\Models\Space;
-use App\Models\SpaceRole;
 use App\Models\SpaceUser;
 use App\Models\User;
 
