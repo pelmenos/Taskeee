@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\SpaceRole;
 use App\Models\SpaceUser;
-use Illuminate\Auth\Access\Response;
 use App\Models\Space;
 use App\Models\User;
 

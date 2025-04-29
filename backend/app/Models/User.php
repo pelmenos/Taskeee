@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Askedio\SoftCascade\Traits\SoftCascadeTrait;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;

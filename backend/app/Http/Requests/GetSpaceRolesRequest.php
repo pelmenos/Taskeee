@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SpaceExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AcceptInviteSpaceRequest extends FormRequest
+class GetSpaceRolesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,13 +15,6 @@ class AcceptInviteSpaceRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'token' => $this->route('token')
-        ]);
     }
 
     /**
@@ -31,21 +25,22 @@ class AcceptInviteSpaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'exists:invite_tokens,token'
+            'space_id' => ['required', 'uuid', new SpaceExistsRule()]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'token.exists' => 'Токен приглашения должен существовать'
+            'space_id.required' => 'Идентификатор пространства должен быть передан в запросе',
+            'space_id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID'
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message' => 'Ошибка при принятии приглашения',
+            'message' => 'Ошибка при получении ролей пространства',
             'errors' => $validator->errors()->getMessages(),
         ], 422));
     }

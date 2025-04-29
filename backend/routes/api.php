@@ -53,9 +53,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request){
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('logout', [UserController::class, 'logout']);
-    Route::get('delete/account', [UserController::class, 'deleteUser']);
+    Route::delete('delete/account', [UserController::class, 'deleteUser']);
 
     Route::post('spaces/roles', [SpaceRoleController::class, 'createSpaceRole']);
+    Route::get('spaces/roles', [SpaceRoleController::class, 'getSpaceRoles']);
     Route::put('spaces/roles/{id}', [SpaceRoleController::class, 'updateSpaceRole']);
     Route::delete('spaces/roles/{id}', [SpaceRoleController::class, 'deleteSpaceRole']);
 
