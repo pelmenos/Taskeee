@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\FinanceProjectController;
 use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\ConditionController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\StatisticController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -85,6 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('tasks', [TaskController::class, 'createTask']);
     Route::put('tasks/{id}', [TaskController::class, 'updateTask']);
     Route::delete('tasks/{id}', [TaskController::class, 'deleteTask']);
+
     Route::group([
         'prefix' => 'finances',
         'middleware' => 'finance.access'
@@ -114,5 +116,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('payments/{payment_id}', [PaymentController::class, 'delete']);
         Route::post('payments/{payment_id}', [PaymentController::class, 'duplicate']);
         Route::match(['put', 'patch'], 'payments/{payment_id}/paid', [PaymentController::class, 'paidStatus']);
+
+        Route::get('statistics/budget/company', [StatisticController::class, 'companyBudget']);
     });
 });
