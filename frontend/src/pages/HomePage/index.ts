@@ -1,5 +1,5 @@
 import { createRouteView } from "atomic-router-react"
-import { HomePage } from "./ui"
+import { HomePage } from "./ui/HomePage"
 import { authorizedRoute, currentRoute } from "./model"
 
 export const HomeRouteView = {

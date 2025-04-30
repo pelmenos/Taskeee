@@ -9,13 +9,7 @@ import { Link } from "atomic-router-react"
 import { routes } from "shared/routing"
 import { clsx } from "clsx"
 import { HomeIcon } from "shared/ui/assets/icons/HomeIcon"
-import { TwoUsersIcon } from "shared/ui/assets/icons/TwoUsersIcon"
-import { GraphIcon } from "shared/ui/assets/icons/GraphIcon"
-import { ChatIcon } from "shared/ui/assets/icons/ChatIcon"
 import { WorkIcon } from "shared/ui/assets/icons/WorkIcon"
-import { ClickIcon } from "shared/ui/assets/icons/ClickIcon"
-import { HugeIcon } from "shared/ui/assets/icons/HugeIcon"
-import { StarIcon } from "shared/ui/assets/icons/StarIcon"
 
 const NAV = [
 	{ Icon: HomeIcon, label: "Главная", route: routes.home },

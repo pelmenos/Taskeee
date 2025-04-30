@@ -4,6 +4,7 @@ import { AuthPasswordRecoveryRouteView } from "pages/AuthPasswordRecoveryPage"
 import { AuthRegisterRouteView } from "pages/AuthRegisterPage"
 import { ProjectListRouteView } from "pages/ProjectListPage"
 import { ProjectDetailRouteView } from "pages/ProjectDetailPage"
+import { HomeRouteView } from "pages/HomePage"
 
 export const Pages = createRoutesView({
 	routes: [
@@ -13,5 +14,7 @@ export const Pages = createRoutesView({
 
 		ProjectListRouteView,
 		ProjectDetailRouteView,
+
+		HomeRouteView,
 	],
 })
