@@ -5,5 +5,5 @@ const currentRoute = routes.auth.passwordRecovery
 
 export const anonymousRoute = chainAnonymous({
 	route: currentRoute,
-	otherwise: routes.project.list.open,
+	otherwise: routes.home.open,
 })

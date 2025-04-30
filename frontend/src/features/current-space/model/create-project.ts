@@ -17,6 +17,7 @@ export const createProjectModel = atom(() => {
 
 	const createProjectMutation = createCreateProjectMutation()
 
+	// TODO: resolve members
 	const submitted = createEvent<Omit<CreateProjectFormSchema, "boards" | "space_id" | "members">>()
 
 	const throttleSubmitted = sample({

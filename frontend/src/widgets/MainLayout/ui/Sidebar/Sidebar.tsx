@@ -8,8 +8,29 @@ import { CategoryIcon } from "shared/ui/assets/icons/CategoryIcon"
 import { Link } from "atomic-router-react"
 import { routes } from "shared/routing"
 import { clsx } from "clsx"
+import { HomeIcon } from "shared/ui/assets/icons/HomeIcon"
+import { TwoUsersIcon } from "shared/ui/assets/icons/TwoUsersIcon"
+import { GraphIcon } from "shared/ui/assets/icons/GraphIcon"
+import { ChatIcon } from "shared/ui/assets/icons/ChatIcon"
+import { WorkIcon } from "shared/ui/assets/icons/WorkIcon"
+import { ClickIcon } from "shared/ui/assets/icons/ClickIcon"
+import { HugeIcon } from "shared/ui/assets/icons/HugeIcon"
+import { StarIcon } from "shared/ui/assets/icons/StarIcon"
 
-const NAV = [{ Icon: CategoryIcon, label: "Проекты", route: routes.project.list }]
+const NAV = [
+	{ Icon: HomeIcon, label: "Главная", route: routes.home },
+	// { Icon: TwoUsersIcon, label: "Команда", route: routes.home },
+	{ Icon: CategoryIcon, label: "Проекты", route: routes.project.list },
+	// { Icon: GraphIcon, label: "Финансы", route: routes.home },
+	// { Icon: StarIcon, label: "Задачи", route: routes.home },
+	// { Icon: ChatIcon, label: "Чаты", route: routes.home },
+]
+
+const FOOTER = [
+	{ Icon: WorkIcon, label: "Тарифный план", route: routes.home },
+	// { Icon: ClickIcon, label: "Инструменты", route: routes.home },
+	// { Icon: HugeIcon, label: "Обратная связь", route: routes.home },
+]
 
 interface Props extends PaperProps {
 	isOpen?: boolean
@@ -41,6 +62,22 @@ export const Sidebar = ({ isOpen, className, ...props }: Props) => {
 							component={Link}
 							to={route}
 							className="nav__link"
+							key={index}
+							label={label}
+							variant="light"
+							leftSection={<Icon />}
+							rightSection={<ChevronRightIcon />}
+							data-close={!isOpen}
+						/>
+					))}
+				</Stack>
+
+				<Stack gap={isOpen ? 0 : "md"} align={isOpen ? "initial" : "center"}>
+					{FOOTER.map(({ Icon, label, route }, index) => (
+						<NavLink
+							className="footer__link"
+							component={Link}
+							to={route}
 							key={index}
 							label={label}
 							variant="light"

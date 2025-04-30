@@ -7,7 +7,7 @@ const currentRoute = routes.auth.register
 
 export const anonymousRoute = chainAnonymous({
 	route: currentRoute,
-	otherwise: routes.project.list.open,
+	otherwise: routes.home.open,
 })
 
 reset({

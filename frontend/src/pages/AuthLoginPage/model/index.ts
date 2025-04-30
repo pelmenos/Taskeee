@@ -14,7 +14,7 @@ export const authLoginModel = atom(() => {
 
 	const anonymousRoute = chainAnonymous({
 		route: currentRoute,
-		otherwise: routes.project.list.open,
+		otherwise: routes.home.open,
 	})
 
 	const submitted = createEvent<LoginFormSchema>()

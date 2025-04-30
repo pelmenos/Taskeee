@@ -6,6 +6,8 @@ import { appStarted } from "./app"
 export const controls = createRouterControls()
 
 export const routes = {
+	home: createRoute(),
+
 	auth: {
 		login: createRoute(),
 		register: createRoute(),
@@ -19,6 +21,7 @@ export const routes = {
 } as const
 
 export const router = createHistoryRouter({
+	controls,
 	routes: [
 		{ path: "/auth/login", route: routes.auth.login },
 		{ path: "/auth/register", route: routes.auth.register },
@@ -26,8 +29,9 @@ export const router = createHistoryRouter({
 
 		{ path: "/project/list", route: routes.project.list },
 		{ path: "/project/detail/:id", route: routes.project.detail },
+
+		{ path: "/", route: routes.home },
 	],
-	controls,
 })
 
 sample({
