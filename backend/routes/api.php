@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\ConditionController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\StatisticController;
+use App\Http\Controllers\Api\BudgetPaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -116,6 +117,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('payments/{payment_id}', [PaymentController::class, 'delete']);
         Route::post('payments/{payment_id}', [PaymentController::class, 'duplicate']);
         Route::match(['put', 'patch'], 'payments/{payment_id}/paid', [PaymentController::class, 'paidStatus']);
+
+        Route::post('budget/payments', [BudgetPaymentController::class, 'store']);
+        Route::get('budget/payments', [BudgetPaymentController::class, 'index']);
+        Route::get('budget/payments/{budget_payment_id}', [BudgetPaymentController::class, 'view']);
+        Route::match(['put', 'patch'], 'budget/payments/{budget_payment_id}', [BudgetPaymentController::class, 'update']);
+        Route::delete('budget/payments/{budget_payment_id}', [BudgetPaymentController::class, 'delete']);
+        Route::post('budget/payments/{budget_payment_id}', [BudgetPaymentController::class, 'duplicate']);
+        Route::match(['put', 'patch'], 'budget/payments/{budget_payment_id}/paid', [BudgetPaymentController::class, 'paidStatus']);
 
         Route::get('statistics/budget/company', [StatisticController::class, 'companyBudget']);
     });
