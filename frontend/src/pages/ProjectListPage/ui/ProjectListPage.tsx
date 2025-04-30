@@ -46,7 +46,7 @@ export const ProjectListPage = () => {
 
 	return (
 		<MainLayout>
-			<Paper bg="surface" p="xl">
+			<Paper bg="surface" p="xl" pos="relative">
 				{onboardingIsVisible ? (
 					<>
 						<Onboarding />
