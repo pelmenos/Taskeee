@@ -18,9 +18,7 @@ import { useUnit } from "effector-react"
 import { useDisclosure } from "@mantine/hooks"
 import { Link } from "atomic-router-react"
 import { routes } from "shared/routing"
-import { useEffect, useRef, useState } from "react"
-import Fuse from "fuse.js"
-import { ProjectListItem } from "entities/project"
+import { useState } from "react"
 import { Onboarding } from "widgets/Onboarding"
 import CellingLight from "shared/ui/assets/images/CeilingLight.png"
 import { $onboardingIsVisible } from "../model"
@@ -31,18 +29,6 @@ export const ProjectListPage = () => {
 
 	const availableProjects = useUnit(projectModel.$availableProjects)
 	const onboardingIsVisible = useUnit($onboardingIsVisible)
-
-	const fuse = useRef<Fuse<ProjectListItem> | null>(null)
-
-	useEffect(() => {
-		fuse.current = new Fuse(availableProjects, {
-			keys: ["name"],
-		})
-	}, [fuse, availableProjects])
-
-	const projects = query
-		? fuse.current?.search(query).map((item) => item.item) ?? []
-		: availableProjects
 
 	return (
 		<MainLayout>
@@ -90,7 +76,7 @@ export const ProjectListPage = () => {
 						</Group>
 
 						<SimpleGrid cols={6}>
-							{projects.map((item) => (
+							{availableProjects.map((item) => (
 								<Button
 									key={item.id}
 									component={Link<{ id: string }>}
