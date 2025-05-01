@@ -16,10 +16,10 @@ class StatisticController extends Controller
         $this->service = $service;
     }
 
-    public function companyBudget()
+    public function projectsBudget()
     {
         return response()->json([
-            'data' => $this->service->calculateBudget()
+            'data' => $this->service->calculateProjectsBudget()
         ]);
     }
 

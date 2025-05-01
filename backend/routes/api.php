@@ -126,6 +126,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('budget/payments/{budget_payment_id}', [BudgetPaymentController::class, 'duplicate']);
         Route::match(['put', 'patch'], 'budget/payments/{budget_payment_id}/paid', [BudgetPaymentController::class, 'paidStatus']);
 
-        Route::get('statistics/budget/company', [StatisticController::class, 'companyBudget']);
+        Route::get('statistics/budget/projects', [StatisticController::class, 'projectsBudget']);
     });
 });

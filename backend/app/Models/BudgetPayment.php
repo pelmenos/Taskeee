@@ -9,10 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class BudgetPayment extends Model
 {
     protected $fillable = [
-        'price', 'comment',
-        'status_id', 'coordinator_id',
-        'lead_id', 'customer_id',
-        'source_id', 'space_id'
+        'sum', 'status_id', 'space_id',
+        'subject_id', 'type', 'director_id',
+        'recipient_id', 'condition_id', 'method'
     ];
 
     public function status()
