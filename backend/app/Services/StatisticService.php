@@ -4,10 +4,11 @@ namespace App\Services;
 
 use App\Services\Traits\CompanyBudget;
 use App\Services\Traits\ProjectsBudget;
+use App\Services\Traits\TotalBudget;
 
 class StatisticService
 {
-    use ProjectsBudget, CompanyBudget;
+    use ProjectsBudget, CompanyBudget, TotalBudget;
 
     public function calculateProjectsBudget()
     {
@@ -36,6 +37,25 @@ class StatisticService
         $lastPayment = $this->companyLastPayment();
         $totalPayments = $this->companyTotalPayments();
         $balance = $this->companyBalance();
+
+        return [
+            'total_turnover' => $totalTurnover,
+            'last_payment' => $lastPayment,
+            'total_payments' => $totalPayments,
+            'expenses' => $expenses,
+            'income' => $income,
+            'balance' => $balance,
+        ];
+    }
+
+    public function calculateTotalBudget()
+    {
+        $expenses = $this->totalExpenses();
+        $income = $this->totalIncome();
+        $totalTurnover = $this->totalTurnover();
+        $lastPayment = $this->totalLastPayment();
+        $totalPayments = $this->totalPayments();
+        $balance = $this->totalBalance();
 
         return [
             'total_turnover' => $totalTurnover,

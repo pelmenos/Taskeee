@@ -128,5 +128,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('statistics/budget/projects', [StatisticController::class, 'projectsBudget']);
         Route::get('statistics/budget/company', [StatisticController::class, 'companyBudget']);
+        Route::get('statistics/budget/total', [StatisticController::class, 'totalBudget']);
     });
 });

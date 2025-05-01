@@ -28,4 +28,11 @@ class StatisticController extends Controller
             'data' => $this->service->calculateCompanyBudget()
         ]);
     }
+
+    public function totalBudget(Request $request)
+    {
+        return response()->json([
+            'data' => $this->service->calculateTotalBudget()
+        ]);
+    }
 }
