@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Payment;
 use App\Services\StatisticService;
 use Illuminate\Http\Request;
 
@@ -16,12 +15,17 @@ class StatisticController extends Controller
         $this->service = $service;
     }
 
-    public function projectsBudget()
+    public function projectsBudget(Request $request)
     {
         return response()->json([
             'data' => $this->service->calculateProjectsBudget()
         ]);
     }
 
-
+    public function companyBudget(Request $request)
+    {
+        return response()->json([
+            'data' => $this->service->calculateCompanyBudget()
+        ]);
+    }
 }

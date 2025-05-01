@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Payment;
+use App\Services\Traits\CompanyBudget;
+use App\Services\Traits\ProjectsBudget;
 
 class StatisticService
 {
+    use ProjectsBudget, CompanyBudget;
+
     public function calculateProjectsBudget()
     {
         $expenses = $this->projectsExpenses();
@@ -25,62 +28,22 @@ class StatisticService
         ];
     }
 
-    private function projectsExpenses()
+    public function calculateCompanyBudget()
     {
-        try {
-            $expensesPercents = 100 / ($this->projectsTotalTurnover() /
-                    abs(Payment::currentSpace()->paid()->expenses()->sum('sum')));
-        } catch (\DivisionByZeroError) {
-            $expensesPercents = 0;
-        }
-
-        $expensesCount = Payment::currentSpace()->paid()->expenses()->count();
-        $expensesSum = abs(Payment::currentSpace()->paid()->expenses()->sum('sum'));
+        $expenses = $this->companyExpenses();
+        $income = $this->companyIncome();
+        $totalTurnover = $this->companyTotalTurnover();
+        $lastPayment = $this->companyLastPayment();
+        $totalPayments = $this->companyTotalPayments();
+        $balance = $this->companyBalance();
 
         return [
-            'sum' => $expensesSum,
-            'percents' => round($expensesPercents, 2),
-            'count' => $expensesCount,
+            'total_turnover' => $totalTurnover,
+            'last_payment' => $lastPayment,
+            'total_payments' => $totalPayments,
+            'expenses' => $expenses,
+            'income' => $income,
+            'balance' => $balance,
         ];
-    }
-
-    private function projectsIncome()
-    {
-        try {
-            $incomePercents = 100 / ($this->projectsTotalTurnover() /
-                    Payment::currentSpace()->paid()->income()->sum('sum'));
-        } catch (\DivisionByZeroError) {
-            $incomePercents = 0;
-        }
-
-        $incomeCount = Payment::currentSpace()->paid()->income()->count();
-        $incomeSum = (float)Payment::currentSpace()->paid()->income()->sum('sum');
-
-        return [
-            'sum' => $incomeSum,
-            'percents' => round($incomePercents, 2),
-            'count' => $incomeCount
-        ];
-    }
-
-    private function projectsTotalTurnover()
-    {
-        return Payment::currentSpace()->paid()->income()->sum('sum') +
-            abs(Payment::currentSpace()->paid()->expenses()->sum('sum'));
-    }
-
-    private function projectsLastPayment()
-    {
-        return (float)Payment::currentSpace()->paid()->get()->last()?->sum;
-    }
-
-    private function projectsTotalPayments()
-    {
-        return Payment::currentSpace()->paid()->count();
-    }
-
-    private function projectsBalance()
-    {
-        return (float)Payment::currentSpace()->paid()->sum('sum');
     }
 }
