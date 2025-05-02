@@ -38,7 +38,7 @@ class UpdateProjectRequest extends FormRequest
             'name' => 'required|string|max:100',
             'description' => 'present|nullable|string|max:500',
             'members' => ['nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
-            'members.*' => ['uuid', new SpaceUserExistsRule()],
+            'members.*' => ['uuid', new SpaceUserExistsRule()]
 //            'boards' => 'nullable|array|min:1|max:20',
 //            'boards.*' => 'array',
 //            'boards.*.name' => 'required|string|max:100',
@@ -58,7 +58,7 @@ class UpdateProjectRequest extends FormRequest
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
             'members.array' => 'Поле Участники должно быть массивом',
             'members.min' => 'Поле Участники должно содержать хотя бы одного участника',
-            'members.*.uuid' => 'Идентификаторы всех участников должны иметь тип данных UUID',
+            'members.*.uuid' => 'Идентификаторы всех участников должны иметь тип данных UUID'
 //            'boards.array' => 'Поле Доски должно быть массивом',
 //            'boards.min' => 'Поле Доски должно содержать хотя бы одну доску',
 //            'boards.max' => 'Поле Доски должно содержать максимум 20 досок',

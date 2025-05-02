@@ -45,10 +45,6 @@ class SpaceUserController extends Controller
 
         $spaceUsers = $space->spaceUsers;
 
-        if($spaceUsers->isEmpty()){
-            return response()->json(['message' => 'На данный момент нету пользователей пространства']);
-        }
-
         return response()->json(["data" =>
             SpaceUserResource::collectionWithFlags($spaceUsers, true, false, true)]);
     }

@@ -35,7 +35,7 @@ class UpdateTaskRequest extends FormRequest
             'id' => ['uuid', new TaskExistsRule()],
             'name' => 'required|string|max:100',
             'description' => 'present|nullable|string|max:500',
-            'status' => 'required|in:Выполнена,В процессе'
+            'status' => 'required|in:Выполнено,В процессе,Отложено,Брошено'
         ];
     }
 
@@ -50,7 +50,7 @@ class UpdateTaskRequest extends FormRequest
             'description.string' => 'Поле Описание должно содержать строковой тип данных',
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
             'status.required' => 'Поле Статус обязательно для заполнения',
-            'status.in' => 'Поле Статус должно содержать одно из значений: Выполнена, В процессе'
+            'status.in' => 'Поле Статус должно содержать одно из значений: Выполнено, В процессе, Отложено, Брошено'
         ];
     }
 

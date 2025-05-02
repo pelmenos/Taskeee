@@ -43,12 +43,7 @@ class SpaceController extends Controller
 
         $allSpaces = $adminSpaces->merge($memberSpaces);
 
-        if($allSpaces->isEmpty()){
-            return response()->json(['message' =>
-                'На данный момент вы не владеете и не являетесь участником какого-либо пространства']);
-        }
-
-        return response()->json(SpaceResource::collectionWithFlags($allSpaces, true));
+        return response()->json(["data" => SpaceResource::collectionWithFlags($allSpaces, true)]);
     }
 
     public function getSpace(GetSpaceRequest $request)

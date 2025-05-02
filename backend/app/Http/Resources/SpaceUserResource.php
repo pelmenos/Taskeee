@@ -41,7 +41,7 @@ class SpaceUserResource extends JsonResource
         $data['role_id'] = $this->resource->role_id;
 
         if ($this->withRoles) {
-            $data['role'] = new SpaceRoleResource($this->role);
+            $data['role'] = new SpaceRoleResource($this->role, true, true);
         }
 
         if ($this->withCreatedAt) {

@@ -30,6 +30,17 @@ class SpaceRoleController extends Controller
         return response()->json(new SpaceRoleResource($spaceRole, true, true));
     }
 
+    public function getSpaceRoles(GetSpaceRolesRequest $request)
+    {
+        $space = Space::find($request->space_id);
+
+        $this->authorize('spaceAdmin', $space);
+
+        $spaceRoles = $space->spaceRoles;
+
+        return response()->json(["data" => SpaceRoleResource::collectionWithFlags($spaceRoles, true)]);
+    }
+
     public function updateSpaceRole(UpdateSpaceRoleRequest $request)
     {
         $spaceRole = SpaceRole::find($request->role_id);
@@ -45,21 +56,6 @@ class SpaceRoleController extends Controller
         $spaceRole->update($request->validated());
 
         return response()->json(new SpaceRoleResource($spaceRole, true, true));
-    }
-
-    public function getSpaceRoles(GetSpaceRolesRequest $request)
-    {
-        $space = Space::find($request->space_id);
-
-        $this->authorize('spaceAdmin', $space);
-
-        $spaceRoles = $space->spaceRoles;
-
-        if($spaceRoles->isEmpty()){
-            return response()->json(['message' => 'На данный момент нету ролей пространства']);
-        }
-
-        return response()->json(["data" => SpaceRoleResource::collectionWithFlags($spaceRoles, true)]);
     }
 
     public function deleteSpaceRole(DeleteSpaceRoleRequest $request)

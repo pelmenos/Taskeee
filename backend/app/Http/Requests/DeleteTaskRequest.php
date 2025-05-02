@@ -32,7 +32,7 @@ class DeleteTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['uuid', new TaskExistsRule()],
+            'id' => ['uuid', new TaskExistsRule()]
         ];
     }
 
