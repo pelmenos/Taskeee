@@ -73,11 +73,7 @@ class ProjectController extends Controller
         if($spaceAdmin){
             $projects = $spaceAdmin->projects;
 
-            if($projects->isEmpty()){
-                return response()->json(['message' => 'На данный момент у вас нету проектов']);
-            }
-
-            return response()->json(ProjectResource::collectionWithFlags($projects, true));
+            return response()->json(["data" => ProjectResource::collectionWithFlags($projects, true)]);
         }
 
         $spaceMember = Space::find($request->space_id);
@@ -89,20 +85,7 @@ class ProjectController extends Controller
 
         $projects = $spaceUser->projects;
 
-        if($projects->isEmpty()){
-            return response()->json(['message' => 'На данный момент у вас нету проектов']);
-        }
-
-        return response()->json(ProjectResource::collectionWithFlags($projects, true));
-    }
-
-    public function getProject(GetProjectRequest $request)
-    {
-        $project = Project::find($request->id);
-
-        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $project);
-
-        return response()->json(new ProjectResource($project, true, true, true));
+        return response()->json(["data" => ProjectResource::collectionWithFlags($projects, true)]);
     }
 
     public function searchProjects(SearchProjectsRequest $request)
@@ -124,6 +107,15 @@ class ProjectController extends Controller
         $projects = $space->projects()->where('name', 'LIKE', "%{$request->input('query')}%")->get();
 
         return response()->json(["data" => ProjectResource::collectionWithFlags($projects, true)]);
+    }
+
+    public function getProject(GetProjectRequest $request)
+    {
+        $project = Project::find($request->id);
+
+        $this->authorize('adminOrMemberSpaceWithProjectsAccess', $project);
+
+        return response()->json(new ProjectResource($project, true, true, true));
     }
 
     public function updateProject(UpdateProjectRequest $request)

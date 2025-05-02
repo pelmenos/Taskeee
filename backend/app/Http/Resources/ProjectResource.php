@@ -22,7 +22,7 @@ class ProjectResource extends JsonResource
     public static function collectionWithFlags($collection, $withCreatedAt = false, $withUpdatedAt = false, $withTasks = false)
     {
         return $collection->map(function ($resource) use ($withCreatedAt, $withUpdatedAt, $withTasks) {
-            return new self($resource, $withCreatedAt, $withUpdatedAt, $withTasks,);
+            return new self($resource, $withCreatedAt, $withUpdatedAt, $withTasks);
         });
     }
 
@@ -40,10 +40,11 @@ class ProjectResource extends JsonResource
         $data['description'] = $this->resource->description;
         $data['space_id'] = $this->resource->space_id;
         $data['members'] = SpaceUserResource::collectionWithFlags($this->spaceUsers, true, true);
-        $data['boards'] = BoardResource::collectionWithTasks($this->boards);
 
         if ($this->withTasks) {
-            $data['tasks'] = TaskResource::collection($this->resource->boards->flatMap->tasks);
+            $data['boards'] = BoardResource::collectionWithTasks($this->boards, true);
+        } else {
+            $data['boards'] = BoardResource::collection($this->boards);
         }
 
         if ($this->withCreatedAt) {
