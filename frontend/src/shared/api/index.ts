@@ -1,4 +1,4 @@
-export { EnumSpaceTariff, EnumTaskStatus } from "./types"
+export { EnumSpaceTariff } from "./types"
 
 export type { ResponseWithMessage, ErrorResponse } from "./types"
 

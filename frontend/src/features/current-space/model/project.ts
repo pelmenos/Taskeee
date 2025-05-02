@@ -9,8 +9,16 @@ import {
 import { createEvent, createStore, sample } from "effector"
 import { normalizeListResponse } from "shared/lib/normalizeListResponse"
 import { BoardDetail, BoardListItem, createBoardDetailQuery } from "entities/board"
-import { not } from "patronum"
-import { createCreateTaskMutation, TaskListItem, TaskStatus } from "entities/task"
+import { debug, not } from "patronum"
+import {
+	createCreateTaskMutation,
+	createDeleteTaskMutation,
+	createUpdateTaskMutation,
+	TaskDeleteSchema,
+	TaskListItem,
+	TaskStatus,
+	TaskUpdateSchema,
+} from "entities/task"
 import { update } from "@farfetched/core"
 import { spaceModel } from "./space"
 
@@ -19,12 +27,16 @@ export const projectModel = atom(() => {
 	const projectDetailQuery = createProjectDetailQuery()
 	const boardDetailQuery = createBoardDetailQuery()
 	const createTaskMutation = createCreateTaskMutation()
+	const updateTaskMutation = createUpdateTaskMutation()
+	const deleteTaskMutation = createDeleteTaskMutation()
 
 	const currentProjectChanged = createEvent<{ id: string }>()
 
 	const currentBoardChanged = createEvent<{ id: string }>()
 
 	const taskSubmitted = createEvent<{ name: string; status: TaskStatus }>()
+	const taskUpdated = createEvent<TaskUpdateSchema>()
+	const taskDeleted = createEvent<TaskDeleteSchema>()
 
 	const $availableProjects = createStore<Array<ProjectListItem>>([])
 	const $currentProject = createStore<ProjectDetail | null>(null)
@@ -32,9 +44,9 @@ export const projectModel = atom(() => {
 	const $availableBoards = createStore<Array<BoardListItem & { tasks_count: number }>>([])
 	const $currentBoard = createStore<BoardDetail | null>(null)
 
-	const $columns = createStore<Record<TaskStatus, TaskListItem[]>>(
-		{} as Record<TaskStatus, TaskListItem[]>,
-	)
+	const $columns = createStore<Record<TaskStatus, TaskListItem[]> | null>(null)
+
+	debug($columns)
 
 	sample({
 		source: spaceModel.$currentSpace,
@@ -87,14 +99,19 @@ export const projectModel = atom(() => {
 	sample({
 		source: $currentBoard,
 		fn: (source) => {
-			if (!source) {
-				return {} as Record<TaskStatus, TaskListItem[]>
+			if (!source || !source.tasks.length) {
+				return {
+					[TaskStatus.InProgress]: [],
+					[TaskStatus.Completed]: [],
+				} as Record<TaskStatus, TaskListItem[]>
 			}
 
-			return Object.groupBy(source.tasks, (item) => item.status) as Record<
-				TaskStatus,
-				TaskListItem[]
-			>
+			return {
+				[TaskStatus.InProgress]: source.tasks.filter(
+					(item) => item.status === TaskStatus.InProgress,
+				),
+				[TaskStatus.Completed]: source.tasks.filter((item) => item.status === TaskStatus.Completed),
+			}
 		},
 		target: $columns,
 	})
@@ -113,8 +130,54 @@ export const projectModel = atom(() => {
 		target: createTaskMutation.start,
 	})
 
+	sample({
+		clock: taskUpdated,
+		target: updateTaskMutation.start,
+	})
+
+	sample({
+		clock: taskDeleted,
+		target: deleteTaskMutation.start,
+	})
+
 	update(boardDetailQuery, {
 		on: createTaskMutation,
+		by: {
+			success: ({ query }) => {
+				let result = null
+
+				if ("result" in query) {
+					result = query.result
+				}
+
+				return {
+					result: result,
+					refetch: true,
+				}
+			},
+		},
+	})
+
+	update(boardDetailQuery, {
+		on: updateTaskMutation,
+		by: {
+			success: ({ query }) => {
+				let result = null
+
+				if ("result" in query) {
+					result = query.result
+				}
+
+				return {
+					result: result,
+					refetch: true,
+				}
+			},
+		},
+	})
+
+	update(boardDetailQuery, {
+		on: deleteTaskMutation,
 		by: {
 			success: ({ query }) => {
 				let result = null
@@ -140,6 +203,8 @@ export const projectModel = atom(() => {
 		currentProjectChanged,
 		currentBoardChanged,
 		taskSubmitted,
+		taskUpdated,
+		taskDeleted,
 
 		$availableProjects,
 		$currentProject,

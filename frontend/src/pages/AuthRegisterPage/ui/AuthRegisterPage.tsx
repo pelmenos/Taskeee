@@ -5,15 +5,13 @@ import { FormLayout } from "widgets/FormLayout"
 import { StageRegister } from "./StageRegister"
 import { StageConfirm } from "./StageConfirm"
 
-
 export const AuthRegisterPage = () => {
-  const stage = useUnit(stagesModel.$currentStage)
+	const stage = useUnit(stagesModel.$currentStage)
 
-  return (
-    <FormLayout>
-      {stage === RegisterFlowStages.Register && <StageRegister />}
-      {stage === RegisterFlowStages.Confirm && <StageConfirm />}
-    </FormLayout>
-  )
+	return (
+		<FormLayout>
+			{stage === RegisterFlowStages.Register && <StageRegister />}
+			{stage === RegisterFlowStages.Confirm && <StageConfirm />}
+		</FormLayout>
+	)
 }
-

@@ -1,9 +1,10 @@
 import "./Column.scss"
-import { Card, Group, Paper, Stack, StackProps, Text, Title } from "@mantine/core"
+import { Group, Paper, Stack, StackProps, Title } from "@mantine/core"
 import { TaskListItem, TaskStatus } from "entities/task"
 import { SortIcon } from "shared/ui/assets/icons/SortIcon"
 import { SettingIcon } from "shared/ui/assets/icons/SettingIcon"
 import { CreateTaskInput } from "./CreateTaskInput"
+import { TaskCard } from "./TaskCard"
 
 interface Props extends StackProps {
 	column: string
@@ -27,10 +28,8 @@ export const Column = ({ column, tasks, ...props }: Props) => {
 
 			<CreateTaskInput column={column as TaskStatus} />
 
-			{tasks.map((task) => (
-				<Card key={task.id} bg="surface" p={16}>
-					<Text>{task.name}</Text>
-				</Card>
+			{tasks.map((item) => (
+				<TaskCard key={item.id} data={item} />
 			))}
 		</Stack>
 	)

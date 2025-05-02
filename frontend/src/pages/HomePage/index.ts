@@ -1,12 +1,11 @@
-import { routes } from "shared/routing"
 import { createRouteView } from "atomic-router-react"
-import { HomePage } from "./ui"
-import { authorizedRoute } from "./model"
+import { HomePage } from "./ui/HomePage"
+import { authorizedRoute, currentRoute } from "./model"
 
 export const HomeRouteView = {
-  route: routes.home,
-  view: createRouteView({
-    route: authorizedRoute,
-    view: HomePage,
-  }),
+	route: currentRoute,
+	view: createRouteView({
+		route: authorizedRoute,
+		view: HomePage,
+	}),
 }

@@ -1,101 +1,79 @@
 import "./SpaceMenu.scss"
 import {
-  Group,
-  Menu,
-  MenuDropdown,
-  MenuItem,
-  MenuTarget,
-  Paper,
-  Text,
-  UnstyledButton,
-  type UnstyledButtonProps,
+	Group,
+	Menu,
+	MenuDropdown,
+	MenuItem,
+	MenuTarget,
+	Paper,
+	Text,
+	UnstyledButton,
+	type UnstyledButtonProps,
 } from "@mantine/core"
 import { StackIcon } from "shared/ui/assets/icons/StackIcon"
 import { ChevronRightIcon } from "shared/ui/assets/icons/ChevronRightIcon"
 import { useUnit } from "effector-react"
-import { spaceModel } from "features/current-space"
+import { CreateSpaceModal, spaceModel } from "features/current-space"
+import { useDisclosure } from "@mantine/hooks"
 
-
-interface Props extends UnstyledButtonProps {
-
-}
+interface Props extends UnstyledButtonProps {}
 
 export const SpaceMenu = (props: Props) => {
-  const currentSpace = useUnit(spaceModel.$currentSpace)
-  const availableSpaces = useUnit(spaceModel.$availableSpaces)
+	const currentSpace = useUnit(spaceModel.$currentSpace)
+	const currentSpaceChanged = useUnit(spaceModel.currentSpaceChanged)
+	const availableSpaces = useUnit(spaceModel.$availableSpaces)
 
-  return (
-    <Menu>
-      <MenuTarget>
-        <UnstyledButton
-          h="2.5rem"
-          bd="1px solid var(--mantine-color-primary-0)"
-          display="flex"
-          style={(theme) => ({
-            borderRadius: theme.radius.md,
-            alignItems: "center",
-            gap: theme.spacing.xxs,
-          })}
-          {...props}
-        >
-          <Paper
-            component="span"
-            bg="primary"
-            h="100%"
-          >
-            <Group
-              component="span"
-              h="100%"
-              align="center"
-              px="md"
-              wrap="nowrap"
-            >
-              <StackIcon />
+	const [opened, { open, close }] = useDisclosure(false)
 
-              <Text
-                span
-                ff="Montserrat, serif"
-                c="onPrimary"
-                fw={600}
-              >
-                Пространство
-              </Text>
-            </Group>
-          </Paper>
+	return (
+		<Menu>
+			<MenuTarget>
+				<UnstyledButton
+					h="2.5rem"
+					bd="1px solid var(--mantine-color-primary-0)"
+					display="flex"
+					style={(theme) => ({
+						borderRadius: theme.radius.md,
+						alignItems: "center",
+						gap: theme.spacing.xxs,
+					})}
+					{...props}
+				>
+					<Paper component="span" bg="primary" h="100%">
+						<Group component="span" h="100%" align="center" px="md" wrap="nowrap">
+							<StackIcon />
 
-          <Paper
-            component="span"
-            h="100%"
-            bg="transparent"
-          >
-            <Group
-              component="span"
-              h="100%"
-              align="center"
-              px="md"
-              wrap="nowrap"
-            >
-              <Text
-                span
-                ff="Montserrat, serif"
-                fw={600}
-              >
-                {currentSpace?.name ?? "У вас нет пространств"}
-              </Text>
+							<Text span ff="Montserrat, serif" c="onPrimary" fw={600}>
+								Пространство
+							</Text>
+						</Group>
+					</Paper>
 
-              <ChevronRightIcon />
-            </Group>
-          </Paper>
-        </UnstyledButton>
-      </MenuTarget>
+					<Paper component="span" h="100%" bg="transparent">
+						<Group component="span" h="100%" align="center" px="md" wrap="nowrap">
+							<Text span ff="Montserrat, serif" fw={600}>
+								{currentSpace?.name ?? "У вас нет пространств"}
+							</Text>
 
-      {!!availableSpaces.length && (
-        <MenuDropdown>
-          {availableSpaces.map(item => (
-            <MenuItem key={item.id}>{item.name}</MenuItem>
-          ))}
-        </MenuDropdown>
-      )}
-    </Menu>
-  )
+							<ChevronRightIcon />
+						</Group>
+					</Paper>
+				</UnstyledButton>
+			</MenuTarget>
+
+			{!!availableSpaces.length && (
+				<MenuDropdown>
+					{availableSpaces.map((item) => (
+						<MenuItem key={item.id} onClick={() => currentSpaceChanged(item)}>
+							{item.name}
+						</MenuItem>
+					))}
+
+					<MenuItem onClick={open}>Создать пространство</MenuItem>
+				</MenuDropdown>
+			)}
+
+			<CreateSpaceModal opened={opened} onClose={close} />
+		</Menu>
+	)
 }
