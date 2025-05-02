@@ -20,6 +20,13 @@ class BoardController extends Controller
 
         $this->authorize('adminOrMemberSpaceWithProjectsAccess', $project);
 
+        if($project->boards->count() == 20)
+        {
+            return response()->json(['message' => 'Ошибка при создании доски',
+                'errors' => ['project_id' =>
+                    ['Нельзя создавать больше 20 досок для одного проекта']]], 422);
+        }
+
         $board = Board::create($request->validated());
 
         return response()->json(new BoardResource($board));

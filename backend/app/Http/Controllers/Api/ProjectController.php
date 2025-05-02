@@ -7,6 +7,7 @@ use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\DeleteProjectRequest;
 use App\Http\Requests\GetProjectRequest;
 use App\Http\Requests\GetProjectsRequest;
+use App\Http\Requests\SearchProjectsRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +105,27 @@ class ProjectController extends Controller
         return response()->json(new ProjectResource($project, true, true, true));
     }
 
+    public function searchProjects(SearchProjectsRequest $request)
+    {
+        $space = Space::find($request->space_id);
+
+        $this->authorize('adminOrMemberSpaceWithProjectsAccessWithSpace', $space);
+
+        $spaceUser = SpaceUser::where('space_id', $request->space_id)
+            ->where('email', Auth::user()->email)->first();
+
+        if($spaceUser)
+        {
+            $projects = $spaceUser->projects()->where('name', 'LIKE', "%{$request->input('query')}%")->get();
+
+            return response()->json(["data" => ProjectResource::collectionWithFlags($projects, true)]);
+        }
+
+        $projects = $space->projects()->where('name', 'LIKE', "%{$request->input('query')}%")->get();
+
+        return response()->json(["data" => ProjectResource::collectionWithFlags($projects, true)]);
+    }
+
     public function updateProject(UpdateProjectRequest $request)
     {
         $project = Project::find($request->id);
@@ -143,15 +165,15 @@ class ProjectController extends Controller
             'description' => $request->description
         ]);
 
-        if($request->input('boards')){
-            foreach ($request->input('boards') as $board){
-                Board::create([
-                    'name' => $board['name'],
-                    'description' => $board['description'],
-                    'project_id' => $project->id
-                ]);
-            }
-        }
+//        if($request->input('boards')){
+//            foreach ($request->input('boards') as $board){
+//                Board::create([
+//                    'name' => $board['name'],
+//                    'description' => $board['description'],
+//                    'project_id' => $project->id
+//                ]);
+//            }
+//        }
 
         return response()->json(new ProjectResource($project, true, true));
     }

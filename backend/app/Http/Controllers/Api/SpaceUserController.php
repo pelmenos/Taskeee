@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateSpaceUserRequest;
 use App\Http\Requests\DeleteSpaceUserRequest;
-
+use App\Http\Requests\GetSpaceUsersRequest;
 use App\Http\Resources\SpaceUserResource;
+
 use App\Models\Space;
 use App\Models\SpaceUser;
 use App\Models\SpaceRole;
@@ -34,6 +35,22 @@ class SpaceUserController extends Controller
         $spaceUser = SpaceUser::create($request->validated());
 
         return response()->json(new SpaceUserResource($spaceUser));
+    }
+
+    public function getSpaceUsers(GetSpaceUsersRequest $request)
+    {
+        $space = Space::find($request->space_id);
+
+        $this->authorize('adminOrMemberSpace', $space);
+
+        $spaceUsers = $space->spaceUsers;
+
+        if($spaceUsers->isEmpty()){
+            return response()->json(['message' => 'На данный момент нету пользователей пространства']);
+        }
+
+        return response()->json(["data" =>
+            SpaceUserResource::collectionWithFlags($spaceUsers, true, false, true)]);
     }
 
     public function deleteSpaceUser(DeleteSpaceUserRequest $request)
