@@ -39,7 +39,7 @@ class ProjectResource extends JsonResource
         $data['name'] = $this->resource->name;
         $data['description'] = $this->resource->description;
         $data['space_id'] = $this->resource->space_id;
-        $data['members'] = SpaceUserResource::collection($this->spaceUsers);
+        $data['members'] = SpaceUserResource::collectionWithFlags($this->spaceUsers, true, true);
         $data['boards'] = BoardResource::collectionWithTasks($this->boards);
 
         if ($this->withTasks) {

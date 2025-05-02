@@ -57,7 +57,7 @@ class SpaceController extends Controller
 
         $this->authorize('adminOrMemberSpace', $space);
 
-        return response()->json(new SpaceResource($space, true, true, true, true));
+        return response()->json(new SpaceResource($space, true, true));
     }
 
     public function updateSpace(UpdateSpaceRequest $request)
@@ -102,11 +102,11 @@ class SpaceController extends Controller
         }
 
         $spaceRole = SpaceRole::where([['space_id', '=', $request->id],
-            ['name', '=', $request->role]])->first();
+            ['id', '=', $request->role_id]])->first();
 
         if(!$spaceRole){
             return response()->json(['message' => 'Ошибка при отправлении приглашения',
-                'errors' => ['role' => ['Указанная роль не относится к данному пространству']]], 422);
+                'errors' => ['role_id' => ['Указанная роль не относится к данному пространству']]], 422);
         }
 
         $user = User::where('email', $request->email)->first();

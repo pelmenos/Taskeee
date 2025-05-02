@@ -39,10 +39,10 @@ class UpdateProjectRequest extends FormRequest
             'description' => 'present|nullable|string|max:500',
             'members' => ['nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
             'members.*' => ['uuid', new SpaceUserExistsRule()],
-            'boards' => 'nullable|array|min:1|max:20',
-            'boards.*' => 'array',
-            'boards.*.name' => 'required|string|max:100',
-            'boards.*.description' => 'required|string|max:500'
+//            'boards' => 'nullable|array|min:1|max:20',
+//            'boards.*' => 'array',
+//            'boards.*.name' => 'required|string|max:100',
+//            'boards.*.description' => 'required|string|max:500'
         ];
     }
 
@@ -59,16 +59,16 @@ class UpdateProjectRequest extends FormRequest
             'members.array' => 'Поле Участники должно быть массивом',
             'members.min' => 'Поле Участники должно содержать хотя бы одного участника',
             'members.*.uuid' => 'Идентификаторы всех участников должны иметь тип данных UUID',
-            'boards.array' => 'Поле Доски должно быть массивом',
-            'boards.min' => 'Поле Доски должно содержать хотя бы одну доску',
-            'boards.max' => 'Поле Доски должно содержать максимум 20 досок',
-            'boards.*.array' => 'Все доски должны быть JSON-объектами',
-            'boards.*.name.required' => 'Все доски должны иметь название',
-            'boards.*.name.string' => 'Все доски должны иметь название строкового типа данных',
-            'boards.*.name.max' => 'Все доски должны иметь название не более 100 символов',
-            'boards.*.description.required' => 'Все доски должны иметь описание',
-            'boards.*.description.string' => 'Все доски должны иметь описание строкового типа данных',
-            'boards.*.description.max' => 'Все доски должны иметь описание не более 500 символов'
+//            'boards.array' => 'Поле Доски должно быть массивом',
+//            'boards.min' => 'Поле Доски должно содержать хотя бы одну доску',
+//            'boards.max' => 'Поле Доски должно содержать максимум 20 досок',
+//            'boards.*.array' => 'Все доски должны быть JSON-объектами',
+//            'boards.*.name.required' => 'Все доски должны иметь название',
+//            'boards.*.name.string' => 'Все доски должны иметь название строкового типа данных',
+//            'boards.*.name.max' => 'Все доски должны иметь название не более 100 символов',
+//            'boards.*.description.required' => 'Все доски должны иметь описание',
+//            'boards.*.description.string' => 'Все доски должны иметь описание строкового типа данных',
+//            'boards.*.description.max' => 'Все доски должны иметь описание не более 500 символов'
         ];
     }
 
