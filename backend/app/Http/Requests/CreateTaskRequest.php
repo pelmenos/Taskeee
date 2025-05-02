@@ -27,7 +27,7 @@ class CreateTaskRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
-            'status' => 'required|in:В процессе,Запланировано',
+            'status' => 'required|in:Выполнено,В процессе,Запланировано,Отложено,Брошено',
             'board_id' => ['required', new BoardExistsRule()]
         ];
     }
@@ -41,7 +41,7 @@ class CreateTaskRequest extends FormRequest
             'description.string' => 'Поле Описание должно содержать строковой тип данных',
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
             'status.required' => 'Поле Статус обязательно для заполнения',
-            'status.in' => 'Поле Статус должно содержать одно из значений: В процессе, Запланировано',
+            'status.in' => 'Поле Статус должно содержать одно из значений: Выполнено, В процессе, Запланировано, Отложено, Брошено',
             'board_id.required' => 'Идентификатор доски должен быть передан для запроса'
         ];
     }
