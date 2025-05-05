@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\Traits\CompanyBudget;
+use App\Services\Traits\Forecast;
 use App\Services\Traits\ProjectsBudget;
 use App\Services\Traits\TotalBudget;
 use App\Services\Traits\TotalExpenses;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 
 class StatisticService
 {
-    use ProjectsBudget, CompanyBudget, TotalBudget, TotalExpenses, TotalIncome;
+    use ProjectsBudget, CompanyBudget, TotalBudget, TotalExpenses, TotalIncome, Forecast;
 
     public function calculateProjectsBudget()
     {
@@ -97,6 +98,25 @@ class StatisticService
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'detail' => $incomeDetail
+        ];
+    }
+
+    public function calculateForecast()
+    {
+        $totalBalance = $this->totalBalanceForecast();
+        $projectBudget = $this->projectsBalanceForecast();
+        $companyBudget = $this->companyBalanceForecast();
+        $totalExpenses = $this->expensesForecast();
+        $totalIncome = $this->incomeForecast();
+        $totalPayments = $this->paymentsForecast();
+
+        return [
+            'total_balance' => $totalBalance,
+            'project_budget' => $projectBudget,
+            'company_budget' => $companyBudget,
+            'total_expenses' => $totalExpenses,
+            'total_income' => $totalIncome,
+            'total_payments' => $totalPayments
         ];
     }
 }

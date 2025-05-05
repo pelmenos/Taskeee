@@ -59,4 +59,11 @@ class StatisticController extends Controller
             'message' => 'Месяц не выбран (1, 3, 6, 12 мес.)'
         ]);
     }
+
+    public function forecast(Request $request)
+    {
+        return response()->json([
+            'data' => $this->service->calculateForecast()
+        ]);
+    }
 }
