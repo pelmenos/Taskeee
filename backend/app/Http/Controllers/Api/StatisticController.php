@@ -35,4 +35,16 @@ class StatisticController extends Controller
             'data' => $this->service->calculateTotalBudget()
         ]);
     }
+
+    public function totalExpenses(Request $request)
+    {
+        if (in_array($request->month, [1, 3, 6, 12])) {
+            return response()->json([
+                'data' => $this->service->calculateTotalExpenses($request)
+            ]);
+        }
+        return response()->json([
+            'message' => 'Месяц не выбран (1, 3, 6, 12 мес.)'
+        ]);
+    }
 }

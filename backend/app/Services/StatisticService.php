@@ -5,10 +5,12 @@ namespace App\Services;
 use App\Services\Traits\CompanyBudget;
 use App\Services\Traits\ProjectsBudget;
 use App\Services\Traits\TotalBudget;
+use App\Services\Traits\TotalExpenses;
+use Illuminate\Http\Request;
 
 class StatisticService
 {
-    use ProjectsBudget, CompanyBudget, TotalBudget;
+    use ProjectsBudget, CompanyBudget, TotalBudget, TotalExpenses;
 
     public function calculateProjectsBudget()
     {
@@ -64,6 +66,21 @@ class StatisticService
             'expenses' => $expenses,
             'income' => $income,
             'balance' => $balance,
+        ];
+    }
+
+    public function calculateTotalExpenses(Request $request)
+    {
+        $totalExpenses = $this->totalExpensesTurnover($request);
+        $lastPayment = $this->lastExpensesPayment();
+        $totalPayments = $this->totalExpensesPayments($request);
+        $expensesDetail = $this->expensesDetail($request);
+
+        return [
+            'total_turnover' => $totalExpenses,
+            'last_payment' => $lastPayment,
+            'total_payments' => $totalPayments,
+            'detail' => $expensesDetail
         ];
     }
 }
