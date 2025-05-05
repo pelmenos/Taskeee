@@ -7,13 +7,13 @@ import {
 } from "entities/project"
 
 import { createEvent, createStore, sample } from "effector"
-import { normalizeListResponse } from "shared/lib/normalizeListResponse"
 import { BoardDetail, BoardListItem, createBoardDetailQuery } from "entities/board"
 import { debug, not } from "patronum"
 import {
 	createCreateTaskMutation,
 	createDeleteTaskMutation,
 	createUpdateTaskMutation,
+	filterByStatus,
 	TaskDeleteSchema,
 	TaskListItem,
 	TaskStatus,
@@ -41,12 +41,12 @@ export const projectModel = atom(() => {
 	const $availableProjects = createStore<Array<ProjectListItem>>([])
 	const $currentProject = createStore<ProjectDetail | null>(null)
 
-	const $availableBoards = createStore<Array<BoardListItem & { tasks_count: number }>>([])
+	const $availableBoards = createStore<Array<BoardListItem>>([])
+
+	debug($availableBoards)
 	const $currentBoard = createStore<BoardDetail | null>(null)
 
 	const $columns = createStore<Record<TaskStatus, TaskListItem[]> | null>(null)
-
-	debug($columns)
 
 	sample({
 		source: spaceModel.$currentSpace,
@@ -58,8 +58,8 @@ export const projectModel = atom(() => {
 	})
 
 	sample({
-		source: projectListQuery.finished.success,
-		fn: normalizeListResponse<ProjectListItem>,
+		clock: projectListQuery.finished.success,
+		fn: ({ result }) => result,
 		target: $availableProjects,
 	})
 
@@ -75,13 +75,9 @@ export const projectModel = atom(() => {
 	})
 
 	sample({
-		source: $currentProject,
+		clock: $currentProject,
 		filter: Boolean,
-		fn: (source) =>
-			source.boards.map((board) => ({
-				...board,
-				tasks_count: source.tasks.filter((task) => task.board_id === board.id).length,
-			})),
+		fn: ({ boards }) => boards,
 		target: $availableBoards,
 	})
 
@@ -97,20 +93,24 @@ export const projectModel = atom(() => {
 	})
 
 	sample({
-		source: $currentBoard,
-		fn: (source) => {
-			if (!source || !source.tasks.length) {
+		clock: $currentBoard,
+		fn: (board) => {
+			if (!board || !board.tasks.length) {
 				return {
+					[TaskStatus.Planned]: [],
 					[TaskStatus.InProgress]: [],
 					[TaskStatus.Completed]: [],
+					[TaskStatus.OnHold]: [],
+					[TaskStatus.Dropped]: [],
 				} as Record<TaskStatus, TaskListItem[]>
 			}
 
 			return {
-				[TaskStatus.InProgress]: source.tasks.filter(
-					(item) => item.status === TaskStatus.InProgress,
-				),
-				[TaskStatus.Completed]: source.tasks.filter((item) => item.status === TaskStatus.Completed),
+				[TaskStatus.Planned]: filterByStatus(board.tasks, TaskStatus.Planned),
+				[TaskStatus.InProgress]: filterByStatus(board.tasks, TaskStatus.InProgress),
+				[TaskStatus.Completed]: filterByStatus(board.tasks, TaskStatus.Completed),
+				[TaskStatus.OnHold]: filterByStatus(board.tasks, TaskStatus.OnHold),
+				[TaskStatus.Dropped]: filterByStatus(board.tasks, TaskStatus.Dropped),
 			}
 		},
 		target: $columns,
@@ -122,10 +122,10 @@ export const projectModel = atom(() => {
 			board: $currentBoard,
 			pending: createTaskMutation.$pending,
 		},
-		filter: (source) => !!source.board && !source.pending,
-		fn: (source, clock) => ({
-			...clock,
-			board_id: source.board!.id,
+		filter: ({ board, pending }) => !!board && !pending,
+		fn: ({ board }, form) => ({
+			...form,
+			board_id: board!.id,
 		}),
 		target: createTaskMutation.start,
 	})
@@ -144,14 +144,14 @@ export const projectModel = atom(() => {
 		on: createTaskMutation,
 		by: {
 			success: ({ query }) => {
-				let result = null
+				let result: BoardDetail
 
 				if ("result" in query) {
 					result = query.result
 				}
 
 				return {
-					result: result,
+					result: result!,
 					refetch: true,
 				}
 			},
@@ -162,14 +162,14 @@ export const projectModel = atom(() => {
 		on: updateTaskMutation,
 		by: {
 			success: ({ query }) => {
-				let result = null
+				let result: BoardDetail
 
 				if ("result" in query) {
 					result = query.result
 				}
 
 				return {
-					result: result,
+					result: result!,
 					refetch: true,
 				}
 			},
@@ -180,14 +180,14 @@ export const projectModel = atom(() => {
 		on: deleteTaskMutation,
 		by: {
 			success: ({ query }) => {
-				let result = null
+				let result: BoardDetail
 
 				if ("result" in query) {
 					result = query.result
 				}
 
 				return {
-					result: result,
+					result: result!,
 					refetch: true,
 				}
 			},

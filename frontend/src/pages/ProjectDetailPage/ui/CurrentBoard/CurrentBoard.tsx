@@ -28,7 +28,7 @@ export const CurrentBoard = (props: Props) => {
 
 	return (
 		<Box {...props}>
-			<Group align="stretch">
+			<Group align="stretch" wrap="nowrap">
 				{Object.entries(columns).map((item) => (
 					<Column key={item[0]} flex="0 0 300px" column={item[0]} tasks={item[1]} />
 				))}

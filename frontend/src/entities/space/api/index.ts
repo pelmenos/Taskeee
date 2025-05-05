@@ -1,46 +1,45 @@
-import { createApiQuery } from "shared/lib/createApiQuery"
-import { createApiMutation } from "shared/lib/createApiMutation"
+import { createApiQuery } from "shared/api/createApiQuery"
+import { createApiMutation } from "shared/api/createApiMutation"
+import { createListContract } from "shared/api/types"
 import {
-  SpaceCreateError,
-  SpaceCreateSuccess,
-  SpaceDetailError,
-  SpaceDetailFormSchema,
-  SpaceDetailSuccess,
-  SpaceFormSchema,
-  SpaceListSuccess,
+	createSpaceContract,
+	spaceDetailContract,
+	SpaceDetailSchema,
+	SpaceSchema,
+	spaceListItemContract,
 } from "../model"
 
 export const createCreateSpaceMutation = () =>
-  createApiMutation<
-    SpaceFormSchema,
-    SpaceCreateSuccess,
-    SpaceCreateError
-  >((params) => ({
-    method: "POST",
-    url: "/api/spaces",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: SpaceSchema) => ({
+			method: "POST",
+			url: "/api/spaces",
+			body: params,
+		}),
+		response: {
+			contract: createSpaceContract,
+		},
+	})
 
 export const createSpaceListQuery = () =>
-  createApiQuery<
-    void,
-    SpaceListSuccess,
-    SpaceCreateError
-  >({
-    request: {
-      method: "GET",
-      url: "/api/spaces",
-    },
-  })
+	createApiQuery({
+		request: () => ({
+			method: "GET",
+			url: "/api/spaces",
+		}),
+		response: {
+			contract: createListContract(spaceListItemContract),
+			mapData: ({ result }) => result.data,
+		},
+	})
 
 export const createSpaceDetailQuery = () =>
-  createApiQuery<
-    SpaceDetailFormSchema,
-    SpaceDetailSuccess,
-    SpaceDetailError
-  >({
-    request: ({ id }) => ({
-      method: "GET",
-      url: `/api/spaces/${id}`,
-    }),
-  })
+	createApiQuery({
+		request: ({ id }: SpaceDetailSchema) => ({
+			method: "GET",
+			url: `/api/spaces/${id}`,
+		}),
+		response: {
+			contract: spaceDetailContract,
+		},
+	})

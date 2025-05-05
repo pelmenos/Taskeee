@@ -1,5 +1,6 @@
-import { createEvent, createStore, sample } from "effector"
+import { attach, createEffect, createEvent, createStore, sample } from "effector"
 import { reset } from "patronum"
+import { obj, str, val, or, UnContract } from "@withease/contracts"
 import { persist } from "../lib/local-storage"
 
 export enum SessionStatus {
@@ -17,6 +18,11 @@ export const $user = createStore<User | null>(null)
 reset({
 	clock: logouted,
 	target: [$status, $session, $user],
+})
+
+export const getSessionFx = attach({
+	source: $session,
+	effect: createEffect((session: string) => session),
 })
 
 // Set anonymous status if token is empty.
@@ -37,10 +43,12 @@ persist({
 	source: $user,
 })
 
-export type User = {
-	id: string
-	name: string
-	avatar: string
-	email: string
-	email_verified_at: string | null
-}
+export const userContract = obj({
+	id: str,
+	name: str,
+	avatar: or(str, val(null)),
+	email: str,
+	email_verified_at: or(str, val(null)),
+})
+
+export type User = UnContract<typeof userContract>

@@ -15,6 +15,7 @@
     "@mantine/core": "^7.17.3",
     "@mantine/form": "^7.17.3",
     "@mantine/hooks": "^7.17.3",
+    "@withease/contracts": "^1.1.0",
     "atomic-router": "^0.10.1",
     "atomic-router-react": "^0.10.0",
     "clsx": "^2.1.1",

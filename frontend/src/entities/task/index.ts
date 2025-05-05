@@ -1,15 +1,5 @@
 export { createCreateTaskMutation, createUpdateTaskMutation, createDeleteTaskMutation } from "./api"
+export { filterByStatus } from "./lib"
 
 export { TaskStatus } from "./model"
-export type {
-	TaskListItem,
-	TaskFormSchema,
-	TaskFormSuccess,
-	TaskFormError,
-	TaskUpdateSchema,
-	TaskUpdateError,
-	TaskUpdateSuccess,
-	TaskDeleteSchema,
-	TaskDeleteSuccess,
-	TaskDeleteError,
-} from "./model"
+export type { TaskListItem, TaskSchema, TaskUpdateSchema, TaskDeleteSchema } from "./model"

@@ -1,74 +1,70 @@
 import { atom } from "shared/lib/factory"
-import { combine, createEvent, createStore, sample } from "effector"
+import { combine, createEvent, createStore, sample, split } from "effector"
 import { not, reset, spread } from "patronum"
 import { createPasswordRecoveryEmailMutation } from "entities/auth"
-import { mapFormError } from "shared/lib/map-form-errors"
+import { mapErrors } from "shared/lib/map-form-errors"
 import { PasswordRecoveryFlowStages, stagesModel } from "./stages"
 
 export type StageEmailFields = {
-  email: string
+	email: string
 }
 
 export const emailModel = atom(() => {
-  const passwordRecoveryEmailMutation = createPasswordRecoveryEmailMutation()
+	const passwordRecoveryEmailMutation = createPasswordRecoveryEmailMutation()
 
-  const submitted = createEvent<StageEmailFields>()
+	const { failure, success } = split(
+		sample({
+			clock: passwordRecoveryEmailMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failure: (result) => "errors" in result,
+			success: (result) => "email" in result,
+		},
+	)
 
-  const $errorFieldEmail = createStore<string | null>(null)
+	const submitted = createEvent<StageEmailFields>()
 
-  const $formErrors = combine({
-    email: $errorFieldEmail,
-  })
+	const $errorFieldEmail = createStore<string | null>(null)
 
-  sample({
-    source: submitted,
-    filter: not(passwordRecoveryEmailMutation.$pending),
-    target: passwordRecoveryEmailMutation.start,
-  })
+	const $formErrors = combine({
+		email: $errorFieldEmail,
+	})
 
-  sample({
-    source: passwordRecoveryEmailMutation.finished.success,
-    fn: (source) => source.result.email,
-    target: stagesModel.$email,
-  })
+	sample({
+		clock: submitted,
+		filter: not(passwordRecoveryEmailMutation.$pending),
+		target: passwordRecoveryEmailMutation.start,
+	})
 
-  sample({
-    clock: passwordRecoveryEmailMutation.finished.success,
-    fn: () => PasswordRecoveryFlowStages.EmailConfirmStage,
-    target: stagesModel.$stage,
-  })
+	sample({
+		clock: success,
+		fn: ({ email }) => email,
+		target: stagesModel.$email,
+	})
 
-  reset({
-    clock: [submitted, passwordRecoveryEmailMutation.finished.success],
-    target: [
-      $errorFieldEmail,
-    ],
-  })
+	sample({
+		clock: success,
+		fn: () => PasswordRecoveryFlowStages.EmailConfirmStage,
+		target: stagesModel.$stage,
+	})
 
-  sample({
-    clock: passwordRecoveryEmailMutation.finished.success,
-    fn: () => null,
-    target: $errorFieldEmail,
-  })
+	reset({
+		clock: [submitted, success],
+		target: [$errorFieldEmail],
+	})
 
-  sample({
-    source: passwordRecoveryEmailMutation.finished.failure,
-    filter: (source) => !!source.error.data,
-    fn: (source) =>
-      mapFormError(
-        source,
-        (message) => ({
-          email: message,
-        }),
-      ),
-    target: spread({
-      email: $errorFieldEmail,
-    }),
-  })
+	sample({
+		clock: failure,
+		fn: ({ errors }) => mapErrors(errors),
+		target: spread({
+			email: $errorFieldEmail,
+		}),
+	})
 
-  return {
-    submitted,
+	return {
+		submitted,
 
-    $formErrors,
-  }
+		$formErrors,
+	}
 })

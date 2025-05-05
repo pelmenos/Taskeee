@@ -1,21 +1,22 @@
-import {createApiMutation} from "../lib/createApiMutation";
-import {ErrorResponse, ResponseWithMessage} from "./types";
-
-export type UploadFileSuccess = ResponseWithMessage<{
-  path: string;
-}>
-
-export type UploadFileError = ErrorResponse;
+import { obj, str } from "@withease/contracts"
+import { createApiMutation } from "./createApiMutation"
 
 export const createUploadFileMutation = () =>
-  createApiMutation<File, UploadFileSuccess, UploadFileError>((file) => {
-    const formData = new FormData();
+	createApiMutation({
+		request: (file: File) => {
+			const formData = new FormData()
 
-    formData.append("file", file)
+			formData.append("file", file)
 
-    return {
-      method: "POST",
-      url: "/api/file",
-      body: formData,
-    }
-  })
+			return {
+				method: "POST",
+				url: "/api/file",
+				body: formData,
+			}
+		},
+		response: {
+			contract: obj({
+				path: str,
+			}),
+		},
+	})

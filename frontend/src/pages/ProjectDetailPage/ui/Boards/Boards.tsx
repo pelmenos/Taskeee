@@ -52,7 +52,7 @@ export const Boards = ({ backRoute, ...props }: Props) => {
 							<Text c="onSurfaceHighest">{board.name}</Text>
 
 							<Text c="onSurfaceHighestVariant">
-								{board.tasks_count} {pluralize(board.tasks_count, ["задача", "задачи", "задач"])}
+								{board.tasks.length} {pluralize(board.tasks.length, ["задача", "задачи", "задач"])}
 							</Text>
 						</Card>
 					))}

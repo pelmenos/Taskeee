@@ -1,92 +1,101 @@
-import { createApiMutation } from "shared/lib/createApiMutation"
+import { createApiMutation } from "shared/api/createApiMutation"
 import {
-  ConfirmCodeResendError,
-  ConfirmCodeResendSchema, ConfirmCodeResendSuccess, ConfirmEmailError,
-  ConfirmEmailSchema,
-  LoginFormError,
-  LoginFormSchema,
-  LoginFormSuccess, PasswordRecoveryConfirmFormError,
-  PasswordRecoveryConfirmFormSchema, PasswordRecoveryConfirmFormSuccess, PasswordRecoveryEmailFormError,
-  PasswordRecoveryEmailFormSchema, PasswordRecoveryEmailFormSuccess, PasswordRecoveryFormError,
-  PasswordRecoveryFormSchema, PasswordRecoveryFormSuccess,
-  RegisterFormError,
-  RegisterFormSchema, RegisterFormSuccess,
+	confirmResendContract,
+	CodeResendSchema,
+	confirmEmailContract,
+	ConfirmEmailSchema,
+	loginContract,
+	LoginSchema,
+	passwordRecoveryConfirmContract,
+	PasswordRecoveryConfirmSchema,
+	passwordRecoveryContract,
+	passwordRecoveryEmailContract,
+	PasswordRecoveryEmailSchema,
+	PasswordRecoverySchema,
+	registerContract,
+	RegisterSchema,
 } from "../model"
 
-
 export const createLoginMutation = () =>
-  createApiMutation<
-    LoginFormSchema,
-    LoginFormSuccess,
-    LoginFormError
-  >((params: LoginFormSchema) => ({
-    url: "/api/authorization",
-    method: "POST",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: LoginSchema) => ({
+			url: "/api/authorization",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: loginContract,
+		},
+	})
 
 export const createRegisterMutation = () =>
-  createApiMutation<
-    RegisterFormSchema,
-    RegisterFormSuccess,
-    RegisterFormError
-  >((params) => ({
-    url: "/api/registration",
-    method: "POST",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: RegisterSchema) => ({
+			url: "/api/registration",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: registerContract,
+		},
+	})
 
 export const createConfirmEmailMutation = () =>
-  createApiMutation<
-    ConfirmEmailSchema,
-    void,
-    ConfirmEmailError
-  >((params) => ({
-    url: "/api/registration/verify",
-    method: "POST",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: ConfirmEmailSchema) => ({
+			url: "/api/registration/verify",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: confirmEmailContract,
+		},
+	})
 
-export const createConfirmCodeResendMutation = () =>
-  createApiMutation<
-    ConfirmCodeResendSchema,
-    ConfirmCodeResendSuccess,
-    ConfirmCodeResendError
-  >((params) => ({
-    url: "/api/verify/code/resend",
-    method: "POST",
-    body: params,
-  }))
+export const createCodeResendMutation = () =>
+	createApiMutation({
+		request: (params: CodeResendSchema) => ({
+			url: "/api/verify/code/resend",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: confirmResendContract,
+		},
+	})
 
 export const createPasswordRecoveryEmailMutation = () =>
-  createApiMutation<
-    PasswordRecoveryEmailFormSchema,
-    PasswordRecoveryEmailFormSuccess,
-    PasswordRecoveryEmailFormError
-  >((params) => ({
-    url: "/api/password/reset/email",
-    method: "POST",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: PasswordRecoveryEmailSchema) => ({
+			url: "/api/password/reset/email",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: passwordRecoveryEmailContract,
+		},
+	})
 
 export const createPasswordRecoveryConfirmMutation = () =>
-  createApiMutation<
-    PasswordRecoveryConfirmFormSchema,
-    PasswordRecoveryConfirmFormSuccess,
-    PasswordRecoveryConfirmFormError
-  >((params) => ({
-    url: "/api/password/reset/verify",
-    method: "POST",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: PasswordRecoveryConfirmSchema) => ({
+			url: "/api/password/reset/verify",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: passwordRecoveryConfirmContract,
+		},
+	})
 
 export const createPasswordRecoveryMutation = () =>
-  createApiMutation<
-    PasswordRecoveryFormSchema,
-    PasswordRecoveryFormSuccess,
-    PasswordRecoveryFormError
-  >((params) => ({
-    url: "/api/password/reset",
-    method: "POST",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: PasswordRecoverySchema) => ({
+			url: "/api/password/reset",
+			method: "POST",
+			body: params,
+		}),
+		response: {
+			contract: passwordRecoveryContract,
+		},
+	})

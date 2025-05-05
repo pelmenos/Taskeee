@@ -1,30 +1,31 @@
 import { sample } from "effector"
-import { createApiQuery } from "../lib/createApiQuery"
-import { User , $status, $user, SessionStatus } from "./authorization";
+import { createApiQuery } from "./createApiQuery"
+import { $status, $user, SessionStatus, userContract } from "./authorization"
 
-
-export const checkSessionQuery =
-  createApiQuery<void, User, void>({
-    request: {
-      url: "/api/user",
-      method: "GET",
-    },
-  })
-
-sample({
-  clock: checkSessionQuery.finished.success,
-  fn: () => SessionStatus.Authenticated,
-  target: $status,
+export const checkSessionQuery = createApiQuery({
+	request: () => ({
+		url: "/api/user",
+		method: "GET",
+	}),
+	response: {
+		contract: userContract,
+	},
 })
 
 sample({
-  clock: checkSessionQuery.finished.failure,
-  fn: () => SessionStatus.Anonymous,
-  target: $status,
+	clock: checkSessionQuery.finished.success,
+	fn: () => SessionStatus.Authenticated,
+	target: $status,
 })
 
 sample({
-  source: checkSessionQuery.finished.success,
-  fn: (source) => source.result,
-  target: $user,
+	clock: checkSessionQuery.finished.failure,
+	fn: () => SessionStatus.Anonymous,
+	target: $status,
+})
+
+sample({
+	clock: checkSessionQuery.finished.success,
+	fn: ({ result }) => result,
+	target: $user,
 })

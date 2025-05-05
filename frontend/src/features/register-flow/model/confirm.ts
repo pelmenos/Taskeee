@@ -1,120 +1,136 @@
 import { atom } from "shared/lib/factory"
-import { createConfirmCodeResendMutation, createConfirmEmailMutation } from "entities/auth"
+import { createCodeResendMutation, createConfirmEmailMutation } from "entities/auth"
 import { createGate } from "effector-react"
-import { combine, createEvent, createStore, sample } from "effector"
+import { combine, createEvent, createStore, sample, split } from "effector"
 import { interval, reset, spread } from "patronum"
 import { routes } from "shared/routing"
-import { mapFormError } from "shared/lib/map-form-errors"
+import { mapErrors } from "shared/lib/map-form-errors"
 import { stagesModel } from "./stages"
 
 type StageConfirmFields = {
-  code: number,
+	code: number
 }
 
 export const confirmModel = atom(() => {
-  const confirmEmailMutation = createConfirmEmailMutation()
+	const confirmEmailMutation = createConfirmEmailMutation()
 
-  const confirmCodeResendMutation = createConfirmCodeResendMutation()
+	const { failureConfirm, successConfirm } = split(
+		sample({
+			clock: confirmEmailMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failureConfirm: (result) => "errors" in result,
+			successConfirm: (result) => "email" in result,
+		},
+	)
 
-  const Gate = createGate<void>()
+	const codeResendMutation = createCodeResendMutation()
 
-  const submitted = createEvent<StageConfirmFields>()
-  const codeResent = createEvent()
+	const { failureCodeResend } = split(
+		sample({
+			clock: codeResendMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failureCodeResend: (result) => "errors" in result,
+		},
+	)
 
-  const $errorFieldCode = createStore<string | null>(null)
+	const Gate = createGate<void>()
 
-  const $formErrors = combine({
-    code: $errorFieldCode,
-  })
+	const submitted = createEvent<StageConfirmFields>()
+	const codeResent = createEvent()
 
-  const $buttonUnlockedAfterTime = createStore(0)
-  const $buttonResentIsDisabled = combine($buttonUnlockedAfterTime, (source) => !!source)
+	const $errorFieldCode = createStore<string | null>(null)
 
-  const { tick } = interval({
-    timeout: 1000,
-    start: sample({
-      source: $buttonUnlockedAfterTime,
-      filter: Boolean,
-    }),
-    stop: sample({
-      source: $buttonUnlockedAfterTime,
-      filter: (source) => !source,
-    }),
-  })
+	const $formErrors = combine({
+		code: $errorFieldCode,
+	})
 
-  sample({
-    clock: [Gate.open, codeResent],
-    fn: () => 20,
-    target: $buttonUnlockedAfterTime,
-  })
+	const $buttonUnlockedAfterTime = createStore(0)
+	const $buttonResentIsDisabled = combine($buttonUnlockedAfterTime, (source) => !!source)
 
-  sample({
-    clock: tick,
-    source: $buttonUnlockedAfterTime,
-    fn: (source) => source - 1,
-    target: $buttonUnlockedAfterTime,
-  })
+	const { tick } = interval({
+		timeout: 1000,
+		start: sample({
+			source: $buttonUnlockedAfterTime,
+			filter: Boolean,
+		}),
+		stop: sample({
+			source: $buttonUnlockedAfterTime,
+			filter: (source) => !source,
+		}),
+	})
 
-  sample({
-    clock: codeResent,
-    source: {
-      email: stagesModel.$email,
-    },
-    filter: $buttonResentIsDisabled,
-    target: confirmCodeResendMutation.start,
-  })
+	sample({
+		clock: [Gate.open, codeResent],
+		fn: () => 20,
+		target: $buttonUnlockedAfterTime,
+	})
 
-  sample({
-    source: confirmCodeResendMutation.finished.failure,
-    filter: (source) => !!source.error.data,
-    fn: (source) => source.error.data!.message,
-    target: $errorFieldCode,
-  })
+	sample({
+		clock: tick,
+		source: $buttonUnlockedAfterTime,
+		fn: (source) => source - 1,
+		target: $buttonUnlockedAfterTime,
+	})
 
-  sample({
-    clock: submitted,
-    source: {
-      email: stagesModel.$email,
-    },
-    fn: (source, clock) => ({
-      ...source,
-      verify_code: clock.code,
-    }),
-    target: confirmEmailMutation.start,
-  })
+	sample({
+		clock: codeResent,
+		source: {
+			email: stagesModel.$email,
+		},
+		filter: $buttonResentIsDisabled,
+		target: codeResendMutation.start,
+	})
 
-  sample({
-    clock: confirmEmailMutation.finished.success,
-    target: routes.auth.login.open,
-  })
+	sample({
+		clock: failureCodeResend,
+		fn: ({ errors }) => mapErrors(errors),
+		target: spread({
+			email: $errorFieldCode,
+		}),
+	})
 
-  reset({
-    clock: [codeResent, submitted, confirmEmailMutation.finished.success],
-    target: [
-      $errorFieldCode,
-    ],
-  })
+	sample({
+		clock: submitted,
+		source: {
+			email: stagesModel.$email,
+		},
+		fn: (source, clock) => ({
+			...source,
+			verify_code: clock.code,
+		}),
+		target: confirmEmailMutation.start,
+	})
 
-  sample({
-    source: confirmEmailMutation.finished.failure,
-    filter: (source) => !!source.error.data,
-    fn: (source) => mapFormError(
-      source,
-      (message) => ({ verify_code: message }),
-    ),
-    target: spread({
-      code: $errorFieldCode,
-    }),
-  })
+	sample({
+		clock: successConfirm,
+		target: routes.auth.login.open,
+	})
 
-  return {
-    Gate,
+	reset({
+		clock: [codeResent, submitted, successConfirm],
+		target: [$errorFieldCode],
+	})
 
-    submitted,
-    codeResent,
+	sample({
+		clock: failureConfirm,
+		fn: ({ errors }) => mapErrors(errors),
+		target: spread({
+			verify_code: $errorFieldCode,
+		}),
+	})
 
-    $formErrors,
-    $buttonUnlockedAfterTime,
-    $buttonResentIsDisabled,
-  }
+	return {
+		Gate,
+
+		submitted,
+		codeResent,
+
+		$formErrors,
+		$buttonUnlockedAfterTime,
+		$buttonResentIsDisabled,
+	}
 })

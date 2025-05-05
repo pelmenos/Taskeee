@@ -1,33 +1,26 @@
-import { createApiMutation } from "shared/lib/createApiMutation"
-import { createApiQuery } from "shared/lib/createApiQuery"
-import {
-  BoardDetailError,
-  BoardDetailParams,
-  BoardDetailSuccess,
-  BoardFormError,
-  BoardFormSchema,
-  BoardFormSuccess,
-} from "../model"
+import { createApiMutation } from "shared/api/createApiMutation"
+import { createApiQuery } from "shared/api/createApiQuery"
+import { boardDetailContract, BoardDetailParams, BoardSchema, createBoardContract } from "../model"
 
 export const createCreateBoardMutation = () =>
-  createApiMutation<
-    BoardFormSchema,
-    BoardFormSuccess,
-    BoardFormError
-  >((params) => ({
-    method: "POST",
-    url: "/api/boards",
-    body: params,
-  }))
+	createApiMutation({
+		request: (params: BoardSchema) => ({
+			method: "POST",
+			url: "/api/boards",
+			body: params,
+		}),
+		response: {
+			contract: createBoardContract,
+		},
+	})
 
 export const createBoardDetailQuery = () =>
-  createApiQuery<
-    BoardDetailParams,
-    BoardDetailSuccess,
-    BoardDetailError
-  >({
-    request: (params) => ({
-      method: "GET",
-      url: `/api/boards/${params.id}`,
-    }),
-  })
+	createApiQuery({
+		request: ({ id }: BoardDetailParams) => ({
+			method: "GET",
+			url: `/api/boards/${id}`,
+		}),
+		response: {
+			contract: boardDetailContract,
+		},
+	})

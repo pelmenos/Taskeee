@@ -1,11 +1,11 @@
 import { atom } from "shared/lib/factory"
 import { createGate } from "effector-react"
-import { combine, createEvent, createStore, restore, sample } from "effector"
+import { combine, createEvent, createStore, restore, sample, split } from "effector"
 import { not, spread } from "patronum"
-import { CreateProjectFormSchema, createCreateProjectMutation } from "entities/project"
+import { createCreateProjectMutation, CreateProjectSchema, ProjectListItem } from "entities/project"
 
 import { update } from "@farfetched/core"
-import { mapFormError } from "shared/lib/map-form-errors"
+import { mapErrors } from "shared/lib/map-form-errors"
 import { DEFAULT_BOARD } from "../config"
 import { projectModel } from "./project"
 import { spaceModel } from "./space"
@@ -17,8 +17,19 @@ export const createProjectModel = atom(() => {
 
 	const createProjectMutation = createCreateProjectMutation()
 
+	const { failure, success } = split(
+		sample({
+			clock: createProjectMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failure: (result) => "errors" in result,
+			success: (result) => "id" in result,
+		},
+	)
+
 	// TODO: resolve members
-	const submitted = createEvent<Omit<CreateProjectFormSchema, "boards" | "space_id" | "members">>()
+	const submitted = createEvent<Omit<CreateProjectSchema, "boards" | "space_id" | "members">>()
 
 	const throttleSubmitted = sample({
 		source: submitted,
@@ -49,19 +60,14 @@ export const createProjectModel = atom(() => {
 	})
 
 	sample({
-		clock: createProjectMutation.finished.success,
+		clock: success,
 		source: $successCallback,
 		fn: (source) => source?.call(null),
 	})
 
 	sample({
-		source: createProjectMutation.finished.failure,
-		fn: (source) =>
-			mapFormError(source, (message) => ({
-				name: message,
-				description: null,
-				members: null,
-			})),
+		source: failure,
+		fn: ({ errors }) => mapErrors(errors),
 		target: spread({
 			name: $errorFieldName,
 			description: $errorFieldDescription,
@@ -73,7 +79,7 @@ export const createProjectModel = atom(() => {
 		on: createProjectMutation,
 		by: {
 			success: ({ query }) => {
-				let result = null
+				let result: Array<ProjectListItem> = []
 
 				if ("result" in query) {
 					result = query.result

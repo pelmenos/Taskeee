@@ -1,8 +1,9 @@
-import { ErrorResponse, ResponseWithMessage, User } from "shared/api"
-import type { BoardListItem } from "../../board"
-import type { TaskListItem } from "../../task"
+import { arr, obj, or, str, UnContract, val } from "@withease/contracts"
+import { userContract } from "shared/api/authorization"
+import { createErrorContract } from "shared/api/types"
+import { boardListItemContract } from "../../board/model"
 
-export type CreateProjectFormSchema = {
+export type CreateProjectSchema = {
 	space_id: string
 	name: string
 	description: string
@@ -14,53 +15,57 @@ export type CreateProjectFormSchema = {
 	}>
 }
 
-export type ProjectCreateSuccess = {
-	id: string
-	name: string
-	description: string
-	space_id: string
-	members: User[]
-	boards: BoardListItem[]
-	created_at: string
-	updated_at: string
-}
+const createProjectSuccessContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	space_id: str,
+	members: arr(userContract),
+	boards: arr(boardListItemContract),
+	created_at: str,
+	updated_at: str,
+})
 
-export type ProjectCreateError = ErrorResponse<CreateProjectFormSchema>
+const createProjectFailureContract = createErrorContract([
+	"space_id",
+	"name",
+	"description",
+	"members",
+	"boards",
+])
+
+export const createProjectContract = or(createProjectSuccessContract, createProjectFailureContract)
 
 export type ProjectListParams = {
 	space_id: string
 }
 
-export type ProjectListSuccess = Array<ProjectListItem> | ResponseWithMessage
+export const projectListItemContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	// avatar: or(str, val(null)),
+	// admin_id: or(str, val(null)),
+	// tariff: en(EnumSpaceTariff),
+	created_at: str,
+})
 
-export type ProjectListError = ErrorResponse<ProjectListParams>
-
-export type ProjectListItem = {
-	id: string
-	name: string
-	description: string
-	avatar: string
-	admin_id: string
-	tariff: string
-	created_at: string
-}
+export type ProjectListItem = UnContract<typeof projectListItemContract>
 
 export type ProjectDetailParams = {
 	id: string
 }
 
-export type ProjectDetailSuccess = ProjectDetail
+export const projectDetailContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	space_id: str,
+	members: arr(userContract),
+	boards: arr(boardListItemContract),
+	// tasks: arr(taskListItemContract),
+	created_at: str,
+	updated_at: str,
+})
 
-export type ProjectDetailError = ErrorResponse<ProjectDetailParams>
-
-export type ProjectDetail = {
-	id: string
-	name: string
-	description: string
-	space_id: string
-	members: User[]
-	boards: BoardListItem[]
-	tasks: TaskListItem[]
-	created_at: string
-	updated_at: string
-}
+export type ProjectDetail = UnContract<typeof projectDetailContract>

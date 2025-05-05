@@ -1,23 +1,35 @@
 import { atom } from "shared/lib/factory"
-import { combine, createEvent, createStore, sample } from "effector"
+import { combine, createEvent, createStore, sample, split } from "effector"
 import { not, reset, spread } from "patronum"
-import { createLoginMutation, LoginFormSchema } from "entities/auth"
+import { createLoginMutation, LoginSchema } from "entities/auth"
 
 import { routes } from "shared/routing"
-import { $session, $user } from "shared/api"
+import { $session } from "shared/api"
 import { chainAnonymous } from "shared/session"
+import { mapErrors } from "shared/lib/map-form-errors"
 
 export const authLoginModel = atom(() => {
 	const currentRoute = routes.auth.login
 
 	const loginMutation = createLoginMutation()
 
+	const { failure, success } = split(
+		sample({
+			clock: loginMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failure: (result) => "errors" in result,
+			success: (result) => "token" in result,
+		},
+	)
+
 	const anonymousRoute = chainAnonymous({
 		route: currentRoute,
 		otherwise: routes.home.open,
 	})
 
-	const submitted = createEvent<LoginFormSchema>()
+	const submitted = createEvent<LoginSchema>()
 
 	const $errorFieldEmail = createStore<string | null>(null)
 	const $errorFieldPassword = createStore<string | null>(null)
@@ -28,23 +40,20 @@ export const authLoginModel = atom(() => {
 	})
 
 	sample({
-		source: submitted,
+		clock: submitted,
 		filter: not(loginMutation.$pending),
 		target: loginMutation.start,
 	})
 
 	sample({
-		source: loginMutation.finished.success,
+		clock: success,
 		target: routes.project.list.open,
 	})
 
 	sample({
-		source: loginMutation.finished.success,
-		fn: (source) => source.result,
-		target: spread({
-			user: $user,
-			token: $session,
-		}),
+		clock: success,
+		fn: ({ token }) => token,
+		target: $session,
 	})
 
 	reset({
@@ -53,32 +62,12 @@ export const authLoginModel = atom(() => {
 	})
 
 	sample({
-		source: loginMutation.finished.failure,
-		filter: (source) => !!source.error.data,
-		fn: (source) => {
-			if (source.error.data!.errors) {
-				const errors = source.error.data!.errors
-
-				if (errors.auth) {
-					return {
-						email: errors.auth.at(0) ?? null,
-					}
-				}
-
-				return {
-					email: errors.email?.at(0) ?? null,
-					password: errors.password?.at(0) ?? null,
-				}
-			}
-
-			return {
-				email: source.error.data!.message,
-				password: null,
-			}
-		},
+		clock: failure,
+		fn: ({ errors }) => mapErrors(errors),
 		target: spread({
 			email: $errorFieldEmail,
 			password: $errorFieldPassword,
+			auth: $errorFieldEmail,
 		}),
 	})
 

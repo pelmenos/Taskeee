@@ -1,77 +1,124 @@
-import { ErrorResponse, ResponseWithMessage, User } from "shared/api"
+import { num, obj, or, str, UnContract } from "@withease/contracts"
+import { createErrorContract } from "shared/api/types"
 
-export type LoginFormSchema = {
+const loginSuccessContract = obj({
+	token: str,
+})
+
+const loginFailureContract = createErrorContract(["email", "password", "remember_me", "auth"])
+
+export const loginContract = or(loginSuccessContract, loginFailureContract)
+
+export type LoginSchema = {
 	email: string
 	password: string
 	remember_me: boolean
 }
 
-export type LoginFormSuccess = ResponseWithMessage<{
-	token: string
-	user: User
-}>
+export type LoginFormSuccess = UnContract<typeof loginSuccessContract>
 
-export type LoginFormError = ErrorResponse<
-	LoginFormSchema & {
-		auth: string
-	}
->
+export type LoginFormError = UnContract<typeof loginFailureContract>
 
-export type RegisterFormSchema = {
+/* ===== Register ===== */
+
+export type RegisterSchema = {
 	name: string
 	email: string
 	password: string
 }
 
-export type RegisterFormSuccess = ResponseWithMessage<{
-	email: string
-}>
+const registerSuccessContract = obj({
+	email: str,
+})
 
-export type RegisterFormError = ErrorResponse<RegisterFormSchema>
+const registerFailureContract = createErrorContract(["name", "email", "password"])
+
+export const registerContract = or(registerSuccessContract, registerFailureContract)
+
+/* ===== Confirm email ===== */
 
 export type ConfirmEmailSchema = {
 	email: string
 	verify_code: number
 }
 
-export type ConfirmEmailError = ErrorResponse<PasswordRecoveryConfirmFormSchema>
+const confirmEmailSuccessContract = obj({
+	// TODO: verify this contract
+	email: str,
+})
 
-export type PasswordRecoveryEmailFormSchema = {
+const confirmEmailFailureContract = createErrorContract(["email", "verify_code"])
+
+export const confirmEmailContract = or(confirmEmailSuccessContract, confirmEmailFailureContract)
+
+/* ===== Confirm code resend ===== */
+
+export type CodeResendSchema = {
 	email: string
 }
 
-export type ConfirmCodeResendSchema = {
+const codeResendSuccessContract = obj({
+	// TODO: verify this contract
+	email: str,
+})
+
+const codeResendFailureContract = createErrorContract(["email"])
+
+export const confirmResendContract = or(codeResendSuccessContract, codeResendFailureContract)
+
+/* ===== Password recovery email ===== */
+
+export type PasswordRecoveryEmailSchema = {
 	email: string
 }
 
-export type ConfirmCodeResendSuccess = ResponseWithMessage
+const passwordRecoveryEmailSuccessContract = obj({
+	// TODO: verify this contract
+	email: str,
+})
 
-export type ConfirmCodeResendError = ErrorResponse<PasswordRecoveryEmailFormSchema>
+const passwordRecoveryEmailFailureContract = createErrorContract(["email"])
 
-export type PasswordRecoveryEmailFormSuccess = ResponseWithMessage<{
-	email: string
-}>
+export const passwordRecoveryEmailContract = or(
+	passwordRecoveryEmailSuccessContract,
+	passwordRecoveryEmailFailureContract,
+)
 
-export type PasswordRecoveryEmailFormError = ErrorResponse<PasswordRecoveryEmailFormSchema>
+/* ===== Password recovery confirm ===== */
 
-export type PasswordRecoveryConfirmFormSchema = {
+export type PasswordRecoveryConfirmSchema = {
 	email: string
 	verify_code: number
 }
 
-export type PasswordRecoveryConfirmFormSuccess = ResponseWithMessage<{
-	verify_code: number
-	email: string
-}>
+const passwordRecoveryConfirmSuccessContract = obj({
+	verify_code: num,
+	email: str,
+})
 
-export type PasswordRecoveryConfirmFormError = ErrorResponse<PasswordRecoveryConfirmFormSchema>
+const passwordRecoveryConfirmFailureContract = createErrorContract(["email", "verify_code"])
 
-export type PasswordRecoveryFormSchema = {
+export const passwordRecoveryConfirmContract = or(
+	passwordRecoveryConfirmSuccessContract,
+	passwordRecoveryConfirmFailureContract,
+)
+
+/* ===== Password recovery ===== */
+
+export type PasswordRecoverySchema = {
 	email: string
 	password: string
 	verify_code: number
 }
 
-export type PasswordRecoveryFormSuccess = ResponseWithMessage
+const passwordRecoverySuccessContract = obj({
+	verify_code: num,
+	email: str,
+})
 
-export type PasswordRecoveryFormError = ErrorResponse<PasswordRecoveryFormSchema>
+const passwordRecoveryFailureContract = createErrorContract(["email", "password", "verify_code"])
+
+export const passwordRecoveryContract = or(
+	passwordRecoverySuccessContract,
+	passwordRecoveryFailureContract,
+)

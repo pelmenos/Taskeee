@@ -8,6 +8,7 @@
         "@mantine/core": "^7.17.3",
         "@mantine/form": "^7.17.3",
         "@mantine/hooks": "^7.17.3",
+        "@withease/contracts": "^1.1.0",
         "atomic-router": "^0.10.1",
         "atomic-router-react": "^0.10.0",
         "clsx": "^2.1.1",
@@ -251,6 +252,8 @@
     "@typescript-eslint/visitor-keys": ["@typescript-eslint/visitor-keys@8.31.1", "", { "dependencies": { "@typescript-eslint/types": "8.31.1", "eslint-visitor-keys": "^4.2.0" } }, "sha512-I+/rgqOVBn6f0o7NDTmAPWWC6NuqhV174lfYvAm9fUaWeiefLdux9/YI3/nLugEn9L8fcSi0XmpKi/r5u0nmpw=="],
 
     "@vitejs/plugin-react-swc": ["@vitejs/plugin-react-swc@3.9.0", "", { "dependencies": { "@swc/core": "^1.11.21" }, "peerDependencies": { "vite": "^4 || ^5 || ^6" } }, "sha512-jYFUSXhwMCYsh/aQTgSGLIN3Foz5wMbH9ahb0Zva//UzwZYbMiZd7oT3AU9jHT9DLswYDswsRwPU9jVF3yA48Q=="],
+
+    "@withease/contracts": ["@withease/contracts@1.1.0", "", {}, "sha512-TwM/nMXUFaLTRT5MpJx1654L0PZGV1/hFr1Ykb9aUwdIAi5rnmLALyvSPaESjjzxwLOBQvlINQavFJpXITNaAw=="],
 
     "acorn": ["acorn@8.14.1", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg=="],
 

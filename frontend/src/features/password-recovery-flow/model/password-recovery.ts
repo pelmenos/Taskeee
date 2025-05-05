@@ -1,69 +1,72 @@
 import { atom } from "shared/lib/factory"
-import { combine, createEvent, createStore, sample } from "effector"
+import { combine, createEvent, createStore, sample, split } from "effector"
 import { not, reset, spread } from "patronum"
 import { routes } from "shared/routing"
 import { createPasswordRecoveryMutation } from "entities/auth"
-import { mapFormError } from "shared/lib/map-form-errors"
+import { mapErrors } from "shared/lib/map-form-errors"
 import { stagesModel } from "./stages"
 
 export type StagePasswordRecoveryFields = {
-  password: string
+	password: string
 }
 
 export const passwordRecoveryModel = atom(() => {
-  const passwordRecoveryMutation = createPasswordRecoveryMutation()
+	const passwordRecoveryMutation = createPasswordRecoveryMutation()
 
-  const submitted = createEvent<StagePasswordRecoveryFields>()
+	const { failure, success } = split(
+		sample({
+			clock: passwordRecoveryMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failure: (result) => "errors" in result,
+			success: (result) => "email" in result,
+		},
+	)
 
-  const $errorFieldPassword = createStore<string | null>(null)
+	const submitted = createEvent<StagePasswordRecoveryFields>()
 
-  const $formErrors = combine({
-    password: $errorFieldPassword,
-  })
+	const $errorFieldPassword = createStore<string | null>(null)
 
-  sample({
-    clock: submitted,
-    source: {
-      email: stagesModel.$email,
-      verify_code: stagesModel.$code,
-    },
-    filter: not(passwordRecoveryMutation.$pending),
-    fn: (source, clock) => ({
-      ...source,
-      ...clock,
-    }),
-    target: passwordRecoveryMutation.start,
-  })
+	const $formErrors = combine({
+		password: $errorFieldPassword,
+	})
 
-  sample({
-    clock: passwordRecoveryMutation.finished.success,
-    target: routes.auth.login.open,
-  })
+	sample({
+		clock: submitted,
+		source: {
+			email: stagesModel.$email,
+			verify_code: stagesModel.$code,
+		},
+		filter: not(passwordRecoveryMutation.$pending),
+		fn: (source, clock) => ({
+			...source,
+			...clock,
+		}),
+		target: passwordRecoveryMutation.start,
+	})
 
-  reset({
-    clock: [submitted, passwordRecoveryMutation.finished.success],
-    target: [
-      $errorFieldPassword,
-    ],
-  })
+	sample({
+		clock: success,
+		target: routes.auth.login.open,
+	})
 
-  sample({
-    source: passwordRecoveryMutation.finished.failure,
-    filter: (source) => !!source.error.data,
-    fn: (source) =>
-      mapFormError(
-        source,
-        (message) => ({
-          password: message,
-        }),
-      ),
-    target: spread({
-      password: $errorFieldPassword,
-    }),
-  })
+	reset({
+		clock: [submitted, success],
+		target: [$errorFieldPassword],
+	})
 
-  return {
-    submitted,
-    $formErrors,
-  }
+	sample({
+		clock: failure,
+		fn: ({ errors }) => mapErrors(errors),
+		target: spread({
+			password: $errorFieldPassword,
+		}),
+	})
+
+	return {
+		submitted,
+
+		$formErrors,
+	}
 })

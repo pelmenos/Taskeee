@@ -1,75 +1,73 @@
 import { atom } from "shared/lib/factory"
-import { RegisterFormSchema , createRegisterMutation } from "entities/auth"
+import { createRegisterMutation, RegisterSchema } from "entities/auth"
 
-import { combine, createEvent, createStore, sample } from "effector"
+import { combine, createEvent, createStore, sample, split } from "effector"
 import { not, reset, spread } from "patronum"
-import { mapFormError } from "shared/lib/map-form-errors"
+import { mapErrors } from "shared/lib/map-form-errors"
 import { RegisterFlowStages, stagesModel } from "./stages"
 
 export const registerModel = atom(() => {
-  const registerMutation = createRegisterMutation()
+	const registerMutation = createRegisterMutation()
 
-  const submitted = createEvent<RegisterFormSchema>()
+	const { failure, success } = split(
+		sample({
+			clock: registerMutation.finished.success,
+			fn: ({ result }) => result,
+		}),
+		{
+			failure: (result) => "errors" in result,
+			success: (result) => "email" in result,
+		},
+	)
 
-  const $errorFieldName = createStore<string | null>(null)
-  const $errorFieldEmail = createStore<string | null>(null)
-  const $errorPassword = createStore<string | null>(null)
+	const submitted = createEvent<RegisterSchema>()
 
-  const $formErrors = combine({
-    name: $errorFieldName,
-    email: $errorFieldEmail,
-    password: $errorPassword,
-  })
+	const $errorFieldName = createStore<string | null>(null)
+	const $errorFieldEmail = createStore<string | null>(null)
+	const $errorPassword = createStore<string | null>(null)
 
-  sample({
-    source: submitted,
-    filter: not(registerMutation.$pending),
-    target: registerMutation.start,
-  })
+	const $formErrors = combine({
+		name: $errorFieldName,
+		email: $errorFieldEmail,
+		password: $errorPassword,
+	})
 
-  sample({
-    source: registerMutation.finished.success,
-    fn: (source) => source.result.email,
-    target: stagesModel.$email,
-  })
+	sample({
+		clock: submitted,
+		filter: not(registerMutation.$pending),
+		target: registerMutation.start,
+	})
 
-  sample({
-    clock: registerMutation.finished.success,
-    fn: () => RegisterFlowStages.Confirm,
-    target: stagesModel.$currentStage,
-  })
+	sample({
+		source: success,
+		fn: ({ email }) => email,
+		target: stagesModel.$email,
+	})
 
-  reset({
-    clock: [registerMutation.finished.success, submitted],
-    target: [
-      $errorFieldName,
-      $errorFieldEmail,
-      $errorPassword,
-    ],
-  })
+	sample({
+		clock: success,
+		fn: () => RegisterFlowStages.Confirm,
+		target: stagesModel.$currentStage,
+	})
 
-  sample({
-    source: registerMutation.finished.failure,
-    filter: (source) => !!source.error.data,
-    fn: (source) =>
-      mapFormError(
-        source,
-        (message) => ({
-          name: message,
-          email: null,
-          password: null,
-        }),
-      ),
-    target: spread({
-      name: $errorFieldName,
-      email: $errorFieldEmail,
-      password: $errorPassword,
-    }),
-  })
+	reset({
+		clock: [success, submitted],
+		target: [$errorFieldName, $errorFieldEmail, $errorPassword],
+	})
 
-  return {
-    submitted,
+	sample({
+		clock: failure,
+		fn: ({ errors }) => mapErrors(errors),
+		target: spread({
+			name: $errorFieldName,
+			email: $errorFieldEmail,
+			password: $errorPassword,
+		}),
+	})
 
-    $formErrors,
-  }
+	return {
+		submitted,
+
+		$formErrors,
+	}
 })

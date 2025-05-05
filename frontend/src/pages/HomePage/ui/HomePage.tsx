@@ -17,6 +17,7 @@ export const HomePage = () => {
 
 						<Image
 							src={CellingLight}
+							style={{ pointerEvents: "none" }}
 							fit="contain"
 							pos="absolute"
 							h="calc(100% - 50px)"

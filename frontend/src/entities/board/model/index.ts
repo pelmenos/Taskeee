@@ -1,46 +1,50 @@
-import { ErrorResponse } from "shared/api"
-import type { TaskListItem } from "../../task"
+import { arr, obj, or, str, UnContract, val } from "@withease/contracts"
+import { createErrorContract } from "shared/api/types"
+import { taskListItemContract } from "../../task/model"
 
-export type BoardFormSchema = {
+export type BoardSchema = {
 	project_id: string
 	name: string
 	description: string
 }
 
-export type BoardFormSuccess = {
-	id: string
-	name: string
-	description: string | null
-	project_id: string
-	created_at: string
-	updated_at: string
-}
+const createBoardSuccessContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	project_id: str,
+	created_at: str,
+	updated_at: str,
+})
 
-export type BoardFormError = ErrorResponse<BoardFormSchema>
+const createBoardFailureContract = createErrorContract(["project_id", "name", "description"])
 
-export type BoardListItem = {
-	id: string
-	name: string
-	description: string
-	project_id: string
-	created_at: string
-	updated_at: string
-}
+export const createBoardContract = or(createBoardSuccessContract, createBoardFailureContract)
+
+export const boardListItemContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	tasks: arr(taskListItemContract),
+	project_id: str,
+	created_at: str,
+	updated_at: str,
+})
+
+export type BoardListItem = UnContract<typeof boardListItemContract>
 
 export type BoardDetailParams = {
 	id: string
 }
 
-export type BoardDetailSuccess = BoardDetail
+export const boardDetailContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	project_id: str,
+	tasks: arr(taskListItemContract),
+	created_at: str,
+	updated_at: str,
+})
 
-export type BoardDetailError = ErrorResponse<BoardDetailParams>
-
-export type BoardDetail = {
-	id: string
-	name: string
-	description: string
-	project_id: string
-	tasks: TaskListItem[]
-	created_at: string
-	updated_at: string
-}
+export type BoardDetail = UnContract<typeof boardDetailContract>

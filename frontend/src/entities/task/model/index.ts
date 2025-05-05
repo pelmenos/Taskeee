@@ -1,32 +1,40 @@
-import { ErrorResponse } from "shared/api"
+import { obj, or, str, UnContract, val } from "@withease/contracts"
+import { createErrorContract } from "shared/api/types"
+import { en } from "shared/lib/contracts"
 
 export enum TaskStatus {
+	Planned = "Запланировано",
 	InProgress = "В процессе",
-	Completed = "Выполнена",
+	Completed = "Выполнено",
+	OnHold = "Отложено",
+	Dropped = "Брошено",
 }
 
-export type TaskFormSchema = {
+export type TaskSchema = {
 	board_id: string
 	name: string
 	status: TaskStatus
 }
 
-export type TaskFormSuccess = {
-	project_id: string
-	name: string
-}
+const createTaskSuccessContract = obj({
+	name: str,
+})
 
-export type TaskFormError = ErrorResponse<TaskFormSchema>
+const createTaskFailureContract = createErrorContract(["board_id", "name", "description"])
 
-export type TaskListItem = {
-	id: string
-	name: string
-	description: string | null
-	status: TaskStatus
-	board_id: string
-	created_at: string
-	updated_at: string
-}
+export const createTaskContract = or(createTaskSuccessContract, createTaskFailureContract)
+
+export const taskListItemContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	status: en(TaskStatus),
+	board_id: str,
+	created_at: str,
+	updated_at: str,
+})
+
+export type TaskListItem = UnContract<typeof taskListItemContract>
 
 export type TaskUpdateSchema = {
 	id: string
@@ -36,20 +44,21 @@ export type TaskUpdateSchema = {
 	status: TaskStatus
 }
 
-export type TaskUpdateSuccess = {
-	project_id: string
-	name: string
-}
+const updateTaskSuccessContract = obj({
+	project_id: str,
+	name: str,
+})
 
-export type TaskUpdateError = ErrorResponse<TaskUpdateSchema>
+const updateTaskFailureContract = createErrorContract([
+	"id",
+	"board_id",
+	"name",
+	"description",
+	"status",
+])
+
+export const updateTaskContract = or(updateTaskSuccessContract, updateTaskFailureContract)
 
 export type TaskDeleteSchema = {
 	id: string
 }
-
-export type TaskDeleteSuccess = {
-	project_id: string
-	name: string
-}
-
-export type TaskDeleteError = ErrorResponse<TaskDeleteSchema>

@@ -1,45 +1,63 @@
-import { ErrorResponse, ResponseWithMessage } from "shared/api"
+import { EnumSpaceTariff } from "shared/api"
+import { obj, or, str, UnContract, val } from "@withease/contracts"
+import { en } from "shared/lib/contracts"
+import { createErrorContract } from "shared/api/types"
 
-export type SpaceFormSchema = {
-  name: string;
-  description: string;
-  avatar: string;
-  admin_id: string;
-  tariff: string;
+export type SpaceSchema = {
+	name: string
+	description: string
+	avatar: string
+	admin_id: string
+	tariff: string
 }
 
-export type SpaceCreateSuccess = Omit<SpaceDetail, "deleted_at">
+const createSpaceSuccessContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	avatar: or(str, val(null)),
+	admin_id: str,
+	tariff: en(EnumSpaceTariff),
+	created_at: str,
+	updated_at: str,
+})
 
-export type SpaceCreateError = ErrorResponse<SpaceFormSchema>
+const createSpaceFailureContract = createErrorContract([
+	"name",
+	"description",
+	"avatar",
+	"admin_id",
+	"tariff",
+])
 
-export type SpaceListSuccess = Array<SpaceListItem> | ResponseWithMessage;
+export const createSpaceContract = or(createSpaceSuccessContract, createSpaceFailureContract)
 
-export type SpaceListItem = {
-  id:          string;
-  name:        string;
-  description: string;
-  avatar:      string;
-  admin_id:    string;
-  tariff:      string;
-  created_at:  string;
+export const spaceListItemContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	avatar: or(str, val(null)),
+	admin_id: str,
+	tariff: en(EnumSpaceTariff),
+	created_at: str,
+})
+
+export type SpaceListItem = UnContract<typeof spaceListItemContract>
+
+export type SpaceDetailSchema = {
+	id: string
 }
 
-export type SpaceDetailFormSchema = {
-  id: string,
-}
+export const spaceDetailContract = obj({
+	id: str,
+	name: str,
+	description: or(str, val(null)),
+	avatar: or(str, val(null)),
+	admin_id: str,
+	tariff: en(EnumSpaceTariff),
+	created_at: str,
+	updated_at: str,
+	deleted_at: or(str, val(null)),
+})
 
-export type SpaceDetail = {
-  id:          string;
-  name:        string;
-  description: string;
-  avatar:      string;
-  admin_id:    string;
-  tariff:      string;
-  created_at:  string;
-  updated_at:  string;
-  deleted_at:  null;
-}
-
-export type SpaceDetailSuccess = SpaceDetail | ResponseWithMessage;
-
-export type SpaceDetailError = ErrorResponse
+export type SpaceDetail = UnContract<typeof spaceDetailContract>

@@ -1,32 +1,40 @@
-import { createApiMutation } from "shared/lib/createApiMutation"
+import { createApiMutation } from "shared/api/createApiMutation"
 import {
-	TaskDeleteError,
+	createTaskContract,
 	TaskDeleteSchema,
-	TaskDeleteSuccess,
-	TaskFormError,
-	TaskFormSchema,
-	TaskFormSuccess,
-	TaskUpdateError,
+	TaskSchema,
 	TaskUpdateSchema,
-	TaskUpdateSuccess,
+	updateTaskContract,
 } from "../model"
 
 export const createCreateTaskMutation = () =>
-	createApiMutation<TaskFormSchema, TaskFormSuccess, TaskFormError>((params) => ({
-		method: "POST",
-		url: "/api/tasks",
-		body: params,
-	}))
+	createApiMutation({
+		request: (params: TaskSchema) => ({
+			method: "POST",
+			url: "/api/tasks",
+			body: params,
+		}),
+		response: {
+			contract: createTaskContract,
+		},
+	})
 
 export const createUpdateTaskMutation = () =>
-	createApiMutation<TaskUpdateSchema, TaskUpdateSuccess, TaskUpdateError>((params) => ({
-		method: "PUT",
-		url: `/api/tasks/${params.id}`,
-		body: params,
-	}))
+	createApiMutation({
+		request: (params: TaskUpdateSchema) => ({
+			method: "PUT",
+			url: `/api/tasks/${params.id}`,
+			body: params,
+		}),
+		response: {
+			contract: updateTaskContract,
+		},
+	})
 
 export const createDeleteTaskMutation = () =>
-	createApiMutation<TaskDeleteSchema, TaskDeleteSuccess, TaskDeleteError>((params) => ({
-		method: "DELETE",
-		url: `/api/tasks/${params.id}`,
-	}))
+	createApiMutation({
+		request: (params: TaskDeleteSchema) => ({
+			method: "DELETE",
+			url: `/api/tasks/${params.id}`,
+		}),
+	})
