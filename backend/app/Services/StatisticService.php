@@ -6,11 +6,12 @@ use App\Services\Traits\CompanyBudget;
 use App\Services\Traits\ProjectsBudget;
 use App\Services\Traits\TotalBudget;
 use App\Services\Traits\TotalExpenses;
+use App\Services\Traits\TotalIncome;
 use Illuminate\Http\Request;
 
 class StatisticService
 {
-    use ProjectsBudget, CompanyBudget, TotalBudget, TotalExpenses;
+    use ProjectsBudget, CompanyBudget, TotalBudget, TotalExpenses, TotalIncome;
 
     public function calculateProjectsBudget()
     {
@@ -81,6 +82,21 @@ class StatisticService
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'detail' => $expensesDetail
+        ];
+    }
+
+    public function calculateTotalIncome(Request $request)
+    {
+        $totalIncome = $this->totalIncomeTurnover($request);
+        $lastPayment = $this->lastIncomePayment();
+        $totalPayments = $this->totalIncomePayments($request);
+        $incomeDetail = $this->incomeDetail($request);
+
+        return [
+            'total_turnover' => $totalIncome,
+            'last_payment' => $lastPayment,
+            'total_payments' => $totalPayments,
+            'detail' => $incomeDetail
         ];
     }
 }

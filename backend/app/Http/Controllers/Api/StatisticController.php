@@ -47,4 +47,16 @@ class StatisticController extends Controller
             'message' => 'Месяц не выбран (1, 3, 6, 12 мес.)'
         ]);
     }
+
+    public function totalIncomes(Request $request)
+    {
+        if (in_array($request->month, [1, 3, 6, 12])) {
+            return response()->json([
+                'data' => $this->service->calculateTotalIncome($request)
+            ]);
+        }
+        return response()->json([
+            'message' => 'Месяц не выбран (1, 3, 6, 12 мес.)'
+        ]);
+    }
 }
