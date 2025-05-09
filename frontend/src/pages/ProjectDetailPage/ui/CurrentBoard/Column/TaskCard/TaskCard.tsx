@@ -1,6 +1,6 @@
 import { TaskListItem } from "entities/task"
 import { useUnit } from "effector-react"
-import { projectModel } from "features/current-space"
+import { boardModel } from "features/current-space"
 import { KeyboardEventHandler, useState } from "react"
 import { ActionIcon, Box, Card, Group, Input, Text } from "@mantine/core"
 import { TrashIcon } from "shared/ui/assets/icons/TrashIcon"
@@ -10,8 +10,8 @@ interface TaskCardProps {
 }
 
 export const TaskCard = ({ data }: TaskCardProps) => {
-	const updated = useUnit(projectModel.taskUpdated)
-	const deleted = useUnit(projectModel.taskDeleted)
+	const updateTask = useUnit(boardModel.taskUpdated)
+	const deleteTask = useUnit(boardModel.taskDeleted)
 
 	const [name, setName] = useState(data.name)
 	const [isEditing, setIsEditing] = useState(false)
@@ -23,7 +23,7 @@ export const TaskCard = ({ data }: TaskCardProps) => {
 		}
 
 		if (e.key === "Enter") {
-			updated({
+			updateTask({
 				id: data.id,
 				name: name,
 				description: data.description,
@@ -50,7 +50,7 @@ export const TaskCard = ({ data }: TaskCardProps) => {
 					)}
 				</Box>
 
-				<ActionIcon variant="transparent" onClick={() => deleted({ id: data.id })}>
+				<ActionIcon variant="transparent" onClick={() => deleteTask({ id: data.id })}>
 					<TrashIcon size={24} />
 				</ActionIcon>
 			</Group>

@@ -36,7 +36,29 @@ const createProjectFailureContract = createErrorContract([
 
 export const createProjectContract = or(createProjectSuccessContract, createProjectFailureContract)
 
-export type ProjectListParams = {
+export type UpdateProjectSchema = {
+	id: string
+	name: string
+	description: string
+}
+
+const updateProjectSuccessContract = obj({
+	id: str,
+})
+
+const updateProjectFailureContract = createErrorContract(["name", "description"])
+
+export const updateProjectContract = or(updateProjectSuccessContract, updateProjectFailureContract)
+
+export type DeleteProjectSchema = {
+	id: string
+}
+
+export const deleteProjectContract = obj({
+	message: val("Проект успешно удален"),
+})
+
+export type ProjectListSchema = {
 	space_id: string
 }
 
@@ -44,15 +66,12 @@ export const projectListItemContract = obj({
 	id: str,
 	name: str,
 	description: or(str, val(null)),
-	// avatar: or(str, val(null)),
-	// admin_id: or(str, val(null)),
-	// tariff: en(EnumSpaceTariff),
 	created_at: str,
 })
 
 export type ProjectListItem = UnContract<typeof projectListItemContract>
 
-export type ProjectDetailParams = {
+export type ProjectDetailSchema = {
 	id: string
 }
 
@@ -63,7 +82,6 @@ export const projectDetailContract = obj({
 	space_id: str,
 	members: arr(userContract),
 	boards: arr(boardListItemContract),
-	// tasks: arr(taskListItemContract),
 	created_at: str,
 	updated_at: str,
 })

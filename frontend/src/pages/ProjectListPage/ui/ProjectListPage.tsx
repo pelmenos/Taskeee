@@ -3,12 +3,13 @@ import { MainLayout } from "widgets/MainLayout"
 import { Button, Group, Paper, SimpleGrid, Stack, Text, TextInput, Title } from "@mantine/core"
 import { PlusIcon } from "shared/ui/assets/icons/PlusIcon"
 import { MagnifyIcon } from "shared/ui/assets/icons/MagnifyIcon"
-import { CreateProjectModal, projectModel } from "features/current-space"
+import { projectModel } from "features/current-space"
 import { useUnit } from "effector-react"
 import { useDisclosure } from "@mantine/hooks"
 import { Link } from "atomic-router-react"
 import { routes } from "shared/routing"
 import { useState } from "react"
+import { CreateProjectModal } from "features/CreateProjectModal"
 
 export const ProjectListPage = () => {
 	const [opened, { open, close }] = useDisclosure(false)

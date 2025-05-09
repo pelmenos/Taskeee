@@ -1,12 +1,16 @@
 export {
 	createCreateProjectMutation,
+	createUpdateProjectMutation,
+	createDeleteProjectMutation,
 	createProjectDetailQuery,
 	createProjectListQuery,
 } from "./api"
 export type {
 	CreateProjectSchema,
-	ProjectListParams,
+	ProjectListSchema,
+	ProjectDetailSchema,
+	UpdateProjectSchema,
+	DeleteProjectSchema,
 	ProjectListItem,
-	ProjectDetailParams,
 	ProjectDetail,
 } from "./model"

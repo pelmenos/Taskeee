@@ -1,14 +1,14 @@
 import "./CurrentBoard.scss"
 import { Box, BoxProps, Group, Image, Paper } from "@mantine/core"
 import { useUnit } from "effector-react"
-import { projectModel } from "features/current-space"
+import { boardModel } from "features/current-space"
 import CellingLight from "shared/ui/assets/images/CeilingLight.png"
 import { Column } from "./Column"
 
 interface Props extends BoxProps {}
 
 export const CurrentBoard = (props: Props) => {
-	const columns = useUnit(projectModel.$columns)
+	const columns = useUnit(boardModel.$columns)
 
 	if (!columns) {
 		return (
@@ -21,6 +21,7 @@ export const CurrentBoard = (props: Props) => {
 					w="fit-content"
 					top={0}
 					right={150}
+					style={{ pointerEvents: "none" }}
 				/>
 			</Paper>
 		)

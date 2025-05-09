@@ -1,53 +1,50 @@
-import "./CreateProjectModal.scss"
+import "./CreateSpaceModal.scss"
 import { ComponentProps, useEffect } from "react"
 
+import { Button, FileInput, TextInput, Title } from "@mantine/core"
 import { CustomModal } from "shared/ui/CustomModal"
-import { Button, TextInput, Title } from "@mantine/core"
+import { PaperPlusIcon } from "shared/ui/assets/icons/PaperPlusIcon"
 import { useForm } from "@mantine/form"
 import { useGate, useUnit } from "effector-react"
-import { createProjectModel } from "../../model/create-project"
+import { $formErrors, Gate, submitPressed } from "../model"
 
 interface Props extends ComponentProps<typeof CustomModal> {}
 
-export const CreateProjectModal = (props: Props) => {
+export const CreateSpaceModal = (props: Props) => {
+	const createSpace = useUnit(submitPressed)
+	const formErrors = useUnit($formErrors)
+
 	const { setErrors, ...form } = useForm({
 		mode: "uncontrolled",
 		initialValues: {
 			name: "",
 			description: "",
-			members: "",
+			avatar: null as File | null,
 		},
 	})
-
-	const submitted = useUnit(createProjectModel.submitted)
-	const formErrors = useUnit(createProjectModel.$formErrors)
 
 	useEffect(() => {
 		setErrors(formErrors)
 	}, [setErrors, formErrors])
 
-	useGate(createProjectModel.Gate, () => {
+	useGate(Gate, () => {
 		props.onClose()
 	})
 
 	const handleSubmit = (fields: typeof form.values) => {
-		submitted({
-			name: fields.name,
-			description: fields.description,
-			// members: fields.members,
-		})
+		createSpace(fields)
 	}
 
 	return (
 		<CustomModal {...props}>
 			<form onSubmit={form.onSubmit(handleSubmit)}>
 				<Title order={3} size="h1">
-					Создание проекта
+					Создание пространства
 				</Title>
 
 				<TextInput
 					mt="xxl"
-					label="Название проекта"
+					label="Название пространства"
 					placeholder="Monene"
 					key={form.key("name")}
 					{...form.getInputProps("name")}
@@ -60,15 +57,16 @@ export const CreateProjectModal = (props: Props) => {
 					{...form.getInputProps("description")}
 				/>
 
-				<TextInput
-					label="Участники"
-					placeholder="Email"
-					key={form.key("members")}
-					{...form.getInputProps("members")}
+				<FileInput
+					label="Изображение"
+					placeholder="Прикрепите изображение"
+					rightSection={<PaperPlusIcon />}
+					key={form.key("avatar")}
+					{...form.getInputProps("avatar")}
 				/>
 
 				<Button mt="lg" type="submit" fullWidth>
-					Создать проект
+					Создать пространство
 				</Button>
 			</form>
 		</CustomModal>

@@ -13,8 +13,9 @@ import {
 import { StackIcon } from "shared/ui/assets/icons/StackIcon"
 import { ChevronRightIcon } from "shared/ui/assets/icons/ChevronRightIcon"
 import { useUnit } from "effector-react"
-import { CreateSpaceModal, spaceModel } from "features/current-space"
+import { spaceModel } from "features/current-space"
 import { useDisclosure } from "@mantine/hooks"
+import { CreateSpaceModal } from "features/CreateSpaceModal"
 
 interface Props extends UnstyledButtonProps {}
 

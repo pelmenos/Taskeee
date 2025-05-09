@@ -1,6 +1,6 @@
 import { atom } from "shared/lib/factory"
 import { createEvent, createStore, sample } from "effector"
-import { SpaceListItem, createSpaceListQuery } from "entities/space"
+import { createSpaceListQuery, SpaceListItem } from "entities/space"
 
 import { $status, SessionStatus } from "shared/api"
 

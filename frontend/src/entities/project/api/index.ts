@@ -4,10 +4,14 @@ import { createListContract } from "shared/api/types"
 import {
 	createProjectContract,
 	CreateProjectSchema,
+	deleteProjectContract,
+	DeleteProjectSchema,
 	projectDetailContract,
-	ProjectDetailParams,
+	ProjectDetailSchema,
 	projectListItemContract,
-	ProjectListParams,
+	ProjectListSchema,
+	updateProjectContract,
+	UpdateProjectSchema,
 } from "../model"
 
 export const createCreateProjectMutation = () =>
@@ -22,9 +26,32 @@ export const createCreateProjectMutation = () =>
 		},
 	})
 
+export const createUpdateProjectMutation = () =>
+	createApiMutation({
+		request: ({ id, ...body }: UpdateProjectSchema) => ({
+			method: "PUT",
+			url: `/api/projects/${id}`,
+			body: body,
+		}),
+		response: {
+			contract: updateProjectContract,
+		},
+	})
+
+export const createDeleteProjectMutation = () =>
+	createApiMutation({
+		request: ({ id }: DeleteProjectSchema) => ({
+			method: "DELETE",
+			url: `/api/projects/${id}`,
+		}),
+		response: {
+			contract: deleteProjectContract,
+		},
+	})
+
 export const createProjectListQuery = () =>
 	createApiQuery({
-		request: ({ space_id }: ProjectListParams) => ({
+		request: ({ space_id }: ProjectListSchema) => ({
 			method: "GET",
 			url: `/api/projects?space_id=${space_id}`,
 		}),
@@ -36,7 +63,7 @@ export const createProjectListQuery = () =>
 
 export const createProjectDetailQuery = () =>
 	createApiQuery({
-		request: ({ id }: ProjectDetailParams) => ({
+		request: ({ id }: ProjectDetailSchema) => ({
 			method: "GET",
 			url: `/api/projects/${id}`,
 		}),

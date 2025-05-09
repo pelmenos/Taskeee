@@ -3,7 +3,7 @@ import { KeyboardEventHandler, useState } from "react"
 import { TextInput, TextInputProps } from "@mantine/core"
 import { TaskStatus } from "entities/task"
 import { useUnit } from "effector-react"
-import { projectModel } from "features/current-space"
+import { boardModel } from "features/current-space/model/board"
 
 interface Props extends TextInputProps {
 	column: TaskStatus
@@ -12,11 +12,11 @@ interface Props extends TextInputProps {
 export const CreateTaskInput = ({ column, ...props }: Props) => {
 	const [value, setValue] = useState("")
 
-	const submitted = useUnit(projectModel.taskSubmitted)
+	const createTask = useUnit(boardModel.taskCreated)
 
 	const handleSubmit: KeyboardEventHandler<HTMLInputElement> = (e) => {
 		if (e.key === "Enter") {
-			submitted({
+			createTask({
 				name: value,
 				status: column,
 			})
