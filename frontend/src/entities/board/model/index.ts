@@ -24,6 +24,7 @@ export const createBoardContract = or(createBoardSuccessContract, createBoardFai
 export const boardListItemContract = obj({
   id: str,
   name: str,
+  tasks: arr(taskListItemContract),
   description: or(str, val(null)),
   project_id: str,
   created_at: str,
