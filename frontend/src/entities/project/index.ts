@@ -4,6 +4,7 @@ export {
 	createDeleteProjectMutation,
 	createProjectDetailQuery,
 	createProjectListQuery,
+  createSearchProjectQuery
 } from "./api"
 export type {
 	CreateProjectSchema,
@@ -11,6 +12,7 @@ export type {
 	ProjectDetailSchema,
 	UpdateProjectSchema,
 	DeleteProjectSchema,
+  SearchProjectSchema,
 	ProjectListItem,
 	ProjectDetail,
 } from "./model"

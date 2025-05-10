@@ -62,6 +62,11 @@ export type ProjectListSchema = {
 	space_id: string
 }
 
+export type SearchProjectSchema = {
+  space_id: string
+  query: string
+}
+
 export const projectListItemContract = obj({
 	id: str,
 	name: str,

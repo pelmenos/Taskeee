@@ -1,68 +1,98 @@
 import "./ProjectListPage.scss"
-import { MainLayout } from "widgets/MainLayout"
-import { Button, Group, Paper, SimpleGrid, Stack, Text, TextInput, Title } from "@mantine/core"
-import { PlusIcon } from "shared/ui/assets/icons/PlusIcon"
-import { MagnifyIcon } from "shared/ui/assets/icons/MagnifyIcon"
-import { projectModel } from "features/current-space"
-import { useUnit } from "effector-react"
-import { useDisclosure } from "@mantine/hooks"
-import { Link } from "atomic-router-react"
-import { routes } from "shared/routing"
-import { useState } from "react"
-import { CreateProjectModal } from "features/CreateProjectModal"
+import {Button, Group, Paper, SimpleGrid, Stack, Text, TextInput, Title} from "@mantine/core"
+import {useDisclosure} from "@mantine/hooks"
+import {Link} from "atomic-router-react"
+import {useUnit} from "effector-react"
+import {CreateProjectModal} from "features/CreateProjectModal"
+import {projectModel} from "features/current-space"
+import {useEffect, useState} from "react";
+import {routes} from "shared/routing"
+import {MagnifyIcon} from "shared/ui/assets/icons/MagnifyIcon"
+import {PlusIcon} from "shared/ui/assets/icons/PlusIcon"
+import {MainLayout} from "widgets/MainLayout"
 
 export const ProjectListPage = () => {
-	const [opened, { open, close }] = useDisclosure(false)
-	const [query, setQuery] = useState("")
+  const setSearchQuery = useUnit(projectModel.searchQueryChanged)
 
-	const availableProjects = useUnit(projectModel.$availableProjects)
+  const [opened, {open, close}] = useDisclosure(false)
 
-	return (
-		<MainLayout>
-			<Paper bg="surface" p="xl" pos="relative">
-				<Stack>
-					<Group justify="space-between">
-						<Group wrap="nowrap" align="start" gap="sm">
-							<Title order={1} size="h2">
-								Все проекты
-							</Title>
+  const [query, setQuery] = useState("")
 
-							<Text c="onSurfaceVariant" fw={600} fz="md" span>
-								{availableProjects.length}
-							</Text>
-						</Group>
+  useEffect(() => {
+    setSearchQuery(query)
+  }, [query, setSearchQuery]);
 
-						<Group>
-							<TextInput
-								size="md"
-								placeholder="Поиск"
-								leftSection={<MagnifyIcon />}
-								value={query}
-								onChange={(e) => setQuery(e.target.value)}
-							/>
+  const availableProjects = useUnit(projectModel.$availableProjects)
 
-							<Button size="md" leftSection={<PlusIcon />} onClick={open}>
-								Добавить проект
-							</Button>
-						</Group>
-					</Group>
+  return (
+    <MainLayout>
+      <Paper
+        bg="surface"
+        p="xl"
+        pos="relative"
+      >
+        <Stack>
+          <Group justify="space-between">
+            <Group
+              wrap="nowrap"
+              align="start"
+              gap="sm"
+            >
+              <Title
+                order={1}
+                size="h2"
+              >
+                Все проекты
+              </Title>
 
-					<SimpleGrid cols={6}>
-						{availableProjects.map((item) => (
-							<Button
-								key={item.id}
-								component={Link<{ id: string }>}
-								to={routes.project.detail}
-								params={{ id: item.id }}
-							>
-								{item.name}
-							</Button>
-						))}
-					</SimpleGrid>
-				</Stack>
-			</Paper>
+              <Text
+                c="onSurfaceVariant"
+                fw={600}
+                fz="md"
+                span
+              >
+                {availableProjects.length}
+              </Text>
+            </Group>
 
-			<CreateProjectModal opened={opened} onClose={close} />
-		</MainLayout>
-	)
+            <Group>
+              <TextInput
+                size="md"
+                placeholder="Поиск"
+                leftSection={<MagnifyIcon />}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+
+              <Button
+                size="md"
+                leftSection={<PlusIcon />}
+                onClick={open}
+              >
+                Добавить проект
+              </Button>
+            </Group>
+          </Group>
+
+          <SimpleGrid cols={6}>
+            {availableProjects.map((item) => (
+              <Button
+                key={item.id}
+                component={Link<{ id: string }>}
+                to={routes.project.detail}
+                params={{id: item.id}}
+              >
+                {item.name}
+              </Button>
+            ))}
+          </SimpleGrid>
+        </Stack>
+      </Paper>
+
+      <CreateProjectModal
+        opened={opened}
+        onClose={close}
+      />
+    </MainLayout>
+  )
 }

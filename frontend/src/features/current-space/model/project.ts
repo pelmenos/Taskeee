@@ -1,61 +1,82 @@
-import { atom } from "shared/lib/factory"
+import {createEvent, createStore, sample} from "effector"
 import {
-	createProjectDetailQuery,
-	createProjectListQuery,
-	ProjectDetail,
-	ProjectListItem,
+  createProjectDetailQuery,
+  createProjectListQuery,
+  createSearchProjectQuery,
+  ProjectDetail,
+  ProjectListItem,
 } from "entities/project"
-
-import { createEvent, createStore, sample } from "effector"
-import { not } from "patronum"
-import { spaceModel } from "./space"
+import {debounce, not} from "patronum"
+import {atom} from "shared/lib/factory"
+import {spaceModel} from "./space"
 
 export const projectModel = atom(() => {
-	const projectListQuery = createProjectListQuery()
-	const projectDetailQuery = createProjectDetailQuery()
+  const searchProjectQuery = createSearchProjectQuery()
+  const projectListQuery = createProjectListQuery()
+  const projectDetailQuery = createProjectDetailQuery()
 
-	const currentProjectChanged = createEvent<{ id: string }>()
-	const $availableProjects = createStore<Array<ProjectListItem>>([])
+  const currentProjectChanged = createEvent<{ id: string }>()
+  const $availableProjects = createStore<Array<ProjectListItem>>([])
 
-	const $currentProject = createStore<ProjectDetail | null>(null)
+  const $currentProject = createStore<ProjectDetail | null>(null)
 
-	const $availableBoards = $currentProject.map((project) => project?.boards ?? [])
+  const $availableBoards = $currentProject.map((project) => project?.boards ?? [])
 
-	sample({
-		clock: spaceModel.$currentSpace,
-		filter: Boolean,
-		fn: (currentSpace) => ({
-			space_id: currentSpace.id,
-		}),
-		target: projectListQuery.start,
-	})
+  const searchQueryChanged = createEvent<string>()
 
-	sample({
-		clock: projectListQuery.finished.success,
-		fn: ({ result }) => result,
-		target: $availableProjects,
-	})
+  sample({
+    clock: spaceModel.$currentSpace,
+    filter: Boolean,
+    fn: (currentSpace) => ({
+      space_id: currentSpace.id,
+    }),
+    target: projectListQuery.start,
+  })
 
-	sample({
-		source: currentProjectChanged,
-		filter: not(projectDetailQuery.$pending),
-		target: projectDetailQuery.start,
-	})
+  sample({
+    clock: projectListQuery.finished.success,
+    fn: ({result}) => result,
+    target: $availableProjects,
+  })
 
-	sample({
-		clock: projectDetailQuery.finished.success,
-		fn: ({ result }) => result,
-		target: $currentProject,
-	})
+  sample({
+    clock: debounce(searchQueryChanged, 300),
+    source: spaceModel.$currentSpace,
+    filter: (currentSpace) => Boolean(currentSpace),
+    fn: (currentSpace, searchQuery) => ({
+      space_id: currentSpace!.id,
+      query: searchQuery,
+    }),
+    target: searchProjectQuery.start,
+  })
 
-	return {
-		projectListQuery,
-		projectDetailQuery,
+  sample({
+    clock: searchProjectQuery.finished.success,
+    fn: ({result}) => result,
+    target: $availableProjects,
+  })
 
-		currentProjectChanged,
+  sample({
+    source: currentProjectChanged,
+    filter: not(projectDetailQuery.$pending),
+    target: projectDetailQuery.start,
+  })
 
-		$availableProjects,
-		$currentProject,
-		$availableBoards,
-	}
+  sample({
+    clock: projectDetailQuery.finished.success,
+    fn: ({result}) => result,
+    target: $currentProject,
+  })
+
+  return {
+    projectListQuery,
+    projectDetailQuery,
+
+    currentProjectChanged,
+    searchQueryChanged,
+
+    $availableProjects,
+    $currentProject,
+    $availableBoards,
+  }
 })

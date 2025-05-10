@@ -2,16 +2,16 @@ import { createApiMutation } from "shared/api/createApiMutation"
 import { createApiQuery } from "shared/api/createApiQuery"
 import { createListContract } from "shared/api/types"
 import {
-	createProjectContract,
-	CreateProjectSchema,
-	deleteProjectContract,
-	DeleteProjectSchema,
-	projectDetailContract,
-	ProjectDetailSchema,
-	projectListItemContract,
-	ProjectListSchema,
-	updateProjectContract,
-	UpdateProjectSchema,
+  createProjectContract,
+  CreateProjectSchema,
+  deleteProjectContract,
+  DeleteProjectSchema,
+  projectDetailContract,
+  ProjectDetailSchema,
+  projectListItemContract,
+  ProjectListSchema, SearchProjectSchema,
+  updateProjectContract,
+  UpdateProjectSchema,
 } from "../model"
 
 export const createCreateProjectMutation = () =>
@@ -51,15 +51,29 @@ export const createDeleteProjectMutation = () =>
 
 export const createProjectListQuery = () =>
 	createApiQuery({
-		request: ({ space_id }: ProjectListSchema) => ({
+		request: (schema: ProjectListSchema) => ({
 			method: "GET",
-			url: `/api/projects?space_id=${space_id}`,
+			url: `/api/projects`,
+      query: schema
 		}),
 		response: {
 			contract: createListContract(projectListItemContract),
 			mapData: ({ result }) => result.data,
 		},
 	})
+
+export const createSearchProjectQuery = () =>
+  createApiQuery({
+    request: (schema: SearchProjectSchema) => ({
+      method: "GET",
+      url: "/api/projects/search",
+      query: schema
+    }),
+    response: {
+      contract: createListContract(projectListItemContract),
+      mapData: ({ result }) => result.data,
+    },
+  })
 
 export const createProjectDetailQuery = () =>
 	createApiQuery({
