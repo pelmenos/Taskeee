@@ -157,7 +157,7 @@ class SpaceController extends Controller
         }
 
         $spaceRole = SpaceRole::where([['space_id', '=', $request->id],
-            ['name', '=', $request->role]])->first();
+            ['id', '=', $request->role_id]])->first();
 
         if(!$spaceRole){
             return response()->json(['message' => 'Ошибка при обновлении роли пользователя пространства',
