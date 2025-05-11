@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\SpaceExistsRule;
-use App\Rules\SpaceRoleNameExistsRule;
+use App\Rules\SpaceRoleExistsRule;
 use App\Rules\SpaceUserExistsRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,7 +37,7 @@ class UpdateUserSpaceRoleRequest extends FormRequest
         return [
             'id' => ['uuid', new SpaceExistsRule()],
             'user_id' => ['uuid', new SpaceUserExistsRule()],
-            'role' => ['required','string', new SpaceRoleNameExistsRule()]
+            'role_id' => ['required','uuid', new SpaceRoleExistsRule()]
         ];
     }
 
@@ -46,8 +46,8 @@ class UpdateUserSpaceRoleRequest extends FormRequest
         return [
             'id.uuid' => 'Идентификатор пространства должен иметь тип данных UUID',
             'user_id.uuid' => 'Идентификатор пользователя пространства должен иметь тип данных UUID',
-            'role.required' => 'Поле Роль пространства обязательно для заполнения',
-            'role.string' => 'Поле Роль пространства должно содержать строковой тип данных'
+            'role_id.required' => 'Поле Роль пространства обязательно для заполнения',
+            'role_id.uuid' => 'Поле Роль пространства должно содержать тип данных UUID'
         ];
     }
 

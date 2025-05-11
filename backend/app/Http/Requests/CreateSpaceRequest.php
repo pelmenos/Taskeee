@@ -28,7 +28,7 @@ class CreateSpaceRequest extends FormRequest
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
             'avatar' => 'nullable|url',
-            'admin_id' => ['required', new UserExistsRule()],
+            'admin_id' => ['required', 'uuid', new UserExistsRule()],
             'tariff' => 'required|in:Free,Pro,Enterprise'
         ];
     }
@@ -43,7 +43,7 @@ class CreateSpaceRequest extends FormRequest
             'description.max' => 'Поле Описание должно иметь максимальную длину в 500 символов',
             'avatar.url' => 'Поле Изображение должно содержать валидную по формату ссылку',
             'admin_id.required' => 'Идентификатор пользователя должен быть передан для запроса',
-            'admin_id.exists' => 'Идентификатор пользователя не относится ни к одному из пользователей',
+            'admin_id.uuid' => 'Идентификатор пользователя должен иметь тип данных UUID',
             'tariff.required' => 'Поле Тариф обязательно для заполнения',
             'tariff.in' => 'Поле Тариф должно содержать одно из значений: Free, Pro, Enterprise'
         ];
