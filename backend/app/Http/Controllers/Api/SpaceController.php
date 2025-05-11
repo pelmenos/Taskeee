@@ -161,7 +161,7 @@ class SpaceController extends Controller
 
         if(!$spaceRole){
             return response()->json(['message' => 'Ошибка при обновлении роли пользователя пространства',
-                'errors' => ['role' => ['Указанная роль не относится к данному пространству']]], 422);
+                'errors' => ['role_id' => ['Указанная роль не относится к данному пространству']]], 422);
         }
 
         $spaceUser->update([
