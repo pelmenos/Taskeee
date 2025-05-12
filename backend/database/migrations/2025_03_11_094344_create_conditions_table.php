@@ -14,12 +14,8 @@ return new class extends Migration
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->uuid('space_id');
+            $table->foreignUuid('space_id')->constrained('spaces')->cascadeOnDelete();
             $table->timestamps();
-
-            $table->foreign('space_id')
-                ->on('spaces')
-                ->references('id');
         });
     }
 

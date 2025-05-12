@@ -15,38 +15,14 @@ return new class extends Migration
             $table->id();
             $table->decimal('price', 14, 2);
             $table->string('comment', 2500)->nullable();
-            $table->unsignedBigInteger('status_id');
-            $table->uuid('project_id');
-            $table->uuid('coordinator_id');
-            $table->uuid('lead_id');
-            $table->uuid('customer_id');
-            $table->uuid('source_id');
-            $table->uuid('space_id');
+            $table->foreignid('status_id')->constrained('finance_project_statuses')->cascadeOnDelete();
+            $table->foreignUuid('project_id')->constrained('projects')->cascadeOnDelete();
+            $table->foreignUuid('coordinator_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('lead_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('customer_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('source_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('space_id')->constrained('spaces')->cascadeOnDelete();
             $table->timestamps();
-
-            $table->foreign('status_id')
-                ->on('finance_project_statuses')
-                ->references('id');
-
-            $table->foreign('coordinator_id')
-                ->on('users')
-                ->references('id');
-
-            $table->foreign('lead_id')
-                ->on('users')
-                ->references('id');
-
-            $table->foreign('customer_id')
-                ->on('users')
-                ->references('id');
-
-            $table->foreign('source_id')
-                ->on('users')
-                ->references('id');
-
-            $table->foreign('space_id')
-                ->on('spaces')
-                ->references('id');
         });
     }
 

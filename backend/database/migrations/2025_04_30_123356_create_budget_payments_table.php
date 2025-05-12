@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('type', 50);
             $table->foreignUuid('director_id')->constrained('users')->cascadeOnDelete();
             $table->foreignUuid('recipient_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('condition_id')->constrained('conditions');
-            $table->foreignUuid('space_id')->constrained('spaces');
+            $table->foreignId('condition_id')->constrained('conditions')->cascadeOnDelete();
+            $table->foreignUuid('space_id')->constrained('spaces')->cascadeOnDelete();
             $table->string('method', 50);
             $table->string('comment', 2500)->nullable();
             $table->timestamps();

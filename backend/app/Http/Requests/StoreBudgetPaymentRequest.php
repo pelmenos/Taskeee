@@ -28,7 +28,7 @@ class StoreBudgetPaymentRequest extends FormRequest
         $space = Space::find($spaceUser->space_id);
 
         return [
-            'sum' => 'decimal:2|required',
+            'sum' => 'regex:/^-?\d+(\.\d{1,2})?$/|required',
             'comment' => 'string|max:2500',
             'status_id' => 'required|integer|in:'
                 . implode(',', BudgetPaymentStatus::pluck('id')->toArray()),
@@ -48,7 +48,7 @@ class StoreBudgetPaymentRequest extends FormRequest
     public function messages()
     {
         return [
-            'sum.decimal' => 'Сумма должна быть с двумя знаками после запятой и иметь длинну не более 14 цифр',
+            'sum.regex' => 'Сумма должна быть с двумя знаками после запятой и иметь длинну не более 14 цифр',
             'sum.required' => 'Сумма обязательна для заполнения',
             'comment.string' => 'Комментарий должен быть строкового типа',
             'comment.max' => 'Максимальное количество символов 2500',

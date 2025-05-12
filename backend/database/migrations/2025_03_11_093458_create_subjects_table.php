@@ -15,12 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('description', 1000)->nullable();
-            $table->uuid('space_id');
+            $table->foreignUuid('space_id')->constrained('spaces')->cascadeOnDelete();
             $table->timestamps();
-
-            $table->foreign('space_id')
-                ->on('spaces')
-                ->references('id');
         });
     }
 

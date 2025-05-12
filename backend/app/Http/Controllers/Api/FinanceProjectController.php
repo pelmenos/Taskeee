@@ -25,7 +25,7 @@ class FinanceProjectController extends Controller
             'data' => FinanceProjectResource::collection(
                 FinanceProject::statusOrder(
                     $financesProjects->get(),
-                    ['Ожидание', 'План', 'Заморожено', 'Оплачено']
+                    ['В работе', 'Завершён']
                 )
             )
         ]);

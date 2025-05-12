@@ -14,41 +14,17 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->decimal('sum', 14, 2);
-            $table->unsignedBigInteger('status_id');
-            $table->unsignedBigInteger('finance_project_id');
-            $table->unsignedBigInteger('subject_id');
+            $table->foreignId('status_id')->constrained('payment_statuses')->cascadeOnDelete();
+            $table->foreignId('finance_project_id')->constrained('finance_projects')->cascadeOnDelete();
+            $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
             $table->string('type', 50);
-            $table->uuid('director_id');
-            $table->uuid('recipient_id');
-            $table->unsignedBigInteger('condition_id');
-            $table->uuid('space_id');
+            $table->foreignUuid('director_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('recipient_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('condition_id')->constrained('conditions')->cascadeOnDelete();
+            $table->foreignUuid('space_id')->constrained('spaces')->cascadeOnDelete();
             $table->string('method', 50);
             $table->string('comment', 2500)->nullable();
             $table->timestamps();
-
-            $table->foreign('status_id')
-                ->on('payment_statuses')
-                ->references('id');
-
-            $table->foreign('finance_project_id')
-                ->on('finance_projects')
-                ->references('id');
-
-            $table->foreign('director_id')
-                ->on('users')
-                ->references('id');
-
-            $table->foreign('recipient_id')
-                ->on('users')
-                ->references('id');
-
-            $table->foreign('condition_id')
-                ->on('conditions')
-                ->references('id');
-
-            $table->foreign('space_id')
-                ->on('spaces')
-                ->references('id');
         });
     }
 
