@@ -26,7 +26,7 @@ trait TotalBudget
         $expensesSum = $projectExpenses['sum'] + $companyExpenses['sum'];
 
         return [
-            'sum' => $expensesSum,
+            'sum' => round($expensesSum, 2),
             'percents' => round($expensesPercents, 2),
             'count' => $expensesCount
         ];
@@ -48,7 +48,7 @@ trait TotalBudget
         $incomeSum = $projectIncome['sum'] + $companyIncome['sum'];
 
         return [
-            'sum' => $incomeSum,
+            'sum' => round($incomeSum, 2),
             'percents' => round($incomePercents, 2),
             'count' => $incomeCount
         ];

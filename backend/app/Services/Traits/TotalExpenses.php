@@ -44,8 +44,8 @@ trait TotalExpenses
 
         $expenses = [
             'company_budget' => [
-                'expenses' => abs(BudgetPayment::currentSpace()
-                    ->paid()->expenses()->lastMonths($request->month)->sum('sum')),
+                'expenses' => round(abs(BudgetPayment::currentSpace()
+                    ->paid()->expenses()->lastMonths($request->month)->sum('sum')), 2),
                 'percents' => round($expensesPercents, 2)
             ]
         ];
@@ -65,7 +65,7 @@ trait TotalExpenses
 
             $expenses['finance_project.' . $project->id] = [
                 'project_name' => $projectName,
-                'project_expenses' => $projectExpenses,
+                'project_expenses' => round($projectExpenses, 2),
                 'percents' => round($expensesProjectPercents, 2)
             ];
         }

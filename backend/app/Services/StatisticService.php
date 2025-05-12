@@ -24,12 +24,12 @@ class StatisticService
         $balance = $this->projectsBalance();
 
         return [
-            'total_turnover' => $totalTurnover,
+            'total_turnover' => round($totalTurnover, 2),
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'expenses' => $expenses,
             'income' => $income,
-            'balance' => $balance,
+            'balance' => round($balance, 2),
         ];
     }
 
@@ -43,12 +43,12 @@ class StatisticService
         $balance = $this->companyBalance();
 
         return [
-            'total_turnover' => $totalTurnover,
+            'total_turnover' => round($totalTurnover, 2),
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'expenses' => $expenses,
             'income' => $income,
-            'balance' => $balance,
+            'balance' => round($balance, 2),
         ];
     }
 
@@ -62,12 +62,12 @@ class StatisticService
         $balance = $this->totalBalance();
 
         return [
-            'total_turnover' => $totalTurnover,
+            'total_turnover' => round($totalTurnover, 2),
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'expenses' => $expenses,
             'income' => $income,
-            'balance' => $balance,
+            'balance' => round($balance, 2),
         ];
     }
 
@@ -79,7 +79,7 @@ class StatisticService
         $expensesDetail = $this->expensesDetail($request);
 
         return [
-            'total_turnover' => $totalExpenses,
+            'total_turnover' => round($totalExpenses, 2),
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'detail' => $expensesDetail
@@ -94,7 +94,7 @@ class StatisticService
         $incomeDetail = $this->incomeDetail($request);
 
         return [
-            'total_turnover' => $totalIncome,
+            'total_turnover' => round($totalIncome, 2),
             'last_payment' => $lastPayment,
             'total_payments' => $totalPayments,
             'detail' => $incomeDetail

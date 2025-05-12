@@ -44,8 +44,8 @@ trait TotalIncome
 
         $income = [
             'company_budget' => [
-                'income' => (float)BudgetPayment::currentSpace()
-                    ->paid()->income()->lastMonths($request->month)->sum('sum'),
+                'income' => round((float)BudgetPayment::currentSpace()
+                    ->paid()->income()->lastMonths($request->month)->sum('sum'), 2),
                 'percents' => round($incomePercents, 2)
             ]
         ];
@@ -65,7 +65,7 @@ trait TotalIncome
 
             $income['finance_project.' . $project->id] = [
                 'project_name' => $projectName,
-                'project_income' => $projectIncome,
+                'project_income' => round($projectIncome, 2),
                 'percents' => round($incomeProjectPercents, 2)
             ];
         }
