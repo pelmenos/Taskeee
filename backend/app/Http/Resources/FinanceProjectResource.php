@@ -19,7 +19,7 @@ class FinanceProjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'price' => $this->price,
+            'price' => (float)$this->price,
             'comment' => $this->comment,
             'status' => $this->status()->first(),
             'project' => $this->project()->first(),

@@ -12,9 +12,7 @@ class FinanceProjectStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        FinanceProjectStatus::create(['name' => 'Ожидание']);
-        FinanceProjectStatus::create(['name' => 'План']);
-        FinanceProjectStatus::create(['name' => 'Заморожено']);
-        FinanceProjectStatus::create(['name' => 'Оплачено']);
+        FinanceProjectStatus::create(['name' => 'В работе']);
+        FinanceProjectStatus::create(['name' => 'Завершён']);
     }
 }

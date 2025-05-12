@@ -30,7 +30,7 @@ class StoreFinanceProjectRequest extends FormRequest
         )->firstOrFail();
 
         return [
-            'price' => 'decimal:2|required',
+            'price' => 'regex:/^-?\d+(\.\d{1,2})?$/|required',
             'comment' => 'string|max:2500',
             'status_id' => 'integer|required|in:'
                 . implode(',', FinanceProjectStatus::pluck('id')->toArray()),
@@ -50,7 +50,7 @@ class StoreFinanceProjectRequest extends FormRequest
     public function messages()
     {
         return [
-            'price.decimal' => 'Цена должна быть с двумя знаками после запятой и иметь длинну не более 14 цифр',
+            'price.regex' => 'Цена должна быть с двумя знаками после запятой и иметь длинну не более 14 цифр',
             'price.required' => 'Цена обязательна для заполнения',
             'comment.string' => 'Комментарий должен быть строкового типа',
             'comment.max' => 'Максимальное количество символов 2500',

@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\BudgetPayment;
 use App\Models\Project;
 use App\Models\Space;
 use App\Models\Condition;
 use App\Models\FinanceProject;
 use App\Models\Payment;
 use App\Models\Subject;
+use App\Policies\BudgetPaymentPolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\ConditionPolicy;
 use App\Policies\FinanceProjectPolicy;
@@ -31,7 +33,8 @@ class AuthServiceProvider extends ServiceProvider
         FinanceProject::class => FinanceProjectPolicy::class,
         Subject::class => SubjectPolicy::class,
         Condition::class => ConditionPolicy::class,
-        Payment::class => PaymentPolicy::class
+        Payment::class => PaymentPolicy::class,
+        BudgetPayment::class => BudgetPaymentPolicy::class,
     ];
 
     /**

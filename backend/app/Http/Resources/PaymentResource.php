@@ -16,7 +16,7 @@ class PaymentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'sum' => $this->sum,
+            'sum' => (float)$this->sum,
             'type' => $this->type,
             'status' => $this->status()->first(),
             'finance_project' => FinanceProjectResource::make($this->financeProject()->first()),

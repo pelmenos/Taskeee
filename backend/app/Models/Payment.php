@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
@@ -53,6 +53,26 @@ class Payment extends Model
     public function scopeCurrentSpace($query)
     {
         return $query->where('space_id', auth()->user()->getSpaceId());
+    }
+
+    public function scopePaid($query)
+    {
+        return $query->where('status_id', PaymentStatus::where('name', 'Оплачено')->first()->id);
+    }
+
+    public function scopeIncome($query)
+    {
+        return $query->where('type', 'Доходы');
+    }
+
+    public function scopeExpenses($query)
+    {
+        return $query->where('type', 'Расходы');
+    }
+
+    public function scopeLastMonths($query, int $months)
+    {
+        return $query->whereBetween('created_at', [Carbon::now()->subMonth($months), Carbon::now()]);
     }
 
     public function scopeWithSearch($query, $term)
