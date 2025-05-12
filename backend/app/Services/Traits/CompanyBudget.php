@@ -19,7 +19,7 @@ trait CompanyBudget
         $expensesSum = abs(BudgetPayment::currentSpace()->paid()->expenses()->sum('sum'));
 
         return [
-            'sum' => $expensesSum,
+            'sum' => round($expensesSum, 2),
             'percents' => round($expensesPercents, 2),
             'count' => $expensesCount,
         ];
@@ -38,7 +38,7 @@ trait CompanyBudget
         $incomeSum = (float)BudgetPayment::currentSpace()->paid()->income()->sum('sum');
 
         return [
-            'sum' => $incomeSum,
+            'sum' => round($incomeSum, 2),
             'percents' => round($incomePercents, 2),
             'count' => $incomeCount
         ];
