@@ -30,7 +30,7 @@ class CreateProjectRequest extends FormRequest
             'name' => 'required|string|max:100',
             'description' => 'nullable|string|max:500',
             'space_id' => ['required', 'uuid', new SpaceExistsRule()],
-            'members' => ['nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
+            'members' => ['bail', 'nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
             'members.*' => ['uuid', new SpaceUserExistsRule()],
             'boards' => 'required|array|max:1',
             'boards.*' => 'array',
