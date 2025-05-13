@@ -37,7 +37,7 @@ class UpdateProjectRequest extends FormRequest
             'id' => ['uuid', new ProjectExistsRule()],
             'name' => 'required|string|max:100',
             'description' => 'present|nullable|string|max:500',
-            'members' => ['nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
+            'members' => ['bail', 'nullable', 'array', 'min:1', new CreateProjectMembersUniqueRule()],
             'members.*' => ['uuid', new SpaceUserExistsRule()]
 //            'boards' => 'nullable|array|min:1|max:20',
 //            'boards.*' => 'array',
