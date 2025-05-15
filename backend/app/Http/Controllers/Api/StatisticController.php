@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\StatisticService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class StatisticController extends Controller
 {
@@ -45,7 +46,7 @@ class StatisticController extends Controller
         }
         return response()->json([
             'message' => 'Месяц не выбран (1, 3, 6, 12 мес.)'
-        ]);
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     public function totalIncomes(Request $request)
@@ -57,7 +58,7 @@ class StatisticController extends Controller
         }
         return response()->json([
             'message' => 'Месяц не выбран (1, 3, 6, 12 мес.)'
-        ]);
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     public function forecast(Request $request)
