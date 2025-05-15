@@ -1,3 +1,3 @@
-export { createCreateSpaceMutation, createSpaceDetailQuery, createSpaceListQuery } from "./api"
+export {createCreateSpaceMutation, createSpaceDetailQuery, createSpaceListQuery, createAddMemberMutation} from "./api"
 
-export type { SpaceSchema, SpaceListItem, SpaceDetailSchema, SpaceDetail } from "./model"
+export type {SpaceSchema, SpaceListItem, SpaceDetailSchema, SpaceDetail, AddMemberSchema} from "./model"
