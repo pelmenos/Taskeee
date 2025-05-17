@@ -10,7 +10,7 @@ import { sleep } from "../lib/sleep"
 import { RequestParams } from "./createRequestBuilder"
 import { requestBuilder } from "./config"
 
-const MOCK_ENABLED = false
+const MOCK_ENABLED = true
 
 interface QueryParameters<
 	Params,

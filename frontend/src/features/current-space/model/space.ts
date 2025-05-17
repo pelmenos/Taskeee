@@ -1,55 +1,59 @@
+import {createEvent, createStore, sample} from "effector"
 import {createRoleListQuery, RoleListItem} from "entities/role";
-import { atom } from "shared/lib/factory"
-import { createEvent, createStore, sample } from "effector"
-import { createSpaceListQuery, SpaceListItem } from "entities/space"
+import {createSpaceListQuery, MemberListItem, SpaceListItem} from "entities/space"
+import {createMembersListQuery} from "entities/space/api";
 
-import { $status, SessionStatus } from "shared/api"
+import {$status, SessionStatus} from "shared/api"
+import {atom} from "shared/lib/factory"
 
 export const spaceModel = atom(() => {
-	const spaceListQuery = createSpaceListQuery()
+  const spaceListQuery = createSpaceListQuery()
   const roleListQuery = createRoleListQuery()
+  const memberListQuery = createMembersListQuery()
 
-	const currentSpaceChanged = createEvent<SpaceListItem>()
+  const currentSpaceChanged = createEvent<SpaceListItem>()
 
-	const $availableSpaces = createStore<Array<SpaceListItem>>([])
+  const $availableSpaces = createStore<Array<SpaceListItem>>([])
 
-	const $currentSpace = createStore<SpaceListItem | null>(null)
+  const $currentSpace = createStore<SpaceListItem | null>(null)
 
   const $availableRoles = createStore<Array<RoleListItem>>([])
 
-	sample({
-		clock: $status,
-		filter: (clock) => clock === SessionStatus.Authenticated,
-		target: spaceListQuery.start,
-	})
+  const $availableMembers = createStore<Array<MemberListItem>>([])
 
-	sample({
-		source: spaceListQuery.finished.success,
-		filter: (source) => !!source.result,
-		fn: (source) => {
-			if (!source.result || "message" in source.result) {
-				return []
-			}
+  sample({
+    clock: $status,
+    filter: (clock) => clock === SessionStatus.Authenticated,
+    target: spaceListQuery.start,
+  })
 
-			return source.result
-		},
-		target: $availableSpaces,
-	})
+  sample({
+    source: spaceListQuery.finished.success,
+    filter: (source) => !!source.result,
+    fn: (source) => {
+      if (!source.result || "message" in source.result) {
+        return []
+      }
 
-	sample({
-		clock: currentSpaceChanged,
-		target: $currentSpace,
-	})
+      return source.result
+    },
+    target: $availableSpaces,
+  })
 
-	sample({
-		source: {
-			available: $availableSpaces,
-			current: $currentSpace,
-		},
-		filter: (source) => !source.current && !!source.available.length,
-		fn: (source) => source.available[0],
-		target: $currentSpace,
-	})
+  sample({
+    clock: currentSpaceChanged,
+    target: $currentSpace,
+  })
+
+  sample({
+    source: {
+      available: $availableSpaces,
+      current: $currentSpace,
+    },
+    filter: (source) => !source.current && !!source.available.length,
+    fn: (source) => source.available[0],
+    target: $currentSpace,
+  })
 
   sample({
     clock: $currentSpace,
@@ -57,7 +61,7 @@ export const spaceModel = atom(() => {
     fn: (currentSpace) => ({
       space_id: currentSpace.id,
     }),
-    target: roleListQuery.start,
+    target: [roleListQuery.start, memberListQuery.start],
   })
 
   sample({
@@ -66,14 +70,22 @@ export const spaceModel = atom(() => {
     target: $availableRoles,
   })
 
-	return {
-		spaceListQuery,
+  sample({
+    clock: memberListQuery.finished.success,
+    fn: ({result}) => result,
+    target: $availableMembers,
+  })
+
+  return {
+    spaceListQuery,
     roleListQuery,
+    memberListQuery,
 
-		currentSpaceChanged,
+    currentSpaceChanged,
 
-		$currentSpace,
-		$availableSpaces,
+    $currentSpace,
+    $availableSpaces,
     $availableRoles,
-	}
+    $availableMembers,
+  }
 })

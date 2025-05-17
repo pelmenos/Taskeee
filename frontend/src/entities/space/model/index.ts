@@ -1,4 +1,4 @@
-import {obj, or, str, UnContract, val} from "@withease/contracts"
+import {arr, obj, or, str, UnContract, val} from "@withease/contracts"
 import {EnumSpaceTariff} from "shared/api"
 import {createErrorContract} from "shared/api/types"
 import {en} from "shared/lib/contracts"
@@ -75,3 +75,22 @@ const addMemberSuccessContract = obj({
 const addMemberFailureContract = createErrorContract(['email', "role_id"])
 
 export const addMemberContract = or(addMemberSuccessContract, addMemberFailureContract)
+
+export type MembersListSchema = {
+  space_id: string
+}
+
+export const memberListItemContract = obj({
+  id: str,
+  space_id: str,
+  email: str,
+  role_id: str,
+  role: obj({
+    id: str,
+    space_id: str,
+    name: str,
+    description: or(str, val(null)),
+  }),
+})
+
+export type MemberListItem = UnContract<typeof memberListItemContract>

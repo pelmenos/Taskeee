@@ -9,6 +9,8 @@ import {
   SpaceDetailSchema,
   spaceListItemContract,
   SpaceSchema,
+  memberListItemContract,
+  MembersListSchema,
 } from "../model"
 
 export const createCreateSpaceMutation = () =>
@@ -55,5 +57,58 @@ export const createAddMemberMutation = () =>
     }),
     response: {
       contract: addMemberContract,
+    }
+  })
+
+export const createMembersListQuery = () =>
+  createApiQuery({
+    request: (schema: MembersListSchema) => ({
+      method: "GET",
+      url: `/api/spaces/users`,
+      query: schema
+    }),
+    response: {
+      contract: createListContract(memberListItemContract),
+      mapData: ({result}) => result.data,
+      mockedData: {
+        data: [
+          {
+            id: "zxc",
+            space_id: "zxc",
+            email: "email",
+            role_id: "zxc",
+            role: {
+              id: "zxc",
+              space_id: "zxc",
+              name: "test",
+              description: null,
+            }
+          },
+          {
+            id: "zxc",
+            space_id: "zxc",
+            email: "email",
+            role_id: "zxc",
+            role: {
+              id: "zxc",
+              space_id: "zxc",
+              name: "test",
+              description: null,
+            }
+          },
+          {
+            id: "zxc",
+            space_id: "zxc",
+            email: "email",
+            role_id: "zxc",
+            role: {
+              id: "zxc",
+              space_id: "zxc",
+              name: "test",
+              description: null,
+            }
+          }
+        ]
+      }
     }
   })
