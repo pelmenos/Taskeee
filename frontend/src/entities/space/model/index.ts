@@ -1,4 +1,4 @@
-import {arr, obj, or, str, UnContract, val} from "@withease/contracts"
+import {obj, or, str, UnContract, val} from "@withease/contracts"
 import {EnumSpaceTariff} from "shared/api"
 import {createErrorContract} from "shared/api/types"
 import {en} from "shared/lib/contracts"
