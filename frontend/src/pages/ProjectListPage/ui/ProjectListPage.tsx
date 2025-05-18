@@ -1,5 +1,5 @@
 import "./ProjectListPage.scss"
-import {Button, Group, Paper, SimpleGrid, Stack, Text, TextInput, Title} from "@mantine/core"
+import {Button, Card, Group, Paper, SimpleGrid, Stack, Text, TextInput, Title} from "@mantine/core"
 import {useDisclosure} from "@mantine/hooks"
 import {Link} from "atomic-router-react"
 import {useUnit} from "effector-react"
@@ -76,14 +76,16 @@ export const ProjectListPage = () => {
 
           <SimpleGrid cols={6}>
             {availableProjects.map((item) => (
-              <Button
+              <Card
                 key={item.id}
+                bg="surfaceHighest"
+                bd="2px solid var(--mantine-color-primary-0)"
                 component={Link<{ id: string }>}
                 to={routes.project.detail}
                 params={{id: item.id}}
               >
                 {item.name}
-              </Button>
+              </Card>
             ))}
           </SimpleGrid>
         </Stack>
